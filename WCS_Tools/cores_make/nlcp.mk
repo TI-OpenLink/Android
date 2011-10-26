@@ -6,7 +6,7 @@
 #
 # Android Version	:	L27.INC1.13.1 OMAP4 GingerBread ES2
 # Platform	     	:	Blaze platform es2.2
-# Date				:	July 2011
+# Date				:	Oct. 2011
 #
 # Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
 #
@@ -29,27 +29,9 @@
 #include $(PWD)/defs.mk
 include defs.mk
 
-NLCP_RELEASE_VERSION:=RLS_R4_10
-NLCP_SP_VERSION:=1
-NLCP_MAIN_REPO:=git://github.com/idor
-
-WL12xx_REPO:=$(NLCP_MAIN_REPO)/wl12xx.git
-WL12xx_DIR:=$(WORKSPACE_DIR)/wl12xx
-WL12xx_BRANCH:=R4-kernel-3.0.4
-WL12xx_TAG:=a971bbd2d41c5836b8885fff06c16f8ac7102b48
-
-COMPAT_DIR:=$(WORKSPACE_DIR)/compat
-COMPAT_REPO:=git://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/compat.git
-COMPAT_HASH:=c03570efe213adbab12e869a2426cf95b6d2b45b
-COMPAT_PULL_BRANCH:=linux-3.0.y
-
-COMPAT_WIRELESS_DIR:=$(WORKSPACE_DIR)/compat-wireless
-COMPAT_WIRELESS_REPO:=git://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/compat-wireless.git
-COMPAT_WIRELESS_BRANCH:=linux-3.0.y
-COMPAT_WIRELESS_HASH:=
-#COMPAT_WIRELESS_DIR:=$(WORKSPACE_DIR)/compat-wireless-2.6
-#COMPAT_WIRELESS_REPO:=git://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/compat-wireless-2.6.git
-#COMPAT_WIRELESS_HASH:=6f4e670
+NLCP_RELEASE_VERSION:=RLS_R4_11
+NLCP_SP_VERSION:=2
+NLCP_MAIN_REPO:=git://github.com/TI-OpenLink
 
 NLCP_PATCHES_PATH:=$(PATCHES_PATH)/wlan/nlcp
 NLCP_WL12xx_PATCHES_DIR:=$(NLCP_PATCHES_PATH)/r4/wl12xx
@@ -59,9 +41,6 @@ NLCP_KERNEL_PATCHES:=$(NLCP_PATCHES_PATH)/kernel
 NLCP_ANDROID_PATCHES:=$(NLCP_PATCHES_PATH)/android
 
 NLCP_BINARIES_PATH=$(NLCP_PATCHES_PATH)/binaries
-
-GIT_COMPAT_TREE:=$(COMPAT_DIR)
-GIT_TREE:=$(WL12xx_DIR)
 
 PROGRESS_NLCP_FETCH_WL12xx:=$(PROGRESS_DIR)/nlcp.wl12xx.fetched
 PROGRESS_NLCP_FETCH_COMPAT:=$(PROGRESS_DIR)/nlcp.compat.fetched
@@ -74,9 +53,6 @@ PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS:=$(PROGRESS_DIR)/nlcp.compat-wireless.brin
 PROGRESS_NLCP_KERNEL_PATCHES:=$(PROGRESS_DIR)/nlcp.kernel.patched
 PROGRESS_NLCP_MYDROID_PATCHES:=$(PROGRESS_DIR)/nlcp.mydroid.patched
 
-export GIT_COMPAT_TREE
-export GIT_TREE
-
 ################################################################################
 # rules
 ################################################################################
@@ -87,6 +63,11 @@ nlcp-private-pre-bringup-validation:
 nlcp-private-pre-make-validation:
 #	cd $(HOSTAP_DIR) ; git checkout hostapd_vanilla
 	@$(ECHO) "nlcp pre-make validation passed..."
+
+WL12xx_REPO:=$(NLCP_MAIN_REPO)/wl12xx.git
+WL12xx_DIR:=$(WORKSPACE_DIR)/wl12xx
+WL12xx_BRANCH:=R4.0.xx
+WL12xx_TAG:=$(NLCP_RELEASE_VERSION)
 
 $(PROGRESS_NLCP_FETCH_WL12xx):
 	@$(ECHO) "getting wl12xx repository..."
@@ -102,6 +83,11 @@ $(PROGRESS_NLCP_BRINGUP_WL12xx): $(PROGRESS_NLCP_FETCH_WL12xx)
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_WL12xx))
 	@$(call print, "wl12xx bringup done")
 
+COMPAT_DIR:=$(WORKSPACE_DIR)/compat
+COMPAT_REPO:=git://github.com/mcgrof/compat.git
+COMPAT_BRANCH:=master
+COMPAT_HASH:=c03570efe213adbab12e869a2426cf95b6d2b45b
+
 $(PROGRESS_NLCP_FETCH_COMPAT):
 	@$(ECHO) "getting compat repository..."
 	git clone $(COMPAT_REPO) $(COMPAT_DIR)
@@ -112,13 +98,20 @@ $(PROGRESS_NLCP_FETCH_COMPAT):
 $(PROGRESS_NLCP_BRINGUP_COMPAT): $(PROGRESS_NLCP_FETCH_COMPAT)
 	@$(ECHO) "compat bringup..."
 	cd $(COMPAT_DIR) ; git checkout $(COMPAT_HASH) -b vanilla
-	cd $(COMPAT_DIR) ; git pull origin $(COMPAT_PULL_BRANCH)
-	$(COPY) $(WL12xx_DIR)/include/linux/if.h $(COMPAT_DIR)/include/linux/if.h
-#	cd $(COMPAT_DIR) ; git reset --hard $(COMPAT_HASH)
-#	cd $(COMPAT_DIR) ; git checkout -b vanilla
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_COMPAT))
 	@$(call print, "compat bringup done")
+
+COMPAT_WIRELESS_DIR:=$(WORKSPACE_DIR)/compat-wireless
+COMPAT_WIRELESS_REPO:=git://github.com/mcgrof/compat-wireless.git
+COMPAT_WIRELESS_BRANCH:=master
+COMPAT_WIRELESS_HASH:=6f4e670
+
+GIT_COMPAT_TREE:=$(COMPAT_DIR)
+GIT_TREE:=$(WL12xx_DIR)
+
+export GIT_COMPAT_TREE
+export GIT_TREE
 	
 $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS):
 	@$(ECHO) "getting compat wireless repository..."
@@ -129,19 +122,11 @@ $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS):
 	
 $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS): $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS)
 	@$(ECHO) "compat wireless bringup..."
-	cd $(COMPAT_WIRELESS_DIR) ; git checkout origin/$(COMPAT_WIRELESS_BRANCH) -b $(COMPAT_WIRELESS_BRANCH)
-	cd $(COMPAT_WIRELESS_DIR) ; git am $(NLCP_COMPAT_WIRELESS_PATCHES_DIR)/*.patch
-	
-#	cd $(COMPAT_WIRELESS_DIR) ; git reset --hard $(COMPAT_WIRELESS_HASH)
-#	cd $(COMPAT_WIRELESS_DIR) ; git checkout -b vanilla
-#	cd $(COMPAT_WIRELESS_DIR) ; rm ./patches/03-*
-#	cd $(COMPAT_WIRELESS_DIR) ; rm ./patches/35-*
-#	cd $(COMPAT_WIRELESS_DIR) ; rm ./patches/40-*
-#	cd $(COMPAT_WIRELESS_DIR) ; $(PATCH) --dry-run -p1 < $(NLCP_COMPAT_WIRELESS_PATCHES_DIR)/compat-wireless.09.patch
-#	cd $(COMPAT_WIRELESS_DIR) ; $(PATCH) -p1 < $(NLCP_COMPAT_WIRELESS_PATCHES_DIR)/compat-wireless.09.patch
-#	cp $(KERNEL_DIR)/.gitignore $(COMPAT_WIRELESS_DIR)
-#	cd $(COMPAT_WIRELESS_DIR) ; git add .
-#	cd $(COMPAT_WIRELESS_DIR) ; git commit -a -m "initial modifications for wl12xx R4 release has been made"
+	cd $(COMPAT_WIRELESS_DIR) ; git checkout $(COMPAT_WIRELESS_HASH) -b vanilla
+	cd $(COMPAT_WIRELESS_DIR) ; if [ -f ./patches/03-* ] ; then $(DEL) ./patches/03-* ; fi
+	cd $(COMPAT_WIRELESS_DIR) ; if [ -f ./patches/35-* ] ; then $(DEL) ./patches/35-* ; fi
+	cd $(COMPAT_WIRELESS_DIR) ; if [ -f ./patches/40-* ] ; then $(DEL) ./patches/40-* ; fi
+	cd $(COMPAT_WIRELESS_DIR) ; git am $(NLCP_COMPAT_WIRELESS_PATCHES_DIR)/0002-fix-patch-threaded-irq.patch
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS))
 	@$(call print, "compat wireless bringup done")
@@ -157,7 +142,7 @@ $(PROGRESS_NLCP_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 	
 HOSTAP_REPO:=$(NLCP_MAIN_REPO)/hostap.git
 HOSTAP_DIR:=$(MYDROID)/external/hostap
-HOSTAP_BRANCH:=android
+HOSTAP_BRANCH:=R4.0.xx
 HOSTAP_TAG:=$(NLCP_RELEASE_VERSION)
 
 PROGRESS_NLCP_FETCH_HOSTAP:=$(PROGRESS_DIR)/nlcp.hostap.fetched
@@ -174,9 +159,7 @@ $(PROGRESS_NLCP_FETCH_HOSTAP): $(PROGRESS_BRINGUP_MYDROID)
 $(PROGRESS_NLCP_BRINGUP_HOSTAP): $(PROGRESS_NLCP_FETCH_HOSTAP)
 	@$(ECHO) "hostapd/supplicant bringup..."
 	$(MKDIR) -p $(HOSTAP_DIR)
-	cd $(HOSTAP_DIR) ; git checkout remotes/origin/$(HOSTAP_BRANCH) -b $(HOSTAP_BRANCH)
-#	cd $(HOSTAP_DIR) ; git reset --hard $(HOSTAP_TAG)
-#	cd $(HOSTAP_DIR) ; git commit -a -m "initial modifications for wl12xx R4 release has been made"
+	cd $(HOSTAP_DIR) ; git checkout origin/$(HOSTAP_BRANCH) -b $(HOSTAP_BRANCH)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_HOSTAP))
 	@$(call print, "hostapd/supplicant bringup done")
@@ -229,7 +212,7 @@ $(PROGRESS_NLCP_BRINGUP_CRDA): $(PROGRESS_NLCP_FETCH_CRDA)
 
 LIBNL_REPO:=$(NLCP_MAIN_REPO)/libnl.git
 LIBNL_DIR:=$(MYDROID)/external/libnl
-LIBNL_BRANCH:=libnl_android
+LIBNL_BRANCH:=android
 LIBNL_TAG:=$(NLCP_RELEASE_VERSION)
 
 PROGRESS_NLCP_FETCH_LIBNL:=$(PROGRESS_DIR)/nlcp.libnl.fetched
@@ -250,28 +233,6 @@ $(PROGRESS_NLCP_BRINGUP_LIBNL): $(PROGRESS_NLCP_FETCH_LIBNL)
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_LIBNL))
 	@$(call print, "libnl bringup done")
 
-#OPENSSL_REPO:=$(NLCP_MAIN_REPO)/openssl.git
-#OPENSSL_DIR:=$(MYDROID)/external/openssl
-#OPENSSL_BRANCH:=openssl_arm
-#OPENSSL_TAG:=$(NLCP_RELEASE_VERSION)
-#
-#PROGRESS_NLCP_FETCH_OPENSSL:=$(PROGRESS_DIR)/nlcp.openssl.fetched
-#PROGRESS_NLCP_BRINGUP_OPENSSL:=$(PROGRESS_DIR)/nlcp.openssl.bringup
-#
-#$(PROGRESS_NLCP_FETCH_OPENSSL): $(PROGRESS_BRINGUP_MYDROID)
-#	@$(ECHO) "getting openssl repository..."
-#	git clone $(OPENSSL_REPO) $(OPENSSL_DIR)
-#	@$(ECHO) "...done"
-#	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_FETCH_OPENSSL))
-#	@$(call print, "openssl repository fetched")
-#	
-#$(PROGRESS_NLCP_BRINGUP_OPENSSL): $(PROGRESS_NLCP_FETCH_OPENSSL)
-#	@$(ECHO) "openssl bringup..."
-#	cd $(OPENSSL_DIR) ; git checkout $(OPENSSL_TAG) -b vanilla
-#	@$(ECHO) "...done"
-#	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_OPENSSL))
-#	@$(call print, "openssl bringup done")
-
 TI_UTILS_REPO:=$(NLCP_MAIN_REPO)/ti-utils.git
 TI_UTILS_DIR:=$(MYDROID)/external/ti-utils
 TI_UTILS_BRANCH:=master
@@ -290,14 +251,14 @@ $(PROGRESS_NLCP_FETCH_TI_UTILS): $(PROGRESS_BRINGUP_MYDROID)
 	
 $(PROGRESS_NLCP_BRINGUP_TI_UTILS): $(PROGRESS_NLCP_FETCH_TI_UTILS)
 	@$(ECHO) "ti-utils bringup..."
-	cd $(TI_UTILS_DIR) ; git checkout $(TI_UTILS_TAG) -b vanilla
+	cd $(TI_UTILS_DIR) ; git checkout $(TI_UTILS_BRANCH) -b $(TI_UTILS_BRANCH)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_TI_UTILS))
 	@$(call print, "ti-utils bringup done")
 	
 nlcp-update-firmware-files:			$(PROGRESS_NLCP_BRINGUP_TI_UTILS)
 #	latest firmwares are managed at the ti-utils project: mydroid/external/ti-utils/firmware,
-#	we move it to the android fw hardware project (which installs it)
+#	we move it to the android fw hardware project (which installs it during android make)
 	@$(MKDIR) -p $(MYDROID)/hardware/wlan/fw
 	@$(ECHO) "Updating latest firmware binaries from ti-utils project..."
 	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl1271-fw-multirole-plt.bin $(MYDROID)/hardware/wlan/fw
@@ -308,24 +269,34 @@ nlcp-update-firmware-files:			$(PROGRESS_NLCP_BRINGUP_TI_UTILS)
 	
 .PHONY += nlcp-update-firmware-files
 
-$(PROGRESS_NLCP_MYDROID_PATCHES): 	$(PROGRESS_BRINGUP_MYDROID) \
-									$(PROGRESS_NLCP_BRINGUP_HOSTAP) \
-									$(PROGRESS_NLCP_BRINGUP_IW) \
-									$(PROGRESS_NLCP_BRINGUP_CRDA) \
-									$(PROGRESS_NLCP_BRINGUP_LIBNL) \
-									$(PROGRESS_NLCP_BRINGUP_TI_UTILS) \
-									$(PROGRESS_NLCP_BRINGUP_WL12xx)
+$(PROGRESS_NLCP_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID) \
+				$(PROGRESS_NLCP_BRINGUP_HOSTAP) \
+				$(PROGRESS_NLCP_BRINGUP_IW) \
+				$(PROGRESS_NLCP_BRINGUP_CRDA) \
+				$(PROGRESS_NLCP_BRINGUP_LIBNL) \
+				$(PROGRESS_NLCP_BRINGUP_TI_UTILS) \
+				$(PROGRESS_NLCP_BRINGUP_WL12xx)
 	@$(ECHO) "patching android for nlcp..."
-	cd $(MYDROID)/build; 						git am $(NLCP_ANDROID_PATCHES)/build/*
-	cd $(MYDROID)/device/ti/blaze; 				git am $(NLCP_ANDROID_PATCHES)/device.ti.blaze/*.patch
-	cd $(MYDROID)/external/hostapd; 			git am $(NLCP_ANDROID_PATCHES)/external.hostapd/*.patch
-	cd $(MYDROID)/external/openssl; 			git am $(NLCP_ANDROID_PATCHES)/external.openssl/*.patch
-	cd $(MYDROID)/external/ti-utils; 			git am $(NLCP_ANDROID_PATCHES)/external.ti-utils/*.patch
-	cd $(MYDROID)/external/wpa_supplicant_6; 	git am $(NLCP_ANDROID_PATCHES)/external.wpa_supplicant_6/*.patch
-	cd $(MYDROID)/frameworks/base;				git am $(NLCP_ANDROID_PATCHES)/frameworks.base/*.patch
-	cd $(MYDROID)/hardware/libhardware_legacy;	git am $(NLCP_ANDROID_PATCHES)/hardware.libhardware_legacy/*.patch
-	cd $(MYDROID)/system/core; 					git am $(NLCP_ANDROID_PATCHES)/system.core/*.patch
-	cd $(MYDROID)/system/netd; 					git am $(NLCP_ANDROID_PATCHES)/system.netd/*.patch
+	cd $(MYDROID)/build; \
+		git am $(NLCP_ANDROID_PATCHES)/build/*patch
+	cd $(MYDROID)/device/ti/blaze; \
+		git am $(NLCP_ANDROID_PATCHES)/device.ti.blaze/*patch
+	cd $(MYDROID)/external/hostapd; \
+ 		git am $(NLCP_ANDROID_PATCHES)/external.hostapd/*patch
+	cd $(MYDROID)/external/openssl; \
+ 		git am $(NLCP_ANDROID_PATCHES)/external.openssl/*patch
+	cd $(MYDROID)/external/ti-utils; \
+ 		git am $(NLCP_ANDROID_PATCHES)/external.ti-utils/*patch
+	cd $(MYDROID)/external/wpa_supplicant_6; \
+	 	git am $(NLCP_ANDROID_PATCHES)/external.wpa_supplicant_6/*patch
+	cd $(MYDROID)/frameworks/base; \
+		git am $(NLCP_ANDROID_PATCHES)/frameworks.base/*.patch
+	cd $(MYDROID)/hardware/libhardware_legacy; \
+		git am $(NLCP_ANDROID_PATCHES)/hardware.libhardware_legacy/*.patch
+	cd $(MYDROID)/system/core; \
+		git am $(NLCP_ANDROID_PATCHES)/system.core/*.patch
+	cd $(MYDROID)/system/netd; \
+		git am $(NLCP_ANDROID_PATCHES)/system.netd/*.patch
 	@$(ECHO) "...done"
 	
 	@$(ECHO) "copying additional packages to mydroid directory..."
@@ -340,47 +311,58 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): 	$(PROGRESS_BRINGUP_MYDROID) \
 	@$(ECHO) "...done"
 	if [ -d $(MYDROID)/hardware/wlan/fw ] ; then $(MOVE) $(MYDROID)/hardware/wlan/fw $(TRASH_DIR)/hardware/wlan/ ; fi
 	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/fw $(MYDROID)/hardware/wlan/fw
-	$(MAKE) nlcp-update-firmware-files
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_MYDROID_PATCHES))
+	$(MAKE) nlcp-update-firmware-files
 	@$(call print, "android patches and packages done")
 
+nlcp-invoke-fetch-private:	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
+				$(PROGRESS_NLCP_KERNEL_PATCHES) \
+				$(PROGRESS_NLCP_MYDROID_PATCHES)
+	cd $(CRDA_DIR); 	git fetch
+	cd $(LIBNL_DIR); 	git fetch
+	cd $(TI_UTILS_DIR);	git fetch
+	cd $(IW_DIR); 		git fetch
+	cd $(HOSTAP_DIR); 	git fetch
+	cd $(WL12xx_DIR); 	git fetch
+
 nlcp-sync-ver-private:	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
-						$(PROGRESS_NLCP_KERNEL_PATCHES) \
-						$(PROGRESS_NLCP_MYDROID_PATCHES)
-	cd $(CRDA_DIR); 	git fetch ; git reset --hard $(NLCP_RELEASE_VERSION)
-	cd $(LIBNL_DIR); 	git fetch ; git reset --hard $(NLCP_RELEASE_VERSION)
-	cd $(TI_UTILS_DIR); git fetch ; git reset --hard $(NLCP_RELEASE_VERSION)
-	cd $(IW_DIR); 		git fetch ; git reset --hard $(NLCP_RELEASE_VERSION)
-	cd $(HOSTAP_DIR); 	git fetch ; git reset --hard $(NLCP_RELEASE_VERSION)
-	cd $(WL12xx_DIR); 	git fetch ; git reset --hard $(NLCP_RELEASE_VERSION)
+			$(PROGRESS_NLCP_KERNEL_PATCHES) \
+			$(PROGRESS_NLCP_MYDROID_PATCHES)
+	$(MAKE) nlcp-invoke-fetch-private
+	cd $(CRDA_DIR); 	git reset --hard $(NLCP_RELEASE_VERSION)
+	cd $(LIBNL_DIR); 	git reset --hard $(NLCP_RELEASE_VERSION)
+	cd $(TI_UTILS_DIR);	git reset --hard $(NLCP_RELEASE_VERSION)
+	cd $(IW_DIR); 		git reset --hard $(NLCP_RELEASE_VERSION)
+	cd $(HOSTAP_DIR); 	git reset --hard $(NLCP_RELEASE_VERSION)
+	cd $(WL12xx_DIR); 	git reset --hard $(NLCP_RELEASE_VERSION)
 	$(MAKE) nlcp-update-firmware-files
 	
 nlcp-sync-repo-latest:	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
-						$(PROGRESS_NLCP_KERNEL_PATCHES) \
-						$(PROGRESS_NLCP_MYDROID_PATCHES)
-	cd $(CRDA_DIR); 	git fetch origin ; git merge remotes/origin/$(CRDA_BRANCH)
-	cd $(LIBNL_DIR); 	git fetch origin ; git merge remotes/origin/$(LIBNL_BRANCH)
-	cd $(TI_UTILS_DIR); git fetch origin ; git merge remotes/origin/$(TI_UTILS_BRANCH)
-	cd $(IW_DIR); 		git fetch origin ; git merge remotes/origin/$(IW_BRANCH)
-	cd $(HOSTAP_DIR); 	git fetch origin ; git merge remotes/origin/$(HOSTAP_BRANCH)
-	cd $(WL12xx_DIR); 	git fetch origin ; git merge remotes/origin/$(WL12xx_BRANCH)
+			$(PROGRESS_NLCP_KERNEL_PATCHES) \
+			$(PROGRESS_NLCP_MYDROID_PATCHES)
+	cd $(CRDA_DIR); 	git pull origin $(CRDA_BRANCH)
+	cd $(LIBNL_DIR); 	git pull origin $(LIBNL_BRANCH)
+	cd $(TI_UTILS_DIR); 	git pull origin $(TI_UTILS_BRANCH)
+	cd $(IW_DIR); 		git pull origin $(IW_BRANCH)
+	cd $(HOSTAP_DIR); 	git pull origin $(HOSTAP_BRANCH)
+	cd $(WL12xx_DIR); 	git pull origin $(WL12xx_BRANCH)
 	$(MAKE) nlcp-update-firmware-files
 
 nlcp-bringup-private: 	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
-						$(PROGRESS_NLCP_BRINGUP_COMPAT) \
-						$(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS) \
-						$(PROGRESS_NLCP_KERNEL_PATCHES) \
-						$(PROGRESS_NLCP_MYDROID_PATCHES)
+			$(PROGRESS_NLCP_BRINGUP_COMPAT) \
+			$(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS) \
+			$(PROGRESS_NLCP_KERNEL_PATCHES) \
+			$(PROGRESS_NLCP_MYDROID_PATCHES)
 	@$(ECHO) "nlcp bringup..."
 	cd $(COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh
 	cd $(COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl12xx
 	@$(ECHO) "...done"
 
 	
-nlcp-make-private:		nlcp-update-firmware-files \
-						$(PROGRESS_NLCP_BRINGUP_COMPAT) \
-						$(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS) \
-						$(PROGRESS_NLCP_BRINGUP_WL12xx)
+nlcp-make-private:	nlcp-update-firmware-files \
+			$(PROGRESS_NLCP_BRINGUP_COMPAT) \
+			$(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS) \
+			$(PROGRESS_NLCP_BRINGUP_WL12xx)
 	@$(ECHO) "nlcp make..."
 	cd $(COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh
 	cd $(COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl12xx
@@ -402,8 +384,6 @@ nlcp-install-private:
 	@$(ECHO) "copying additinal binaries to file system"
 	$(COPY) -rf $(NLCP_BINARIES_PATH)/* $(MYFS_PATH)
 	$(CHMOD) -R 777 $(MYFS_PATH)/data/misc/wifi/*
-#	@$(ECHO) "copying firmware binaries to file system"
-#	$(COPY) -rf $(WL12xx_DIR)/firmware/ti-connectivity/* $(MYFS_PATH)/system/etc/firmware/ti-connectivity
 	@$(ECHO) "...done"
 	
 nlcp-clean-private:

@@ -1,23 +1,25 @@
-From 5392377516cd434f01146d6a91692dc721b0e1d1 Mon Sep 17 00:00:00 2001
+From b99c6c50e79514f87a5fba716b9ca2ae21544dbd Mon Sep 17 00:00:00 2001
 From: Ido Reis <idor@ti.com>
-Date: Wed, 27 Jul 2011 14:18:46 +0300
-Subject: [PATCH] wl12xx-tool.sh usage of android busybox
+Date: Thu, 6 Oct 2011 19:30:33 +0200
+Subject: [PATCH] wl12xx-tool.sh usage of busybox
 
 change the script sh settings from #!/bin/sh to #!/data/busybox/sh
+
+Signed-off-by: Ido Reis <idor@ti.com>
 ---
  scripts/wl12xx-tool.sh |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/scripts/wl12xx-tool.sh b/scripts/wl12xx-tool.sh
-index 7792542..afbca76 100755
+index d2f2072..5f1cda7 100755
 --- a/scripts/wl12xx-tool.sh
 +++ b/scripts/wl12xx-tool.sh
 @@ -1,4 +1,4 @@
 -#!/bin/sh
 +#!/data/busybox/sh
  
- # Bootlevels
- #   1 - start only inetd			0000 0001
+ # PLT utility for TI's wireless driver wl12xx
+ #
 -- 
 1.7.0.4
 

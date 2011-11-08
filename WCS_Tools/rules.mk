@@ -55,7 +55,9 @@ else
 $(PROGRESS_FETCH_MYDROID): $(PROGRESS_FETCH_MANIFEST)
 	@$(MKDIR) -p $(MYDROID)
 #	cd $(MYDROID) ; repo init -u $(MANIFEST) ; repo sync
-	cd $(MYDROID) ; repo init -u $(OMAPMANIFEST_REPO) -b 27.x -m $(OMAPMANIFEST_TAG) ; repo sync
+	cd $(MYDROID) ; \
+	repo init -u $(OMAPMANIFEST_REPO) -b 27.x -m $(OMAPMANIFEST_TAG) --repo-branch=master --repo-url=git://git.omapzoom.org/tools/repo ; \
+	 repo sync --no-repo-verify
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MYDROID))
 	@$(call print, "android filesystem retrieved")
 endif

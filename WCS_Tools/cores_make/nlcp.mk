@@ -29,7 +29,7 @@
 #include $(PWD)/defs.mk
 include defs.mk
 
-NLCP_RELEASE_VERSION:=RLS_R4_11
+NLCP_RELEASE_VERSION:=RLS_R4_12
 NLCP_SP_VERSION:=2
 NLCP_MAIN_REPO:=git://github.com/TI-OpenLink
 
@@ -160,6 +160,7 @@ $(PROGRESS_NLCP_BRINGUP_HOSTAP): $(PROGRESS_NLCP_FETCH_HOSTAP)
 	@$(ECHO) "hostapd/supplicant bringup..."
 	$(MKDIR) -p $(HOSTAP_DIR)
 	cd $(HOSTAP_DIR) ; git checkout origin/$(HOSTAP_BRANCH) -b $(HOSTAP_BRANCH)
+	cd $(HOSTAP_DIR) ; git reset --hard $(HOSTAP_TAG)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_HOSTAP))
 	@$(call print, "hostapd/supplicant bringup done")
@@ -182,7 +183,8 @@ $(PROGRESS_NLCP_FETCH_IW): $(PROGRESS_BRINGUP_MYDROID)
 	
 $(PROGRESS_NLCP_BRINGUP_IW): $(PROGRESS_NLCP_FETCH_IW)
 	@$(ECHO) "iw bringup..."
-	cd $(IW_DIR) ; git checkout $(IW_TAG) -b vanilla
+	cd $(IW_DIR) ; git checkout origin/$(IW_BRANCH) -b $(IW_BRANCH)
+	cd $(IW_DIR) ; git reset --hard $(IW_TAG) 
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_IW))
 	@$(call print, "iw bringup done")
@@ -205,7 +207,8 @@ $(PROGRESS_NLCP_FETCH_CRDA): $(PROGRESS_BRINGUP_MYDROID)
 	
 $(PROGRESS_NLCP_BRINGUP_CRDA): $(PROGRESS_NLCP_FETCH_CRDA)
 	@$(ECHO) "crda bringup..."
-	cd $(CRDA_DIR) ; git checkout $(CRDA_TAG) -b vanilla
+	cd $(CRDA_DIR) ; git checkout origin/$(CRDA_BRANCH) -b $(CRDA_BRANCH)
+	cd $(CRDA_DIR) ; git reset --hard $(CRDA_TAG) 
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_CRDA))
 	@$(call print, "crda bringup done")
@@ -228,14 +231,15 @@ $(PROGRESS_NLCP_FETCH_LIBNL): $(PROGRESS_BRINGUP_MYDROID)
 	
 $(PROGRESS_NLCP_BRINGUP_LIBNL): $(PROGRESS_NLCP_FETCH_LIBNL)
 	@$(ECHO) "libnl bringup..."
-	cd $(LIBNL_DIR) ; git checkout $(LIBNL_TAG) -b vanilla
+	cd $(LIBNL_DIR) ; git checkout origin/$(LIBNL_BRANCH) -b $(LIBNL_BRANCH)
+	cd $(LIBNL_DIR) ; git reset --hard $(LIBNL_TAG)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_LIBNL))
 	@$(call print, "libnl bringup done")
 
 TI_UTILS_REPO:=$(NLCP_MAIN_REPO)/ti-utils.git
 TI_UTILS_DIR:=$(MYDROID)/external/ti-utils
-TI_UTILS_BRANCH:=master
+TI_UTILS_BRANCH:=R4.0.xx
 TI_UTILS_TAG:=$(NLCP_RELEASE_VERSION)
 
 PROGRESS_NLCP_FETCH_TI_UTILS:=$(PROGRESS_DIR)/nlcp.ti-utils.fetched
@@ -251,7 +255,8 @@ $(PROGRESS_NLCP_FETCH_TI_UTILS): $(PROGRESS_BRINGUP_MYDROID)
 	
 $(PROGRESS_NLCP_BRINGUP_TI_UTILS): $(PROGRESS_NLCP_FETCH_TI_UTILS)
 	@$(ECHO) "ti-utils bringup..."
-	cd $(TI_UTILS_DIR) ; git checkout $(TI_UTILS_BRANCH) -b $(TI_UTILS_BRANCH)
+	cd $(TI_UTILS_DIR) ; git checkout origin/$(TI_UTILS_BRANCH) -b $(TI_UTILS_BRANCH)
+	cd $(TI_UTILS_DIR) ; git reset --hard $(TI_UTILS_TAG)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_TI_UTILS))
 	@$(call print, "ti-utils bringup done")

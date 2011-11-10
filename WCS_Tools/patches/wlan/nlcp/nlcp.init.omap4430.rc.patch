@@ -60,7 +60,7 @@
  
  # HotSpot Related services
  service wlan_ap_loader /system/bin/tiap_loader \
-@@ -249,10 +276,39 @@
+@@ -249,10 +276,45 @@
      disabled
      oneshot
  
@@ -102,3 +102,9 @@
 +    oneshot
 +
 +########################## wl12xx addition - end
++
++service ibss_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0 -c/data/misc/wifi/ibss_supplicant.conf -dd
++    socket wpa_wlan0:0 dgram 660 wifi wifi
++    disabled
++    oneshot
++

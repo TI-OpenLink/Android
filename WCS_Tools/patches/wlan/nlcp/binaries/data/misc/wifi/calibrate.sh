@@ -41,6 +41,7 @@ calibrator set ref_nvs $1
 
 echo "Copy reference NVS file"
 cat ./new-nvs.bin > /system/etc/firmware/ti-connectivity/wl1271-nvs.bin
+cat ./new-nvs.bin > /system/etc/firmware/ti-connectivity/wl12xx-nvs.bin
 
 echo "Insert wl12xx SDIO module"
 insmod /system/lib/modules/wl12xx.ko

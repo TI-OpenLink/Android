@@ -183,7 +183,7 @@ $(PROGRESS_NLCP_FETCH_IW): $(PROGRESS_BRINGUP_MYDROID)
 	
 $(PROGRESS_NLCP_BRINGUP_IW): $(PROGRESS_NLCP_FETCH_IW)
 	@$(ECHO) "iw bringup..."
-	cd $(IW_DIR) ; git checkout origin/$(IW_BRANCH) -b $(IW_BRANCH)
+	cd $(IW_DIR) ; git checkout origin/$(IW_BRANCH) -b vanilla
 	cd $(IW_DIR) ; git reset --hard $(IW_TAG) 
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_IW))
@@ -207,7 +207,7 @@ $(PROGRESS_NLCP_FETCH_CRDA): $(PROGRESS_BRINGUP_MYDROID)
 	
 $(PROGRESS_NLCP_BRINGUP_CRDA): $(PROGRESS_NLCP_FETCH_CRDA)
 	@$(ECHO) "crda bringup..."
-	cd $(CRDA_DIR) ; git checkout origin/$(CRDA_BRANCH) -b $(CRDA_BRANCH)
+	cd $(CRDA_DIR) ; git checkout origin/$(CRDA_BRANCH) -b vanilla
 	cd $(CRDA_DIR) ; git reset --hard $(CRDA_TAG) 
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_CRDA))
@@ -231,7 +231,7 @@ $(PROGRESS_NLCP_FETCH_LIBNL): $(PROGRESS_BRINGUP_MYDROID)
 	
 $(PROGRESS_NLCP_BRINGUP_LIBNL): $(PROGRESS_NLCP_FETCH_LIBNL)
 	@$(ECHO) "libnl bringup..."
-	cd $(LIBNL_DIR) ; git checkout origin/$(LIBNL_BRANCH) -b $(LIBNL_BRANCH)
+	cd $(LIBNL_DIR) ; git checkout origin/$(LIBNL_BRANCH) -b vanilla
 	cd $(LIBNL_DIR) ; git reset --hard $(LIBNL_TAG)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_LIBNL))
@@ -290,7 +290,7 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID) \
  		git am $(NLCP_ANDROID_PATCHES)/external.hostapd/*patch
 	cd $(MYDROID)/external/openssl; \
  		git am $(NLCP_ANDROID_PATCHES)/external.openssl/*patch
-	cd $(MYDROID)/external/ti-utils; \
+#	cd $(MYDROID)/external/ti-utils; \
  		git am $(NLCP_ANDROID_PATCHES)/external.ti-utils/*patch
 	cd $(MYDROID)/external/wpa_supplicant_6; \
 	 	git am $(NLCP_ANDROID_PATCHES)/external.wpa_supplicant_6/*patch

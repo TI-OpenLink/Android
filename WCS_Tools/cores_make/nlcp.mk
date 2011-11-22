@@ -66,7 +66,7 @@ nlcp-private-pre-make-validation:
 
 WL12xx_REPO:=$(NLCP_MAIN_REPO)/wl12xx.git
 WL12xx_DIR:=$(WORKSPACE_DIR)/wl12xx
-WL12xx_BRANCH:=R4.0.xx
+WL12xx_BRANCH:=p2p_dyn_fw
 WL12xx_TAG:=$(NLCP_RELEASE_VERSION)
 
 $(PROGRESS_NLCP_FETCH_WL12xx):
@@ -84,7 +84,7 @@ $(PROGRESS_NLCP_BRINGUP_WL12xx): $(PROGRESS_NLCP_FETCH_WL12xx)
 	@$(call print, "wl12xx bringup done")
 
 COMPAT_DIR:=$(WORKSPACE_DIR)/compat
-COMPAT_REPO:=git://github.com/mcgrof/compat.git
+COMPAT_REPO:=$(NLCP_MAIN_REPO)/compat.git
 COMPAT_BRANCH:=master
 COMPAT_HASH:=c03570efe213adbab12e869a2426cf95b6d2b45b
 
@@ -97,13 +97,14 @@ $(PROGRESS_NLCP_FETCH_COMPAT):
 	
 $(PROGRESS_NLCP_BRINGUP_COMPAT): $(PROGRESS_NLCP_FETCH_COMPAT)
 	@$(ECHO) "compat bringup..."
-	cd $(COMPAT_DIR) ; git checkout $(COMPAT_HASH) -b vanilla
+	$(COPY) $(WL12xx_DIR)/include/net/cfg80211-wext.h $(COMPAT_DIR)/include/net/cfg80211-wext.h
+	$(COPY) $(WL12xx_DIR)/include/linux/if_ether.h $(COMPAT_DIR)/include/linux/if_ether.h
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_COMPAT))
 	@$(call print, "compat bringup done")
 
 COMPAT_WIRELESS_DIR:=$(WORKSPACE_DIR)/compat-wireless
-COMPAT_WIRELESS_REPO:=git://github.com/mcgrof/compat-wireless.git
+COMPAT_WIRELESS_REPO:=$(NLCP_MAIN_REPO)/compat-wireless.git
 COMPAT_WIRELESS_BRANCH:=master
 COMPAT_WIRELESS_HASH:=6f4e670
 
@@ -122,11 +123,6 @@ $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS):
 	
 $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS): $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS)
 	@$(ECHO) "compat wireless bringup..."
-	cd $(COMPAT_WIRELESS_DIR) ; git checkout $(COMPAT_WIRELESS_HASH) -b vanilla
-	cd $(COMPAT_WIRELESS_DIR) ; if [ -f ./patches/03-* ] ; then $(DEL) ./patches/03-* ; fi
-	cd $(COMPAT_WIRELESS_DIR) ; if [ -f ./patches/35-* ] ; then $(DEL) ./patches/35-* ; fi
-	cd $(COMPAT_WIRELESS_DIR) ; if [ -f ./patches/40-* ] ; then $(DEL) ./patches/40-* ; fi
-	cd $(COMPAT_WIRELESS_DIR) ; git am $(NLCP_COMPAT_WIRELESS_PATCHES_DIR)/0002-fix-patch-threaded-irq.patch
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS))
 	@$(call print, "compat wireless bringup done")
@@ -156,11 +152,15 @@ $(PROGRESS_NLCP_FETCH_HOSTAP): $(PROGRESS_BRINGUP_MYDROID)
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_FETCH_HOSTAP))
 	@$(call print, "hostapd/supplicant repository fetched")
 	
-$(PROGRESS_NLCP_BRINGUP_HOSTAP): $(PROGRESS_NLCP_FETCH_HOSTAP)
+$(PROGRESS_NLCP_BRINGUP_HOSTAP): $(PROGRESS_NLCP_BRINGUP_WL12xx) $(PROGRESS_NLCP_FETCH_HOSTAP)
 	@$(ECHO) "hostapd/supplicant bringup..."
 	$(MKDIR) -p $(HOSTAP_DIR)
 	cd $(HOSTAP_DIR) ; git checkout origin/$(HOSTAP_BRANCH) -b $(HOSTAP_BRANCH)
 	cd $(HOSTAP_DIR) ; git reset --hard $(HOSTAP_TAG)
+	@$(call print, "=============================================")
+	@$(call print, "TODO: update nl80211.h from wl12xx dir")
+	@$(call print, "=============================================")
+#	$(COPY) $(WL12xx_DIR)/
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_HOSTAP))
 	@$(call print, "hostapd/supplicant bringup done")

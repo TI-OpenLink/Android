@@ -266,10 +266,10 @@ nlcp-update-firmware-files:			$(PROGRESS_NLCP_BRINGUP_TI_UTILS)
 #	we move it to the android fw hardware project (which installs it during android make)
 	@$(MKDIR) -p $(MYDROID)/hardware/wlan/fw
 	@$(ECHO) "Updating latest firmware binaries from ti-utils project..."
-	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl1271-fw-multirole-plt.bin $(MYDROID)/hardware/wlan/fw
-	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl1271-fw-multirole-roc.bin $(MYDROID)/hardware/wlan/fw
-	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl128x-fw-multirole-plt.bin $(MYDROID)/hardware/wlan/fw
-	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl128x-fw-multirole-roc.bin $(MYDROID)/hardware/wlan/fw
+	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl128x-fw-mr_plt.bin.r4 $(MYDROID)/hardware/wlan/fw
+	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl128x-fw-mr_plt.bin.r5 $(MYDROID)/hardware/wlan/fw
+	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl128x-fw-mr.bin.r4 $(MYDROID)/hardware/wlan/fw
+	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl128x-fw-mr.bin.r5 $(MYDROID)/hardware/wlan/fw
 	@$(ECHO) "...done"
 	
 .PHONY += nlcp-update-firmware-files

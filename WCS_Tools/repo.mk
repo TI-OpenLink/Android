@@ -25,24 +25,30 @@
 #
 ################################################################################
 
+OMAP_REPO_TOOL:=git://git.omapzoom.org/tools/repo
+OMAP_REPO_BRANCH:=master
+
 # -----------------------------------------------------------------------------
 # mydroid repository definitions
 # -----------------------------------------------------------------------------
-OMAPMANIFEST_REPO = git://git.omapzoom.org/platform/omapmanifest.git
-OMAPMANIFEST_TAG = RLS27.13.1_Gingerbread.xml
-OMAPMANIFEST_HASH = 
+
+OMAPMANIFEST_REPO:=git://git.omapzoom.org/platform/omapmanifest.git
+OMAPMANIFEST_BRANCH:=27.x
+#ics-mr0
+OMAPMANIFEST_XMLFILE:=RLS27.I.ENG.2_IcecreamSandwich.xml
+OMAPMANIFEST_HASH:= 
 
 # -----------------------------------------------------------------------------
 # kernel repository definitions
 # -----------------------------------------------------------------------------
-KERNEL_REPO = git://git.omapzoom.org/kernel/omap.git
-KERNEL_TAG_HASH = c2573e171d3991810ebe7d933f5646eaaaf019c7
+KERNEL_REPO:=git://git.omapzoom.org/kernel/omap.git
+KERNEL_TAG_HASH:=c738ec9855aad23216fbddf72265613a23a00cb9
 
 # -----------------------------------------------------------------------------
 # x-loader repository definitions
 # -----------------------------------------------------------------------------
-XLOADER_REPO = git://git.omapzoom.org/repo/x-loader.git
-XLOADER_TAG_HASH = 1aee45bbcf4f94cd4558315f5a5464ae33ce84b4
+XLOADER_REPO:=git://git.omapzoom.org/repo/x-loader.git
+XLOADER_TAG_HASH:=4361857120dc8b3fae5ee9861fe406a9aae67c8b
 
 # -----------------------------------------------------------------------------
 # u-boot repository definitions
@@ -50,7 +56,5 @@ XLOADER_TAG_HASH = 1aee45bbcf4f94cd4558315f5a5464ae33ce84b4
 # Note: 
 # L27.INC1.11.1 u-boot release is corrupted - sd card boot is not available,
 # we are using an older version (L27.INC1.10.1) 
-UBOOT_REPO = git://git.omapzoom.org/repo/u-boot.git
-UBOOT_TAG_HASH = bf5e493e24af4cc400eaac23ef428325fb06918c
-# official release version:
-# UBOOT_TAG_HASH = 601ff71c8d46b5e90e13613974a16d10f2006bb3
+UBOOT_REPO:=git://git.omapzoom.org/repo/u-boot.git
+UBOOT_TAG_HASH:=0b595b50d298d58933227c2ded3bffac677a6f91

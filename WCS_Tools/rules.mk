@@ -25,12 +25,20 @@
 #
 ################################################################################
 
+$(PROGRESS_DIR):
+	@$(MKDIR) -p $(PROGRESS_DIR)
+
 $(PROGRESS_FETCH_MANIFEST):
-#	git clone git://git.omapzoom.org/platform/omapmanifest.git $(MANIFEST)
-#	@cd $(MANIFEST) ; git reset --hard $(OMAPMANIFEST_TAG)
+	@$(ECHO) "getting manifest"...
+	@$(MAKE) $(PROGRESS_DIR)
+	@$(ECHO) "$(PROGRESS_FETCH_MANIFEST)"
+	@git clone $(OMAPMANIFEST_REPO) $(MANIFEST)
+	@cd $(MANIFEST) ; git checkout origin/$(OMAPMANIFEST_BRANCH) -b $(OMAPMANIFEST_BRANCH)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MANIFEST))
-	@$(call print, "manifest for $(OMAPMANIFEST_TAG) retrieved")
+	@$(call print, "manifest for $(OMAPMANIFEST_BRANCH) retrieved")
 	@$(call echo-to-file, "PACKAGE SOURCE: git -> $(GIT_PROTOCOL_USE)", $(PROGRESS_FETCH_METHOD))
+	
+omapmanifest-bringup: $(PROGRESS_FETCH_MANIFEST)
 
 ifeq ($(GIT_PROTOCOL_USE), opbu)
 $(PROGRESS_FETCH_MYDROID):
@@ -53,31 +61,34 @@ error-opbu_missing:
 	$(error OPBU tar file is missing or not defined)
 else
 $(PROGRESS_FETCH_MYDROID): $(PROGRESS_FETCH_MANIFEST)
+	@$(ECHO) "$(PROGRESS_FETCH_MYDROID)"
+	@$(MAKE) $(PROGRESS_DIR)
 	@$(MKDIR) -p $(MYDROID)
 #	cd $(MYDROID) ; repo init -u $(MANIFEST) ; repo sync
 	cd $(MYDROID) ; \
-	repo init -u $(OMAPMANIFEST_REPO) -b 27.x -m $(OMAPMANIFEST_TAG) --repo-branch=master --repo-url=git://git.omapzoom.org/tools/repo ; \
-	 repo sync --no-repo-verify
+	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) ; \
+	$(COPY) $(MANIFESTS_PATH)/mydroid.xml $(MYDROID)/.repo/manifest.xml ; \
+	repo sync --no-repo-verify
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MYDROID))
 	@$(call print, "android filesystem retrieved")
 endif
 
-$(PROGRESS_FETCH_KERNEL):
+$(PROGRESS_FETCH_KERNEL): $(PROGRESS_FETCH_MANIFEST)
 	@$(MKDIR) -p $(KERNEL_DIR)
 	git clone $(KERNEL_REPO) $(KERNEL_DIR)
-	cd $(KERNEL_DIR) ; git checkout $(KERNEL_TAG_HASH)
+	cd $(KERNEL_DIR) ; git checkout $(KERNEL_TAG_HASH) -b vanilla
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_KERNEL))
 	@$(call print, "kernel version $(KERNEL_VERSION) retrieved")
 
-$(PROGRESS_FETCH_UBOOT):
+$(PROGRESS_FETCH_UBOOT): 
 	git clone $(UBOOT_REPO) $(UBOOT_DIR)
-	cd $(UBOOT_DIR) ; git checkout $(UBOOT_TAG_HASH)
+	cd $(UBOOT_DIR) ; git checkout $(UBOOT_TAG_HASH) -b vanilla
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_UBOOT))
 	@$(call print, "u-boot retrieved")
 
-$(PROGRESS_FETCH_XLOADER):
+$(PROGRESS_FETCH_XLOADER): 
 	git clone $(XLOADER_REPO) $(XLOADER_DIR)
-	cd $(XLOADER_DIR) ; git checkout $(XLOADER_TAG_HASH)
+	cd $(XLOADER_DIR) ; git checkout $(XLOADER_TAG_HASH) -b vanilla
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_XLOADER))
 	@$(call print, "x-loader retrieved")
 
@@ -106,7 +117,10 @@ $(PROGRESS_BRINGUP_KERNEL): $(PROGRESS_FETCH_KERNEL)
 kernel-bringup: 	$(PROGRESS_BRINGUP_KERNEL)
 
 $(PROGRESS_BRINGUP_MYDROID): $(PROGRESS_FETCH_MYDROID)
-	@$(COPY) -Rfp $(MYDROID)/device/ti/blaze/buildspec.mk.default $(MYDROID)/buildspec.mk
+	@$(ECHO) "$(PROGRESS_BRINGUP_MYDROID)"
+	
+	@cd $(MYDROID) ; source build/envsetup.sh ; lunch 6
+#	@$(COPY) -Rfp $(MYDROID)/device/ti/blaze/buildspec.mk.default $(MYDROID)/buildspec.mk
 	$(MAKE) -C $(MYDROID) -j$(NTHREADS) clean
 #	$(DEL) $(MYDROID)/device/ti/blaze/overlay/packages/apps/Launcher2/res/layout/all_apps.xml
 #	$(MAKE) -C $(MYDROID) -j$(NTHREADS) update-api
@@ -130,7 +144,7 @@ kernel-make: 		$(PROGRESS_BRINGUP_KERNEL) \
 	@$(call print, "kernel make done")
 
 mydroid-make: 		$(PROGRESS_BRINGUP_MYDROID)
-	$(MAKE) -C $(MYDROID) -j$(NTHREADS) 2>&1
+	cd $(MYDROID) ; source build/envsetup.sh ; lunch 6 ; $(MAKE) -j$(NTHREADS) 2>&1
 	@$(call print, "mydroid make done")
 
 $(UBOOT_DIR)/u-boot.bin:
@@ -162,8 +176,8 @@ mydroid-install:
 	@$(CHMOD) 777 $(MYFS_PATH)/data/busybox
 	cd $(MYFS_PATH)/data/busybox ; source $(WIIST_PATH)/misc/scripts/create_busybox_symlink.sh
 
-	@$(ECHO) extract graphics...
-	@$(COPY) -rf $(MYDROID)/device/ti/proprietary-open/graphics/omap4/* $(MYFS_PATH)/
+#	@$(ECHO) extract graphics...
+#	@$(COPY) -rf $(MYDROID)/device/ti/proprietary-open/graphics/omap4/* $(MYFS_PATH)/
 	
 	@$(ECHO) extract prebuilt binaries...
 	$(MAKE) binaries-install
@@ -217,6 +231,7 @@ u-boot-clean: 		$(PROGRESS_BRINGUP_UBOOT)
 	
 u-boot-distclean: 	$(PROGRESS_BRINGUP_UBOOT)
 	$(MAKE) -C $(UBOOT_DIR) distclean 2>&1
+	@$(DEL) $(PROGRESS_BRINGUP_UBOOT)
 	@$(call print, "u-boot distclean done")
 
 x-loader-clean: 	$(PROGRESS_BRINGUP_XLOADER)
@@ -225,6 +240,7 @@ x-loader-clean: 	$(PROGRESS_BRINGUP_XLOADER)
 
 x-loader-distclean: $(PROGRESS_BRINGUP_XLOADER)
 	$(MAKE) -C $(XLOADER_DIR) distclean 2>&1
+	@$(DEL) $(PROGRESS_BRINGUP_XLOADER)
 	@$(call print, "x-loader distclean done")
 
 kernel-clean: 		$(PROGRESS_BRINGUP_KERNEL)
@@ -233,6 +249,7 @@ kernel-clean: 		$(PROGRESS_BRINGUP_KERNEL)
 	
 kernel-distclean:	$(PROGRESS_BRINGUP_KERNEL)
 	$(MAKE) -C $(KERNEL_DIR) -j$(NTHREADS) ARCH=arm distclean
+	@$(DEL) $(PROGRESS_BRINGUP_KERNEL)
 	@$(call print, "kernel distclean done")
 
 mydroid-clean: 		$(PROGRESS_BRINGUP_MYDROID)

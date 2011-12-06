@@ -29,7 +29,7 @@
 ifndef DEFS_MK_INCLUDED
 DEFS_MK_INCLUDED:=included
 
-VERSION:=L27.INC1.13.1
+VERSION:=ICS-DailyBuild_305
 
 YOUR_PATH:=$(PWD)
 export YOUR_PATH
@@ -39,6 +39,7 @@ export YOUR_PATH
 ################################################################################
 
 WIIST_PATH:=$(PWD)/WCS_Tools
+MANIFESTS_PATH:=$(WIIST_PATH)/manifests
 PATCHES_PATH:=$(WIIST_PATH)/patches
 BINARIES_PATH=$(WIIST_PATH)/binaries
 MAKEFILES_PATH:=$(WIIST_PATH)/cores_make
@@ -58,7 +59,7 @@ export MANIFEST
 MYDROID:=$(WORKSPACE_DIR)/mydroid
 export MYDROID
 
-KERNEL_VERSION:=android-2.6.35
+KERNEL_VERSION:=p-android-omap-3.0
 KERNEL_DIR:=$(WORKSPACE_DIR)/kernel/$(KERNEL_VERSION)
 UBOOT_DIR:=$(WORKSPACE_DIR)/u-boot
 XLOADER_DIR:=$(WORKSPACE_DIR)/x-loader
@@ -91,7 +92,7 @@ endif
 
 UBOOT_PLATFORM_CONFIG:=omap4430sdp_config
 XLOADER_PLATFORM_CONFIG:=omap4430sdp_config
-KERNEL_PLATFORM_CONFIG:=android_4430_defconfig
+KERNEL_PLATFORM_CONFIG:=blaze_defconfig
 
 ################################################################################
 # output paths
@@ -109,10 +110,10 @@ EMMC_PATH:=$(OUTPUT_PATH)/eMMC
 # project configration
 ################################################################################
 
-CONFIG_NLCP?=y
-CONFIG_BT?=y
-CONFIG_TIST?=y
-CONFIG_FM?=y
+CONFIG_NLCP?=n
+CONFIG_BT?=n
+CONFIG_TIST?=n
+CONFIG_FM?=n
 CONFIG_GPS?=n
 
 WLAN_STA_SOURCE_PATH?=

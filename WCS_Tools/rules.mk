@@ -172,19 +172,19 @@ mydroid-install:
 	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/root/* $(MYFS_PATH)
 	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/system/ $(MYFS_PATH)
 	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/data/ $(MYFS_PATH)
-	@$(MKDIR) -p $(MYFS_PATH)/data/busybox
-	@$(CHMOD) 777 $(MYFS_PATH)/data/busybox
-	cd $(MYFS_PATH)/data/busybox ; source $(WIIST_PATH)/misc/scripts/create_busybox_symlink.sh
+#	@$(MKDIR) -p $(MYFS_PATH)/data/busybox
+#	@$(CHMOD) 777 $(MYFS_PATH)/data/busybox
+#	cd $(MYFS_PATH)/data/busybox ; source $(WIIST_PATH)/misc/scripts/create_busybox_symlink.sh
 
 #	@$(ECHO) extract graphics...
 #	@$(COPY) -rf $(MYDROID)/device/ti/proprietary-open/graphics/omap4/* $(MYFS_PATH)/
 	
-	@$(ECHO) extract prebuilt binaries...
-	$(MAKE) binaries-install
+#	@$(ECHO) extract prebuilt binaries...
+#	$(MAKE) binaries-install
 	
-	@$(ECHO) copy init.rc scripts to myfs folder...
-	@$(COPY) -rfv $(INITRC_PATH)/init.rc $(MYFS_PATH)/
-	@$(COPY) -rfv $(INITRC_PATH)/init.omap4430.rc $(MYFS_PATH)/
+#	@$(ECHO) copy init.rc scripts to myfs folder...
+#	@$(COPY) -rfv $(INITRC_PATH)/init.rc $(MYFS_PATH)/
+#	@$(COPY) -rfv $(INITRC_PATH)/init.omap4430.rc $(MYFS_PATH)/
 	
 	@$(call print, "mydroid install done")
 

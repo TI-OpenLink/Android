@@ -144,24 +144,21 @@ create-images: $(OUTPUT_PATH_SD)/$(VERSION).sd.tar
 	$(COPY) -f $(BOOT_PATH)/MLO* $(EMMC_PATH)
 	$(COPY) -f $(KERNEL_DIR)/arch/arm/boot/zImage $(EMMC_PATH)
 
-#	$(FIND) $(OUTPUT_IMG_DIR) -name *.img -exec rm -f {} \;
-#	# echo instead of just copy since there are ommited directories (which causes errors)
-#	$(ECHO) `$(COPY) $(MYFS_PATH)/* $(OUTPUT_IMG_DIR)/root`
-#	$(COPY) -rf $(MYFS_PATH)/system/* $(OUTPUT_IMG_DIR)/system
-#	$(COPY) -rf $(MYFS_PATH)/data/* $(OUTPUT_IMG_DIR)/data	
-#	$(MAKE) mydroid-make
+	$(FIND) $(OUTPUT_IMG_DIR) -name *.img -exec rm -f {} \;
+	# echo instead of just copy since there are ommited directories (which causes errors)
+	$(ECHO) `$(COPY) $(MYFS_PATH)/* $(OUTPUT_IMG_DIR)/root`
+	$(COPY) -rf $(MYFS_PATH)/system/* $(OUTPUT_IMG_DIR)/system
+	$(COPY) -rf $(MYFS_PATH)/data/* $(OUTPUT_IMG_DIR)/data	
+	$(MAKE) mydroid-make
 	
 	#copy all android generated images to local folder
 	$(COPY) -f $(OUTPUT_IMG_DIR)/*.img $(EMMC_PATH)
 	
 	# create boot .img
 	if [ -f $(EMMC_PATH)/boot.img ] ; then $(DEL) $(EMMC_PATH)/boot.img ; fi
-#	cd $(EMMC_PATH) ; ./mkbootimg --kernel zImage --ramdisk ramdisk.img --base 0x80000000 --cmdline "console=ttyO2,115200n8 rootdelay=2 mem=456M@0x80000000 mem=512M@0xA0000000 init=/init vram=10M omapfb.vram=0:4M androidboot.console=ttyO2" --board omap4 -o boot.img
 	cd $(EMMC_PATH) ; ./mkbootimg --kernel zImage --ramdisk ramdisk.img --base 0x80000000 --cmdline "console=ttyO2,115200n8" --board omap4 -o boot.img
 	
 	# create cache.img partiotion
-#	cd $(EMMC_PATH) ; dd if=/dev/zero of=./cache.img bs=1048510 count=128
-#	cd $(EMMC_PATH) ; $(MKFS_EXT4) -F cache.img -L cache
 	cd $(EMMC_PATH) ; ./make_ext4fs -s -l 256M -a cache cache.img
 
 	# create efs.img partiotion

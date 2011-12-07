@@ -110,7 +110,7 @@ EMMC_PATH:=$(OUTPUT_PATH)/eMMC
 # project configration
 ################################################################################
 
-CONFIG_NLCP?=n
+CONFIG_NLCP?=y
 CONFIG_BT?=n
 CONFIG_TIST?=n
 CONFIG_FM?=n

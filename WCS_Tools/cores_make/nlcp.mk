@@ -253,15 +253,18 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 	@$(ECHO) "copying additional packages to mydroid directory..."
 	$(MKDIR) -p $(TRASH_DIR)/hardware/wlan
 	$(MKDIR) -p $(MYDROID)/hardware/wlan
-#	if [ -f $(MYDROID)/hardware/wlan/Android.mk ] ; then $(MOVE) $(MYDROID)/hardware/wlan/Android.mk $(TRASH_DIR)/hardware/wlan/ ; fi
-#	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/Android.mk $(MYDROID)/hardware/wlan/Android.mk		
+	# add an recursive Android.mk to new mydroid/hardware/wlan directory
+	if [ -f $(MYDROID)/hardware/wlan/Android.mk ] ; then $(MOVE) $(MYDROID)/hardware/wlan/Android.mk $(TRASH_DIR)/hardware/wlan/ ; fi
+	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/Android.mk $(MYDROID)/hardware/wlan/Android.mk
+	# add the firmware project (only Android.mk, the binaries are copied during 'nlcp-update-firmware-files')
+	if [ -d $(MYDROID)/hardware/wlan/fw ] ; then $(MOVE) $(MYDROID)/hardware/wlan/fw $(TRASH_DIR)/hardware/wlan/ ; fi
+	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/fw $(MYDROID)/hardware/wlan/fw
+			
 #	if [ -d $(MYDROID)/hardware/wlan/initial_regdom ] ; then $(MOVE) $(MYDROID)/hardware/wlan/initial_regdom $(TRASH_DIR)/hardware/wlan/ ; fi
 #	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/initial_regdom $(MYDROID)/hardware/wlan/initial_regdom	
 #	if [ -d $(MYDROID)/hardware/wlan/wifi_conf ] ; then $(MOVE) $(MYDROID)/hardware/wlan/wifi_conf $(TRASH_DIR)/hardware/wlan/ ; fi
 #	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/wifi_conf $(MYDROID)/hardware/wlan/wifi_conf
 	@$(ECHO) "...done"
-	if [ -d $(MYDROID)/hardware/wlan/fw ] ; then $(MOVE) $(MYDROID)/hardware/wlan/fw $(TRASH_DIR)/hardware/wlan/ ; fi
-	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/fw $(MYDROID)/hardware/wlan/fw
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_MYDROID_PATCHES))
 	$(MAKE) nlcp-update-firmware-files
 	@$(call print, "android patches and packages done")

@@ -118,10 +118,10 @@ kernel-bringup: 	$(PROGRESS_BRINGUP_KERNEL)
 
 $(PROGRESS_BRINGUP_MYDROID): $(PROGRESS_FETCH_MYDROID)
 	@$(ECHO) "$(PROGRESS_BRINGUP_MYDROID)"
-	
-	@cd $(MYDROID) ; source build/envsetup.sh ; lunch 6
 #	@$(COPY) -Rfp $(MYDROID)/device/ti/blaze/buildspec.mk.default $(MYDROID)/buildspec.mk
-	$(MAKE) -C $(MYDROID) -j$(NTHREADS) clean
+	@cd $(MYDROID) ; source build/envsetup.sh ; lunch 6 ; $(MAKE) -j$(NTHREADS) clean 2>&1
+#	@cd $(MYDROID) ; source build/envsetup.sh ; lunch 6
+#	$(MAKE) -C $(MYDROID) -j$(NTHREADS) clean
 #	$(DEL) $(MYDROID)/device/ti/blaze/overlay/packages/apps/Launcher2/res/layout/all_apps.xml
 #	$(MAKE) -C $(MYDROID) -j$(NTHREADS) update-api
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_MYDROID))

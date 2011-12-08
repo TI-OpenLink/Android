@@ -254,7 +254,7 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 	cd $(MYDROID)/device/ti/blaze ; \
 		git am $(NLCP_ANDROID_PATCHES)/patches/device/ti/blaze/*.patch
 	# remove the mac80211 config folder
-	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/config ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/config $(TRASH) ; fi
+	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/config ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/config $(TRASH_DIR) ; fi
 
 	@$(ECHO) "copying additional packages to mydroid directory..."
 	$(MKDIR) -p $(TRASH_DIR)/hardware/wlan

@@ -249,6 +249,8 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 
 	cd $(MYDROID)/system/core/libnl_2; \
 		git am $(NLCP_ANDROID_PATCHES)/patches/system/core/libnl_2/*.patch
+	cd $(MYDROID)/device/ti/blaze ; \
+		git am $(NLCP_ANDROID_PATCHES)/patches/device/ti/blaze/*.patch
 
 	@$(ECHO) "copying additional packages to mydroid directory..."
 	$(MKDIR) -p $(TRASH_DIR)/hardware/wlan

@@ -1,0 +1,32 @@
+From 24333aff67e84cc7837060490503d621d6291944 Mon Sep 17 00:00:00 2001
+From: Ido Reis <idor@ti.com>
+Date: Thu, 8 Dec 2011 21:35:31 +0200
+Subject: [PATCH] added fw files to product output
+
+Change-Id: I58df2816f42414062015a0d009d84d3eb4ffc8f0
+Signed-off-by: Ido Reis <idor@ti.com>
+---
+ device.mk |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/device.mk b/device.mk
+index 16d038f..d0f5ce9 100644
+--- a/device.mk
++++ b/device.mk
+@@ -123,7 +123,12 @@ PRODUCT_PACKAGES += \
+ 	TQS_D_1.7_127x.ini \
+ 	crda \
+ 	regulatory.bin \
+-	calibrator
++	calibrator \
++	wl1271-nvs.bin \
++	wl128x-fw-mr.bin.r4 \
++	wl128x-fw-mr.bin.r5 \
++	wl128x-fw-mr_plt.bin.r4 \
++	wl128x-fw-mr_plt.bin.r5 
+ 
+ # Audio HAL module
+ PRODUCT_PACKAGES += audio.primary.blaze
+-- 
+1.7.0.4
+

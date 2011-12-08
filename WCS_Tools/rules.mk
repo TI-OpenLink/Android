@@ -119,7 +119,7 @@ kernel-bringup: 	$(PROGRESS_BRINGUP_KERNEL)
 $(PROGRESS_BRINGUP_MYDROID): $(PROGRESS_FETCH_MYDROID)
 	@$(ECHO) "$(PROGRESS_BRINGUP_MYDROID)"
 #	@$(COPY) -Rfp $(MYDROID)/device/ti/blaze/buildspec.mk.default $(MYDROID)/buildspec.mk
-	@cd $(MYDROID) ; source build/envsetup.sh ; $(MAKE) PRODUCT-full_blaze-userdebug -j$(NTHREADS) clean 2>&1
+	@cd $(MYDROID) ; source build/envsetup.sh ; $(MAKE) -j$(NTHREADS) clean 2>&1
 #	$(DEL) $(MYDROID)/device/ti/blaze/overlay/packages/apps/Launcher2/res/layout/all_apps.xml
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_MYDROID))
 	@$(call print, "mydroid bringup done")

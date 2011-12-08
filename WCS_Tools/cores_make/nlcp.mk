@@ -155,6 +155,8 @@ $(PROGRESS_NLCP_BRINGUP_HOSTAP): $(PROGRESS_NLCP_FETCH_HOSTAP)
 	@$(ECHO) "hostapd/supplicant bringup..."
 	$(MKDIR) -p $(HOSTAP_DIR)
 	cd $(HOSTAP_DIR) ; git checkout $(HOSTAP_REMOTE_NAME)/$(HOSTAP_BRANCH) -b $(HOSTAP_BRANCH)
+	@$(ECHO) "updating nl80211 interface from driver code"
+	$(COPY) $(WL12xx_DIR)/include/linux/nl80211.h $(HOSTAP_DIR)/src/drivers/nl80211_copy.h
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_HOSTAP))
 	@$(call print, "hostapd/supplicant bringup done")

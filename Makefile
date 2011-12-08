@@ -54,6 +54,7 @@ ifeq ($(USE_INTERNALS),yes)
 	$(MAKE) update-internals
 endif
 endif
+	@if [ -d $(TRASH_DIR) ] ; then $(DEL) -rf $(TRASH_DIR) ; fi
 	@$(MKDIR) -p $(TRASH_DIR)
 	@$(MKDIR) -p $(PROGRESS_DIR)
 	@$(MAKE) ti-st-pre-bringup-validation
@@ -188,6 +189,7 @@ clean: bringup
 distclean:
 	@if [ -f bringup ] ; then $(DEL) -rf bringup ; fi
 	@if [ -d $(PROGRESS_DIR) ] ; then $(ECHO) removing $(PROGRESS_DIR) directory ; $(DEL) -rf $(PROGRESS_DIR) ; fi
+	@if [ -d $(TRASH_DIR) ] ; then $(ECHO) removing $(TRASH_DIR) directory ; $(DEL) -rf $(TRASH_DIR) ; fi
 	@if [ -d $(OUTPUT_PATH) ] ; then $(ECHO) removing $(OUTPUT_PATH) directory ; $(DEL) -rf $(OUTPUT_PATH) ; fi
 	@if [ -d $(MANIFEST) ] ; then $(ECHO) removing $(MANIFEST) directory ; $(DEL) -rf $(MANIFEST) ; fi
 	@if [ -d $(WORKSPACE_DIR) ] ; then $(ECHO) removing $(WORKSPACE_DIR) directory ; $(DEL) -rf $(WORKSPACE_DIR) ; fi

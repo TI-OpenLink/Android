@@ -106,6 +106,10 @@ MYFS_PATH:=$(OUTPUT_PATH_SD)/rootfs
 BOOT_PATH:=$(OUTPUT_PATH_SD)/boot
 EMMC_PATH:=$(OUTPUT_PATH)/eMMC
 
+MYFS_ROOT_PATH:=$(OUTPUT_IMG_DIR)/root
+MYFS_SYSTEM_PATH:=$(OUTPUT_IMG_DIR)/system
+MYFS_DATA_PATH:=$(OUTPUT_IMG_DIR)/data
+
 ################################################################################
 # project configration
 ################################################################################

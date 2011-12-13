@@ -228,33 +228,11 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 				$(PROGRESS_NLCP_BRINGUP_IW) \
 				$(PROGRESS_NLCP_BRINGUP_TI_UTILS)
 	@$(ECHO) "patching android for nlcp..."
-#	cd $(MYDROID)/build; \
-#		git am $(NLCP_ANDROID_PATCHES)/build/*patch
-#	cd $(MYDROID)/device/ti/blaze; \
-#		git am $(NLCP_ANDROID_PATCHES)/device.ti.blaze/*patch
-#	cd $(MYDROID)/external/hostapd; \
-# 		git am $(NLCP_ANDROID_PATCHES)/external.hostapd/*patch
-#	cd $(MYDROID)/external/openssl; \
-# 		git am $(NLCP_ANDROID_PATCHES)/external.openssl/*patch
-##	cd $(MYDROID)/external/ti-utils; \
-# 		git am $(NLCP_ANDROID_PATCHES)/external.ti-utils/*patch
-#	cd $(MYDROID)/external/wpa_supplicant_6; \
-#	 	git am $(NLCP_ANDROID_PATCHES)/external.wpa_supplicant_6/*patch
-#	cd $(MYDROID)/frameworks/base; \
-#		git am $(NLCP_ANDROID_PATCHES)/frameworks.base/*.patch
-#	cd $(MYDROID)/hardware/libhardware_legacy; \
-#		git am $(NLCP_ANDROID_PATCHES)/hardware.libhardware_legacy/*.patch
-#	cd $(MYDROID)/system/netd; \
-#		git am $(NLCP_ANDROID_PATCHES)/system.netd/*.patch
-#	@$(ECHO) "...done"
-#	
 
 	cd $(MYDROID)/system/core/libnl_2; \
 		git am $(NLCP_ANDROID_PATCHES)/patches/system/core/libnl_2/*.patch
 	cd $(MYDROID)/device/ti/blaze ; \
 		git am $(NLCP_ANDROID_PATCHES)/patches/device/ti/blaze/*.patch
-	# remove the mac80211 config folder
-	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/config ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/config $(TRASH_DIR) ; fi
 
 	@$(ECHO) "copying additional packages to mydroid directory..."
 	$(MKDIR) -p $(TRASH_DIR)/hardware/wlan
@@ -265,13 +243,17 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 	# add the firmware project (only Android.mk, the binaries are copied during 'nlcp-update-firmware-files')
 	if [ -d $(MYDROID)/hardware/wlan/fw ] ; then $(MOVE) $(MYDROID)/hardware/wlan/fw $(TRASH_DIR)/hardware/wlan/ ; fi
 	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/fw $(MYDROID)/hardware/wlan/fw
+
+#	# remove the mac80211 config folder
+#	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/config ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/config $(TRASH_DIR) ; fi
 	# remove omap's ti-utils project from ics
 	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils $(TRASH_DIR) ; fi
-			
-#	if [ -d $(MYDROID)/hardware/wlan/initial_regdom ] ; then $(MOVE) $(MYDROID)/hardware/wlan/initial_regdom $(TRASH_DIR)/hardware/wlan/ ; fi
-#	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/initial_regdom $(MYDROID)/hardware/wlan/initial_regdom	
-#	if [ -d $(MYDROID)/hardware/wlan/wifi_conf ] ; then $(MOVE) $(MYDROID)/hardware/wlan/wifi_conf $(TRASH_DIR)/hardware/wlan/ ; fi
-#	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/wifi_conf $(MYDROID)/hardware/wlan/wifi_conf
+	
+#	# update wpa_supplicant.conf template file to $(MYDROID)/external/wpa_supplicant_8/wpa_supplicant
+#	$(COPY) $(NLCP_BINARIES_PATH)/system/etc/wifi/wpa_supplicant.conf $(MYDROID)/external/wpa_supplicant_8/wpa_supplicant
+	# update hostapd.conf to $(MYDROID)/hardware/ti/wlan/mac80211/config project
+	$(COPY) $(NLCP_BINARIES_PATH)/system/etc/wifi/hostapd.conf $(MYDROID)/hardware/ti/wlan/mac80211/config
+
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_MYDROID_PATCHES))
 	$(MAKE) nlcp-update-firmware-files
@@ -331,20 +313,22 @@ nlcp-make-private:	$(PROGRESS_NLCP_BRINGUP_COMPAT) \
 	$(MAKE) -C $(COMPAT_WIRELESS_DIR) KLIB=$(KERNEL_DIR) KLIB_BUILD=$(KERNEL_DIR) -j$(NTHREADS)
 
 	@$(ECHO) "...done"
-	
+
+NLCP_KO_TARGET_PATH:=$(MYFS_SYSTEM_PATH)/lib/modules
+
 nlcp-install-private:
 	@$(ECHO) "nlcp install..."
-	$(MKDIR) -p $(MYFS_PATH)/system/lib/modules
+	$(MKDIR) -p $(NLCP_KO_TARGET_PATH)
 	@$(ECHO) "copy modules from compat-wireless"
-	$(FIND) $(COMPAT_WIRELESS_DIR) -name "*.ko" -exec cp -f {}  $(MYFS_PATH)/system/lib/modules/ \;
+	$(FIND) $(COMPAT_WIRELESS_DIR) -name "*.ko" -exec cp -f {}  $(NLCP_KO_TARGET_PATH) \;
 	@$(ECHO) "copy modules from kernel"
-	$(FIND) $(KERNEL_DIR)/drivers/staging -name "*.ko" -exec cp -v {} $(MYFS_PATH) \;
+	$(FIND) $(KERNEL_DIR)/drivers/staging -name "*.ko" -exec cp -v {} $(MYFS_ROOT_PATH) \;
 #	@$(ECHO) "patching init.omap4430.rc"
 #	cd $(MYFS_PATH) ; $(PATCH) -p1 --dry-run < $(NLCP_PATCHES_PATH)/nlcp.init.omap4430.rc.patch
 #	cd $(MYFS_PATH) ; $(PATCH) -p1 < $(NLCP_PATCHES_PATH)/nlcp.init.omap4430.rc.patch
-	@$(ECHO) "copying additinal binaries to file system"
-	$(COPY) -rf $(NLCP_BINARIES_PATH)/* $(MYFS_PATH)
-	$(CHMOD) -R 777 $(MYFS_PATH)/data/misc/wifi/*
+#	@$(ECHO) "copying additinal binaries to file system"
+#	$(COPY) -rf $(NLCP_BINARIES_PATH)/* $(MYFS_PATH)
+#	$(CHMOD) -R 777 $(MYFS_PATH)/data/misc/wifi/*
 	@$(ECHO) "...done"
 	
 nlcp-clean-private:

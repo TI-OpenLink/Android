@@ -166,18 +166,15 @@ kernel-install: 	$(KERNEL_DIR)/arch/arm/boot/uImage
 	$(call print, "kernel install done")
 
 mydroid-install:
-	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/root/* $(MYFS_PATH)
-	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/system/ $(MYFS_PATH)
-	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/data/ $(MYFS_PATH)
+#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/root/* $(MYFS_PATH)
+#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/system/ $(MYFS_PATH)
+#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/data/ $(MYFS_PATH)
 #	@$(MKDIR) -p $(MYFS_PATH)/data/busybox
 #	@$(CHMOD) 777 $(MYFS_PATH)/data/busybox
 #	cd $(MYFS_PATH)/data/busybox ; source $(WIIST_PATH)/misc/scripts/create_busybox_symlink.sh
-
-#	@$(ECHO) extract graphics...
-#	@$(COPY) -rf $(MYDROID)/device/ti/proprietary-open/graphics/omap4/* $(MYFS_PATH)/
 	
-#	@$(ECHO) extract prebuilt binaries...
-#	$(MAKE) binaries-install
+	@$(ECHO) extract prebuilt binaries...
+	$(MAKE) binaries-install
 	
 #	@$(ECHO) copy init.rc scripts to myfs folder...
 #	@$(COPY) -rfv $(INITRC_PATH)/init.rc $(MYFS_PATH)/
@@ -200,7 +197,7 @@ ifeq ($(CONFIG_NLCP), y)
 	@$(ECHO) "SP Version: $(NLCP_SP_VERSION)" >>$(BINARIES_PATH)/version_ti.txt
 	@$(ECHO) "wl12xx commit id : $(WL12xx_HASH)" >>$(BINARIES_PATH)/version_ti.txt
 	@$(ECHO) "compat commit id : $(COMPAT_HASH)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "compat-wireless-2.6 commit id : $(COMPAT_WIRELESS_HASH)" >>$(BINARIES_PATH)/version_ti.txt
+	@$(ECHO) "compat-wireless commit id : $(COMPAT_WIRELESS_HASH)" >>$(BINARIES_PATH)/version_ti.txt
 endif
 	@$(ECHO) "Built by :" `whoami` "@ " `date` ", on machine:" `hostname`>>$(BINARIES_PATH)/version_ti.txt
 	@$(ECHO) "CROSS COMPILE: $(CROSS_COMPILE)" >>$(BINARIES_PATH)/version_ti.txt
@@ -219,7 +216,7 @@ endif
 	@$(ECHO) "CONFIG_NLCP: $(CONFIG_NLCP)" >>$(BINARIES_PATH)/version_ti.txt
 	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
 	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
-	@$(COPY) -rf $(BINARIES_PATH)/* $(MYFS_PATH)
+	@$(COPY) -rf $(BINARIES_PATH)/* $(MYFS_ROOT_PATH)
 	@$(call print, "binaries copied to target directory")
 
 u-boot-clean: 		$(PROGRESS_BRINGUP_UBOOT)

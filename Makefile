@@ -117,25 +117,26 @@ endif
 	$(MAKE) u-boot-install
 	$(MAKE) x-loader-install
 	$(MAKE) kernel-install
-	$(MAKE) mydroid-install
 	$(MAKE) nlcp-install
 	$(MAKE) ti-st-install
 	$(MAKE) bt-install
 	$(MAKE) gps-install
 	$(MAKE) fm-install
+	$(MAKE) mydroid-install
 
-	$(MAKE) pack-sd-fs
+#	$(MAKE) pack-sd-fs
 	@$(call print, "INSTALL DONE")
 
 pack-sd-fs:
-	@cd $(OUTPUT_PATH_SD) ; $(TAR) cf $(OUTPUT_PATH_SD)/$(VERSION).sd.tar *
-	@cd $(OUTPUT_PATH_SD)/rootfs ; $(TAR) cf $(OUTPUT_PATH_SD)/rootfs.tar *
-	@cd $(OUTPUT_PATH_SD)/boot ; $(TAR) cf $(OUTPUT_PATH_SD)/boot.tar *
+#	@cd $(OUTPUT_PATH_SD) ; $(TAR) cf $(OUTPUT_PATH_SD)/$(VERSION).sd.tar *
+#	@cd $(OUTPUT_PATH_SD)/rootfs ; $(TAR) cf $(OUTPUT_PATH_SD)/rootfs.tar *
+#	@cd $(OUTPUT_PATH_SD)/boot ; $(TAR) cf $(OUTPUT_PATH_SD)/boot.tar *
+#	
+#$(OUTPUT_PATH_SD)/$(VERSION).sd.tar:
+#	$(MAKE) install
 	
-$(OUTPUT_PATH_SD)/$(VERSION).sd.tar:
-	$(MAKE) install
-	
-create-images: $(OUTPUT_PATH_SD)/$(VERSION).sd.tar
+create-images: 
+#$(OUTPUT_PATH_SD)/$(VERSION).sd.tar
 	@if [ -d $(EMMC_PATH) ] ; then $(DEL) -rf $(EMMC_PATH) ; fi
 	$(MKDIR) -p $(EMMC_PATH)
 	$(COPY) -f $(MYDROID)/out/host/linux-x86/bin/fastboot $(EMMC_PATH)
@@ -145,12 +146,12 @@ create-images: $(OUTPUT_PATH_SD)/$(VERSION).sd.tar
 	$(COPY) -f $(BOOT_PATH)/MLO* $(EMMC_PATH)
 	$(COPY) -f $(KERNEL_DIR)/arch/arm/boot/zImage $(EMMC_PATH)
 
-	$(FIND) $(OUTPUT_IMG_DIR) -name *.img -exec rm -f {} \;
-	# echo instead of just copy since there are ommited directories (which causes errors)
-	$(ECHO) `$(COPY) $(MYFS_PATH)/* $(OUTPUT_IMG_DIR)/root`
-	$(COPY) -rf $(MYFS_PATH)/system/* $(OUTPUT_IMG_DIR)/system
-	$(COPY) -rf $(MYFS_PATH)/data/* $(OUTPUT_IMG_DIR)/data	
-	$(MAKE) mydroid-make
+#	$(FIND) $(OUTPUT_IMG_DIR) -name *.img -exec rm -f {} \;
+#	# echo instead of just copy since there are ommited directories (which causes errors)
+#	$(ECHO) `$(COPY) $(MYFS_PATH)/* $(OUTPUT_IMG_DIR)/root`
+#	$(COPY) -rf $(MYFS_PATH)/system/* $(OUTPUT_IMG_DIR)/system
+#	$(COPY) -rf $(MYFS_PATH)/data/* $(OUTPUT_IMG_DIR)/data	
+#	$(MAKE) mydroid-make
 	
 	#copy all android generated images to local folder
 	$(COPY) -f $(OUTPUT_IMG_DIR)/*.img $(EMMC_PATH)

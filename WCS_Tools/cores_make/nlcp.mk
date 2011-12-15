@@ -29,7 +29,8 @@
 #include $(PWD)/defs.mk
 include defs.mk
 
-NLCP_RELEASE_VERSION:=ol_R5.00.02
+NLCP_RELEASE_VERSION:=
+#ol_R5.00.02
 NLCP_SP_VERSION:=
 NLCP_MAIN_REPO:=git://github.com/TI-OpenLink
 
@@ -81,7 +82,8 @@ $(PROGRESS_NLCP_BRINGUP_WL12xx): $(PROGRESS_NLCP_FETCH_WL12xx)
 COMPAT_DIR:=$(WORKSPACE_DIR)/compat
 COMPAT_REPO:=git://github.com/mcgrof/compat.git
 COMPAT_BRANCH:=
-COMPAT_HASH:=984ab77279488f3fea4436da76c0f81a618cef1b
+COMPAT_HASH:=
+#984ab77279488f3fea4436da76c0f81a618cef1b
 
 PROGRESS_NLCP_FETCH_COMPAT:=$(PROGRESS_DIR)/nlcp.compat.fetched
 PROGRESS_NLCP_BRINGUP_COMPAT:=$(PROGRESS_DIR)/nlcp.compat.bringup
@@ -103,7 +105,8 @@ $(PROGRESS_NLCP_BRINGUP_COMPAT): $(PROGRESS_NLCP_FETCH_COMPAT)
 COMPAT_WIRELESS_DIR:=$(WORKSPACE_DIR)/compat-wireless
 COMPAT_WIRELESS_REPO:=git://github.com/mcgrof/compat-wireless.git
 COMPAT_WIRELESS_BRANCH:=
-COMPAT_WIRELESS_HASH:=22c9e40fe140f32a342810fe82a390a6df7827f1
+COMPAT_WIRELESS_HASH:=
+#22c9e40fe140f32a342810fe82a390a6df7827f1
 
 PROGRESS_NLCP_FETCH_COMPAT_WIRELESS:=$(PROGRESS_DIR)/nlcp.compat-wireless.fetched
 PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS:=$(PROGRESS_DIR)/nlcp.compat-wireless.bringup
@@ -124,6 +127,8 @@ $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS):
 $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS): $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS)
 	@$(ECHO) "compat wireless bringup..."
 	cd $(COMPAT_WIRELESS_DIR) ; git reset --hard $(COMPAT_WIRELESS_HASH)
+	$(DEL) $(COMPAT_WIRELESS_DIR)/patches/09-threaded-irq.patch
+	$(DEL) $(COMPAT_WIRELESS_DIR)/patches/40*
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS))
 	@$(call print, "compat wireless bringup done")
@@ -276,7 +281,7 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 	if [ -d $(MYDROID)/hardware/wlan/ko ] ; then $(MOVE) $(MYDROID)/hardware/wlan/ko $(TRASH_DIR)/hardware/wlan/ ; fi
 	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/ko $(MYDROID)/hardware/wlan/ko
 
-	$(MKDIR) -p $(TRASH)/hardware/ti/wlan/mac80211
+	$(MKDIR) -p $(TRASH_DIR)/hardware/ti/wlan/mac80211
 	# remove omap's ti-utils project from ics
 	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils $(TRASH_DIR)/hardware/ti/wlan/mac80211/ ; fi
 #	# remove the mac80211 config folder

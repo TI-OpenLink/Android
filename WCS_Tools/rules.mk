@@ -25,6 +25,8 @@
 #
 ################################################################################
 
+include defs.mk
+
 $(PROGRESS_DIR):
 	@$(MKDIR) -p $(PROGRESS_DIR)
 
@@ -141,7 +143,7 @@ kernel-make: 		$(PROGRESS_BRINGUP_KERNEL) \
 	@$(call print, "kernel make done")
 
 mydroid-make: 		$(PROGRESS_BRINGUP_MYDROID)
-	cd $(MYDROID) ; source build/envsetup.sh ; $(MAKE) PRODUCT-full_blaze-userdebug -j$(NTHREADS) 2>&1
+	cd $(MYDROID) ; source build/envsetup.sh ; $(MAKE) $(AFS_BUILD_OPTION) -j$(NTHREADS) 2>&1
 	@$(call print, "mydroid make done")
 
 $(UBOOT_DIR)/u-boot.bin:

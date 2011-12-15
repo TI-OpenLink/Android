@@ -30,6 +30,7 @@ ifndef DEFS_MK_INCLUDED
 DEFS_MK_INCLUDED:=included
 
 VERSION:=ICS-DailyBuild_305
+AFS_BUILD_OPTION:=PRODUCT-full_blaze-eng
 
 YOUR_PATH:=$(PWD)
 export YOUR_PATH

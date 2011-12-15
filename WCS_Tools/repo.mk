@@ -35,20 +35,20 @@ OMAP_REPO_BRANCH:=master
 OMAPMANIFEST_REPO:=git://git.omapzoom.org/platform/omapmanifest.git
 OMAPMANIFEST_BRANCH:=27.x
 #ics-mr0
-OMAPMANIFEST_XMLFILE:=RLS27.I.ENG.2_IcecreamSandwich.xml
+OMAPMANIFEST_XMLFILE:=RLS27.IS.1_IcecreamSandwich.xml
 OMAPMANIFEST_HASH:= 
 
 # -----------------------------------------------------------------------------
 # kernel repository definitions
 # -----------------------------------------------------------------------------
 KERNEL_REPO:=git://git.omapzoom.org/kernel/omap.git
-KERNEL_TAG_HASH:=c738ec9855aad23216fbddf72265613a23a00cb9
+KERNEL_TAG_HASH:=042a2c41c2445220892ac0562de286dd955ebed9
 
 # -----------------------------------------------------------------------------
 # x-loader repository definitions
 # -----------------------------------------------------------------------------
 XLOADER_REPO:=git://git.omapzoom.org/repo/x-loader.git
-XLOADER_TAG_HASH:=4361857120dc8b3fae5ee9861fe406a9aae67c8b
+XLOADER_TAG_HASH:=7e049cfbf85735a34633581141e8bd568cefce34
 
 # -----------------------------------------------------------------------------
 # u-boot repository definitions
@@ -57,4 +57,4 @@ XLOADER_TAG_HASH:=4361857120dc8b3fae5ee9861fe406a9aae67c8b
 # L27.INC1.11.1 u-boot release is corrupted - sd card boot is not available,
 # we are using an older version (L27.INC1.10.1) 
 UBOOT_REPO:=git://git.omapzoom.org/repo/u-boot.git
-UBOOT_TAG_HASH:=0b595b50d298d58933227c2ded3bffac677a6f91
+UBOOT_TAG_HASH:=3a7cc9ef9dcaeda2715a2c864293eadb4fef0afc

@@ -29,8 +29,8 @@
 #include $(PWD)/defs.mk
 include defs.mk
 
-NLCP_RELEASE_VERSION:=RLS_R4_12
-NLCP_SP_VERSION:=2
+NLCP_RELEASE_VERSION:=ol_R5.00.02
+NLCP_SP_VERSION:=
 NLCP_MAIN_REPO:=git://github.com/TI-OpenLink
 
 NLCP_PATCHES_PATH:=$(PATCHES_PATH)/wlan/nlcp
@@ -41,14 +41,6 @@ NLCP_KERNEL_PATCHES:=$(NLCP_PATCHES_PATH)/kernel
 NLCP_ANDROID_PATCHES:=$(NLCP_PATCHES_PATH)/android
 
 NLCP_BINARIES_PATH=$(NLCP_PATCHES_PATH)/binaries
-
-PROGRESS_NLCP_FETCH_WL12xx:=$(PROGRESS_DIR)/nlcp.wl12xx.fetched
-PROGRESS_NLCP_FETCH_COMPAT:=$(PROGRESS_DIR)/nlcp.compat.fetched
-PROGRESS_NLCP_FETCH_COMPAT_WIRELESS:=$(PROGRESS_DIR)/nlcp.compat-wireless.fetched
-
-PROGRESS_NLCP_BRINGUP_WL12xx:=$(PROGRESS_DIR)/nlcp.wl12xx.bringup
-PROGRESS_NLCP_BRINGUP_COMPAT:=$(PROGRESS_DIR)/nlcp.compat.bringup
-PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS:=$(PROGRESS_DIR)/nlcp.compat-wireless.bringup
 
 PROGRESS_NLCP_KERNEL_PATCHES:=$(PROGRESS_DIR)/nlcp.kernel.patched
 PROGRESS_NLCP_MYDROID_PATCHES:=$(PROGRESS_DIR)/nlcp.mydroid.patched
@@ -61,13 +53,15 @@ nlcp-private-pre-bringup-validation:
 	@$(ECHO) "nlcp pre-bringup validation passed..."
 	
 nlcp-private-pre-make-validation:
-#	cd $(HOSTAP_DIR) ; git checkout hostapd_vanilla
 	@$(ECHO) "nlcp pre-make validation passed..."
 
 WL12xx_REPO:=$(NLCP_MAIN_REPO)/wl12xx.git
 WL12xx_DIR:=$(WORKSPACE_DIR)/wl12xx
-WL12xx_BRANCH:=r5
+WL12xx_BRANCH:=r5_3.2
 WL12xx_TAG:=$(NLCP_RELEASE_VERSION)
+
+PROGRESS_NLCP_FETCH_WL12xx:=$(PROGRESS_DIR)/nlcp.wl12xx.fetched
+PROGRESS_NLCP_BRINGUP_WL12xx:=$(PROGRESS_DIR)/nlcp.wl12xx.bringup
 
 $(PROGRESS_NLCP_FETCH_WL12xx):
 	@$(ECHO) "getting wl12xx repository..."
@@ -79,14 +73,18 @@ $(PROGRESS_NLCP_FETCH_WL12xx):
 $(PROGRESS_NLCP_BRINGUP_WL12xx): $(PROGRESS_NLCP_FETCH_WL12xx)
 	@$(ECHO) "wl12xx bringup..."
 	cd $(WL12xx_DIR) ; git checkout origin/$(WL12xx_BRANCH) -b $(WL12xx_BRANCH)
+	cd $(WL12xx_DIR) ; git reset --hard $(WL12xx_TAG)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_WL12xx))
 	@$(call print, "wl12xx bringup done")
 
 COMPAT_DIR:=$(WORKSPACE_DIR)/compat
-COMPAT_REPO:=$(NLCP_MAIN_REPO)/compat.git
+COMPAT_REPO:=git://github.com/mcgrof/compat.git
 COMPAT_BRANCH:=
-COMPAT_HASH:=
+COMPAT_HASH:=984ab77279488f3fea4436da76c0f81a618cef1b
+
+PROGRESS_NLCP_FETCH_COMPAT:=$(PROGRESS_DIR)/nlcp.compat.fetched
+PROGRESS_NLCP_BRINGUP_COMPAT:=$(PROGRESS_DIR)/nlcp.compat.bringup
 
 $(PROGRESS_NLCP_FETCH_COMPAT):
 	@$(ECHO) "getting compat repository..."
@@ -97,16 +95,18 @@ $(PROGRESS_NLCP_FETCH_COMPAT):
 	
 $(PROGRESS_NLCP_BRINGUP_COMPAT): $(PROGRESS_NLCP_FETCH_COMPAT)
 	@$(ECHO) "compat bringup..."
-	$(COPY) $(WL12xx_DIR)/include/linux/if_ether.h $(COMPAT_DIR)/include/linux/
-	$(COPY) $(WL12xx_DIR)/include/net/cfg80211-wext.h $(COMPAT_DIR)/include/net/	
+	cd $(COMPAT_DIR) ; git reset --hard $(COMPAT_HASH)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_COMPAT))
 	@$(call print, "compat bringup done")
 
 COMPAT_WIRELESS_DIR:=$(WORKSPACE_DIR)/compat-wireless
-COMPAT_WIRELESS_REPO:=$(NLCP_MAIN_REPO)/compat-wireless.git
+COMPAT_WIRELESS_REPO:=git://github.com/mcgrof/compat-wireless.git
 COMPAT_WIRELESS_BRANCH:=
-COMPAT_WIRELESS_HASH:=
+COMPAT_WIRELESS_HASH:=22c9e40fe140f32a342810fe82a390a6df7827f1
+
+PROGRESS_NLCP_FETCH_COMPAT_WIRELESS:=$(PROGRESS_DIR)/nlcp.compat-wireless.fetched
+PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS:=$(PROGRESS_DIR)/nlcp.compat-wireless.bringup
 
 GIT_COMPAT_TREE:=$(COMPAT_DIR)
 GIT_TREE:=$(WL12xx_DIR)
@@ -123,6 +123,7 @@ $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS):
 	
 $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS): $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS)
 	@$(ECHO) "compat wireless bringup..."
+	cd $(COMPAT_WIRELESS_DIR) ; git reset --hard $(COMPAT_WIRELESS_HASH)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS))
 	@$(call print, "compat wireless bringup done")
@@ -155,11 +156,38 @@ $(PROGRESS_NLCP_BRINGUP_HOSTAP): $(PROGRESS_NLCP_FETCH_HOSTAP)
 	@$(ECHO) "hostapd/supplicant bringup..."
 	$(MKDIR) -p $(HOSTAP_DIR)
 	cd $(HOSTAP_DIR) ; git checkout $(HOSTAP_REMOTE_NAME)/$(HOSTAP_BRANCH) -b $(HOSTAP_BRANCH)
+	cd $(HOSTAP_DIR) ; git reset --hard $(NLCP_RELEASE_VERSION)
 	@$(ECHO) "updating nl80211 interface from driver code"
 	$(COPY) $(WL12xx_DIR)/include/linux/nl80211.h $(HOSTAP_DIR)/src/drivers/nl80211_copy.h
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_HOSTAP))
 	@$(call print, "hostapd/supplicant bringup done")
+
+LIBNL_REPO:=$(NLCP_MAIN_REPO)/libnl.git
+LIBNL_DIR:=$(MYDROID)/system/core/libnl_2
+LIBNL_REMOTE_NAME:=ti-wcs
+LIBNL_BRANCH:=ics
+LIBNL_TAG:=
+
+PROGRESS_NLCP_FETCH_LIBNL:=$(PROGRESS_DIR)/nlcp.libnl.fetched
+PROGRESS_NLCP_BRINGUP_LIBNL:=$(PROGRESS_DIR)/nlcp.libnl.bringup
+
+$(PROGRESS_NLCP_FETCH_LIBNL): $(PROGRESS_BRINGUP_MYDROID)
+	@$(ECHO) "getting libnl..."
+	cd $(LIBNL_DIR) ; \
+	git remote add $(LIBNL_REMOTE_NAME) $(LIBNL_REPO) ; \
+	git fetch $(LIBNL_REMOTE_NAME) 
+	@$(ECHO) "...done"
+	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_FETCH_LIBNL))
+	@$(call print, "libnl repository fetched")
+	
+$(PROGRESS_NLCP_BRINGUP_LIBNL): $(PROGRESS_NLCP_FETCH_LIBNL)
+	@$(ECHO) "libnl update..."
+	cd $(LIBNL_DIR) ; git checkout $(LIBNL_REMOTE_NAME)/$(LIBNL_BRANCH) -b $(LIBNL_BRANCH)
+	cd $(LIBNL_DIR) ; git reset --hard $(LIBNL_TAG) 
+	@$(ECHO) "...done"
+	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_LIBNL))
+	@$(call print, "libnl bringup done")
 
 IW_REPO:=$(NLCP_MAIN_REPO)/iw.git
 IW_DIR:=$(MYDROID)/external/iw
@@ -225,14 +253,15 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 				$(PROGRESS_BRINGUP_MYDROID) \
 				$(PROGRESS_NLCP_BRINGUP_WL12xx) \
 				$(PROGRESS_NLCP_BRINGUP_HOSTAP) \
+				$(PROGRESS_NLCP_BRINGUP_LIBNL) \
 				$(PROGRESS_NLCP_BRINGUP_IW) \
 				$(PROGRESS_NLCP_BRINGUP_TI_UTILS)
 	@$(ECHO) "patching android for nlcp..."
 
-	cd $(MYDROID)/system/core/libnl_2; \
-		git am $(NLCP_ANDROID_PATCHES)/patches/system/core/libnl_2/*.patch
-	cd $(MYDROID)/device/ti/blaze ; \
-		git am $(NLCP_ANDROID_PATCHES)/patches/device/ti/blaze/*.patch
+#	cd $(MYDROID)/system/core/libnl_2; \
+#		git am $(NLCP_ANDROID_PATCHES)/patches/system/core/libnl_2/*.patch
+#	cd $(MYDROID)/device/ti/blaze ; \
+#		git am $(NLCP_ANDROID_PATCHES)/patches/device/ti/blaze/*.patch
 
 	@$(ECHO) "copying additional packages to mydroid directory..."
 	$(MKDIR) -p $(TRASH_DIR)/hardware/wlan
@@ -240,17 +269,19 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 	# add an recursive Android.mk to new mydroid/hardware/wlan directory
 	if [ -f $(MYDROID)/hardware/wlan/Android.mk ] ; then $(MOVE) $(MYDROID)/hardware/wlan/Android.mk $(TRASH_DIR)/hardware/wlan/ ; fi
 	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/Android.mk $(MYDROID)/hardware/wlan/Android.mk
-	# add the firmware project (only Android.mk, the binaries are copied during 'nlcp-update-firmware-files')
+	# add the firmware install project (only Android.mk, the binaries are copied during 'nlcp-update-firmware-files')
 	if [ -d $(MYDROID)/hardware/wlan/fw ] ; then $(MOVE) $(MYDROID)/hardware/wlan/fw $(TRASH_DIR)/hardware/wlan/ ; fi
 	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/fw $(MYDROID)/hardware/wlan/fw
+	# add the kernel objects install project (only Android.mk, the binaries are copied during 'nlcp-make-private')
+	if [ -d $(MYDROID)/hardware/wlan/ko ] ; then $(MOVE) $(MYDROID)/hardware/wlan/ko $(TRASH_DIR)/hardware/wlan/ ; fi
+	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/ko $(MYDROID)/hardware/wlan/ko
 
-#	# remove the mac80211 config folder
-#	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/config ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/config $(TRASH_DIR) ; fi
+	$(MKDIR) -p $(TRASH)/hardware/ti/wlan/mac80211
 	# remove omap's ti-utils project from ics
-	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils $(TRASH_DIR) ; fi
+	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils $(TRASH_DIR)/hardware/ti/wlan/mac80211/ ; fi
+#	# remove the mac80211 config folder
+#	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/config ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/config $(TRASH_DIR)$(MYDROID)/hardware/ti/wlan/mac80211/ ; fi
 	
-#	# update wpa_supplicant.conf template file to $(MYDROID)/external/wpa_supplicant_8/wpa_supplicant
-#	$(COPY) $(NLCP_BINARIES_PATH)/system/etc/wifi/wpa_supplicant.conf $(MYDROID)/external/wpa_supplicant_8/wpa_supplicant
 	# update hostapd.conf to $(MYDROID)/hardware/ti/wlan/mac80211/config project
 	$(COPY) $(NLCP_BINARIES_PATH)/system/etc/wifi/hostapd.conf $(MYDROID)/hardware/ti/wlan/mac80211/config
 
@@ -285,11 +316,11 @@ nlcp-sync-repo-latest:	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
 			$(PROGRESS_NLCP_KERNEL_PATCHES) \
 			$(PROGRESS_NLCP_MYDROID_PATCHES)
 	cd $(CRDA_DIR); 	git pull origin $(CRDA_BRANCH)
-	cd $(LIBNL_DIR); 	git pull origin $(LIBNL_BRANCH)
-	cd $(TI_UTILS_DIR); 	git pull origin $(TI_UTILS_BRANCH)
+	cd $(TI_UTILS_DIR); git pull origin $(TI_UTILS_BRANCH)
 	cd $(IW_DIR); 		git pull origin $(IW_BRANCH)
-	cd $(HOSTAP_DIR); 	git pull origin $(HOSTAP_BRANCH)
 	cd $(WL12xx_DIR); 	git pull origin $(WL12xx_BRANCH)
+	cd $(LIBNL_DIR); 	git pull $(LIBNL_REMOTE_NAME) $(LIBNL_BRANCH)
+	cd $(HOSTAP_DIR); 	git pull $(HOSTAP_REMOTE_NAME) $(HOSTAP_BRANCH)
 	$(MAKE) nlcp-update-firmware-files
 
 nlcp-bringup-private: 	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
@@ -300,6 +331,7 @@ nlcp-bringup-private: 	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
 	@$(ECHO) "nlcp bringup..."
 	cd $(COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh
 	cd $(COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl12xx
+	touch $(COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	@$(ECHO) "...done"
 
 	
@@ -310,95 +342,26 @@ nlcp-make-private:	$(PROGRESS_NLCP_BRINGUP_COMPAT) \
 	@$(ECHO) "nlcp make..."
 	cd $(COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh
 	cd $(COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl12xx
+	touch $(COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	$(MAKE) -C $(COMPAT_WIRELESS_DIR) KLIB=$(KERNEL_DIR) KLIB_BUILD=$(KERNEL_DIR) -j$(NTHREADS)
-
+	$(FIND) $(COMPAT_WIRELESS_DIR) -name "*.ko" -exec $(COPY) {}  $(MYDROID)/hardware/wlan/ko \;
 	@$(ECHO) "...done"
 
-NLCP_KO_TARGET_PATH:=$(MYFS_SYSTEM_PATH)/lib/modules
+#NLCP_KO_TARGET_PATH:=$(MYFS_SYSTEM_PATH)/lib/modules
+NLCP_KO_TARGET_PATH:=$(MYDROID)/hardware/wlan/ko
 
 nlcp-install-private:
 	@$(ECHO) "nlcp install..."
-	$(MKDIR) -p $(NLCP_KO_TARGET_PATH)
-	@$(ECHO) "copy modules from compat-wireless"
-	$(FIND) $(COMPAT_WIRELESS_DIR) -name "*.ko" -exec cp -f {}  $(NLCP_KO_TARGET_PATH) \;
-	@$(ECHO) "copy modules from kernel"
-	$(FIND) $(KERNEL_DIR)/drivers/staging -name "*.ko" -exec cp -v {} $(MYFS_ROOT_PATH) \;
-#	@$(ECHO) "patching init.omap4430.rc"
-#	cd $(MYFS_PATH) ; $(PATCH) -p1 --dry-run < $(NLCP_PATCHES_PATH)/nlcp.init.omap4430.rc.patch
-#	cd $(MYFS_PATH) ; $(PATCH) -p1 < $(NLCP_PATCHES_PATH)/nlcp.init.omap4430.rc.patch
-#	@$(ECHO) "copying additinal binaries to file system"
-#	$(COPY) -rf $(NLCP_BINARIES_PATH)/* $(MYFS_PATH)
-#	$(CHMOD) -R 777 $(MYFS_PATH)/data/misc/wifi/*
+#	$(MKDIR) -p $(NLCP_KO_TARGET_PATH)
+#	@$(ECHO) "copy modules from compat-wireless"
+#	$(FIND) $(COMPAT_WIRELESS_DIR) -name "*.ko" -exec cp -f {}  $(NLCP_KO_TARGET_PATH) \;
+#	@$(ECHO) "copy modules from kernel"
+#	$(FIND) $(KERNEL_DIR)/drivers/staging -name "*.ko" -exec cp -v {} $(NLCP_KO_TARGET_PATH) \;
 	@$(ECHO) "...done"
 	
 nlcp-clean-private:
 	@$(ECHO) "nlcp clean..."
-	$(MAKE) -C $(COMPAT_WIRELESS_DIR) KLIB=$(KERNEL_DIR) KLIB_BUILD=$(KERNEL_DIR) -j$(NTHREADS) clean
+	cd $(COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-clean.sh
+	$(FIND) $(MYDROID)/hardware/wlan/ko -name "*.ko" -exec $(DEL) {} \;
 	@$(ECHO) "...done"
 
-nlcp-distclean-private:
-	@$(ECHO) "nlcp distclean..."
-	$(MAKE) $(PROGRESS_NLCP_MYDROID_PATCHES)-distclean
-	$(MAKE) $(PROGRESS_NLCP_KERNEL_PATCHES)-distclean
-	@$(ECHO) "removing wl12xx..."
-	$(DEL) -rf $(WL12xx_DIR) $(PROGRESS_NLCP_FETCH_WL12xx) $(PROGRESS_NLCP_BRINGUP_WL12xx)
-	@$(ECHO) "...done"
-	@$(ECHO) "removing compat..."
-	$(DEL) -rf $(COMPAT_DIR) $(PROGRESS_NLCP_FETCH_COMPAT) $(PROGRESS_NLCP_BRINGUP_COMPAT)
-	@$(ECHO) "...done"	
-	@$(ECHO) "removing compat wireless..."
-	$(DEL) -rf $(COMPAT_WIRELESS_DIR) $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS) $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS)
-	@$(ECHO) "...done"
-	@$(call print, "nlcp removed from workspace")
-
-$(PROGRESS_NLCP_KERNEL_PATCHES)-distclean: $(PROGRESS_NLCP_KERNEL_PATCHES)
-	@$(ECHO) "removing nlcp support from kernel..."
-	cd $(KERNEL_DIR) ; $(REM_PATCH) -p1 < $(NLCP_KERNEL_PATCHES)/L27.INC1.13.1.kernel-config.nlcp-r3-rc5.patch
-	cd $(KERNEL_DIR) ; $(REM_PATCH) -p1 < $(NLCP_KERNEL_PATCHES)/L27.INC1.13.1.kernel.nlcp-r3-rc5.patch
-	@$(ECHO) "...done"
-	@$(DEL) $(PROGRESS_NLCP_KERNEL_PATCHES)
-	@$(call print, "nlcp kernel patches removed")
-
-$(PROGRESS_NLCP_MYDROID_PATCHES)-distclean: $(PROGRESS_NLCP_MYDROID_PATCHES)
-	@$(ECHO) "removing nlcp support from android..."
-	cd $(MYDROID)/system/netd ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/system.netd/0004*
-	cd $(MYDROID)/system/netd ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/system.netd/0003*
-	cd $(MYDROID)/system/netd ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/system.netd/0002*
-	cd $(MYDROID)/system/netd ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/system.netd/0001*
-	cd $(MYDROID)/system/core ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/system.core/0003-revert-android-dhcp-service-name-device-name-usage.patch
-	cd $(MYDROID)/system/core ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/system.core/0002*
-	cd $(MYDROID)/system/core ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/system.core/0001*
-	cd $(MYDROID)/hardware/libhardware_legacy ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/hardware.libhardware_legacy/0001-Revert*
-	cd $(MYDROID)/frameworks/base ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/frameworks.base/0002*
-	cd $(MYDROID)/frameworks/base ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/frameworks.base/0001*
-	cd $(MYDROID)/external/wpa_supplicant_6 ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/external.wpa_supplicant_6/*
-	cd $(MYDROID)/external/openssl ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/external.openssl/*
-	cd $(MYDROID)/external/hostapd ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/external.hostapd/*
-	cd $(MYDROID)/device/ti/blaze ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/device.ti.blaze/*
-	cd $(MYDROID)/build ; $(REM_PATCH) -p1 < $(NLCP_ANDROID_PATCHES)/build/*	
-	@$(ECHO) "...done"	
-	@$(ECHO) "removing additional packages from mydroid directory..."
-	$(DEL) -rf $(MYDROID)/external/crda
-	if [ -d $(TRASH_DIR)/crda ] ; $(MOVE) $(TRASH_DIR)/crda $(MYDROID)/external/crda ; fi
-	$(DEL) -rf $(MYDROID)/external/hostap
-	if [ -d $(TRASH_DIR)/hostapd ] ; $(MOVE) $(TRASH_DIR)/hostapd $(MYDROID)/external/hostapd ; fi
-	$(DEL) -rf $(MYDROID)/external/iw
-	if [ -d $(TRASH_DIR)/iw ] ; $(MOVE) $(TRASH_DIR)/iw $(MYDROID)/external/iw ; fi
-	$(DEL) -rf $(MYDROID)/external/libnl
-	if [ -d $(TRASH_DIR)/libnl ] ; $(MOVE) $(TRASH_DIR)/libnl $(MYDROID)/external/libnl ; fi
-	$(DEL) -rf $(MYDROID)/external/ti-utils
-	if [ -d $(TRASH_DIR)/ti-utils ] ; $(MOVE) $(TRASH_DIR)/ti-utils $(MYDROID)/external/ti-utils ; fi
-	$(MKDIR) -p $(MYDROID)/hardware/wlan
-	$(DEL) -rf $(MYDROID)/hardware/wlan/Android.mk
-	if [ -f $(MYDROID)/hardware/wlan/Android.mk.org ] ; then $(MOVE) $(MYDROID)/hardware/wlan/Android.mk.org $(MYDROID)/hardware/wlan/Android.mk ; fi
-	$(DEL) -rf $(MYDROID)/hardware/wlan/fw
-	if [ -d $(MYDROID)/hardware/wlan/fw.org ] ; then $(MOVE) $(MYDROID)/hardware/wlan/fw.org $(MYDROID)/hardware/wlan/fw ; fi
-	$(DEL) -rf $(MYDROID)/hardware/wlan/initial_regdom
-	if [ -d $(MYDROID)/hardware/wlan/initial_regdom.org ] ; then $(MOVE) $(MYDROID)/hardware/wlan/initial_regdom.org $(MYDROID)/hardware/wlan/initial_regdom ; fi
-	$(DEL) -rf $(MYDROID)/hardware/wlan/wifi_conf
-	if [ -d $(MYDROID)/hardware/wlan/wifi_conf.org ] ; then $(MOVE) $(MYDROID)/hardware/wlan/wifi_conf.org $(MYDROID)/hardware/wlan/wifi_conf ; fi
-	$(DEL) -rf $(MYDROID)/hardware/wlan/wpa_supplicant_lib
-	if [ -d $(MYDROID)/hardware/wlan/wpa_supplicant_lib.org ] ; then $(MOVE) $(MYDROID)/hardware/wlan/wpa_supplicant_lib.org $(MYDROID)/hardware/wlan/wpa_supplicant_lib ; fi
-	@$(ECHO) "...done"
-	@$(DEL) $(PROGRESS_NLCP_MYDROID_PATCHES)
-	@$(call print, "android patches and packages removed")

@@ -331,7 +331,7 @@ nlcp-bringup-private: 	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
 	@$(ECHO) "nlcp bringup..."
 	cd $(COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh
 	cd $(COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl12xx
-	touch $(COMPAT_WIRELESS_DIR)/drivers/net/Makefile
+	$(TOUCH) $(COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	@$(ECHO) "...done"
 
 	
@@ -342,7 +342,7 @@ nlcp-make-private:	$(PROGRESS_NLCP_BRINGUP_COMPAT) \
 	@$(ECHO) "nlcp make..."
 	cd $(COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh
 	cd $(COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl12xx
-	touch $(COMPAT_WIRELESS_DIR)/drivers/net/Makefile
+	$(TOUCH) $(COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	$(MAKE) -C $(COMPAT_WIRELESS_DIR) KLIB=$(KERNEL_DIR) KLIB_BUILD=$(KERNEL_DIR) -j$(NTHREADS)
 	$(FIND) $(COMPAT_WIRELESS_DIR) -name "*.ko" -exec $(COPY) {}  $(MYDROID)/hardware/wlan/ko \;
 	@$(ECHO) "...done"

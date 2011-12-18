@@ -123,6 +123,7 @@ $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS):
 $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS): $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS)
 	@$(ECHO) "compat wireless bringup..."
 	cd $(COMPAT_WIRELESS_DIR) ; git checkout $(COMPAT_WIRELESS_HASH) -b vanilla
+	cd $(COMPAT_WIRELESS_DIR) ; if [ -f ./patches/02-* ] ; then $(DEL) ./patches/02-* ; fi
 	cd $(COMPAT_WIRELESS_DIR) ; if [ -f ./patches/03-* ] ; then $(DEL) ./patches/03-* ; fi
 	cd $(COMPAT_WIRELESS_DIR) ; if [ -f ./patches/35-* ] ; then $(DEL) ./patches/35-* ; fi
 	cd $(COMPAT_WIRELESS_DIR) ; if [ -f ./patches/40-* ] ; then $(DEL) ./patches/40-* ; fi

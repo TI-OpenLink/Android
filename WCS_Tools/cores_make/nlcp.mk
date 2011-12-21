@@ -80,7 +80,8 @@ $(PROGRESS_NLCP_BRINGUP_WL12xx): $(PROGRESS_NLCP_FETCH_WL12xx)
 	@$(call print, "wl12xx bringup done")
 
 COMPAT_DIR:=$(WORKSPACE_DIR)/compat
-COMPAT_REPO:=git://github.com/mcgrof/compat.git
+COMPAT_REPO:=$(NLCP_MAIN_REPO)/compat.git
+#git://github.com/mcgrof/compat.git
 COMPAT_BRANCH:=
 COMPAT_HASH:=
 #984ab77279488f3fea4436da76c0f81a618cef1b
@@ -103,7 +104,8 @@ $(PROGRESS_NLCP_BRINGUP_COMPAT): $(PROGRESS_NLCP_FETCH_COMPAT)
 	@$(call print, "compat bringup done")
 
 COMPAT_WIRELESS_DIR:=$(WORKSPACE_DIR)/compat-wireless
-COMPAT_WIRELESS_REPO:=git://github.com/mcgrof/compat-wireless.git
+COMPAT_REPO:=$(NLCP_MAIN_REPO)/compat-wireless.git
+#git://github.com/mcgrof/compat-wireless.git
 COMPAT_WIRELESS_BRANCH:=
 COMPAT_WIRELESS_HASH:=
 #22c9e40fe140f32a342810fe82a390a6df7827f1
@@ -127,8 +129,8 @@ $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS):
 $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS): $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS)
 	@$(ECHO) "compat wireless bringup..."
 	cd $(COMPAT_WIRELESS_DIR) ; git reset --hard $(COMPAT_WIRELESS_HASH)
-	$(DEL) $(COMPAT_WIRELESS_DIR)/patches/09-threaded-irq.patch
-	$(DEL) $(COMPAT_WIRELESS_DIR)/patches/40*
+#	$(DEL) $(COMPAT_WIRELESS_DIR)/patches/09-threaded-irq.patch
+#	$(DEL) $(COMPAT_WIRELESS_DIR)/patches/40*
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS))
 	@$(call print, "compat wireless bringup done")

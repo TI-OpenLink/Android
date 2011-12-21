@@ -1,5 +1,5 @@
 LOCAL_PATH := $(call my-dir)
-local_target_dir := $(TARGET_OUT)/data/misc/wifi
+local_target_dir := $(TARGET_OUT_DATA)/misc/wifi
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := sta_start.sh

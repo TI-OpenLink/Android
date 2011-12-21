@@ -43,6 +43,7 @@ update-internals: /data/git/repositories/wiist/Android/R4.xx/internals
 	@$(ECHO) getting internals from local repository
 	@if [ -d ./.internals ] ; then $(DEL) -rf ./.internals ; fi
 	git clone /data/git/repositories/wiist/Android/R4.xx/internals ./.internals
+	cd ./.internals ; git checkout origin/ics
 	@$(ECHO) "updating $(WIIST_PATH) with internals..."
 	@$(COPY) -rf ./.internals/* $(WIIST_PATH)/
 	@$(ECHO) "deleting local internals repository..."
@@ -118,11 +119,11 @@ endif
 	$(MAKE) x-loader-install
 	$(MAKE) kernel-install
 	$(MAKE) nlcp-install
+	$(MAKE) mydroid-install
 	$(MAKE) ti-st-install
 	$(MAKE) bt-install
 	$(MAKE) gps-install
 	$(MAKE) fm-install
-	$(MAKE) mydroid-install
 
 #	$(MAKE) pack-sd-fs
 	@$(call print, "INSTALL DONE")
@@ -146,12 +147,12 @@ create-images:
 	$(COPY) -f $(BOOT_PATH)/MLO* $(EMMC_PATH)
 	$(COPY) -f $(KERNEL_DIR)/arch/arm/boot/zImage $(EMMC_PATH)
 
-#	$(FIND) $(OUTPUT_IMG_DIR) -name *.img -exec rm -f {} \;
 #	# echo instead of just copy since there are ommited directories (which causes errors)
 #	$(ECHO) `$(COPY) $(MYFS_PATH)/* $(OUTPUT_IMG_DIR)/root`
 #	$(COPY) -rf $(MYFS_PATH)/system/* $(OUTPUT_IMG_DIR)/system
-#	$(COPY) -rf $(MYFS_PATH)/data/* $(OUTPUT_IMG_DIR)/data	
-#	$(MAKE) mydroid-make
+#	$(COPY) -rf $(MYFS_PATH)/data/* $(OUTPUT_IMG_DIR)/data
+	$(FIND) $(OUTPUT_IMG_DIR) -name *.img -exec rm -f {} \;	
+	$(MAKE) mydroid-make
 	
 	#copy all android generated images to local folder
 	$(COPY) -f $(OUTPUT_IMG_DIR)/*.img $(EMMC_PATH)

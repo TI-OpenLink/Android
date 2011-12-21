@@ -166,27 +166,31 @@ kernel-install: 	$(KERNEL_DIR)/arch/arm/boot/uImage
 	$(call print, "kernel install done")
 
 mydroid-install:
-#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/root/* $(MYFS_PATH)
-#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/system/ $(MYFS_PATH)
-#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/data/ $(MYFS_PATH)
-#	@$(MKDIR) -p $(MYFS_PATH)/data/busybox
-#	@$(CHMOD) 777 $(MYFS_PATH)/data/busybox
-#	cd $(MYFS_PATH)/data/busybox ; source $(WIIST_PATH)/misc/scripts/create_busybox_symlink.sh
-	
 	@$(ECHO) extract prebuilt binaries...
 	$(MAKE) binaries-install
 	
-#	@$(ECHO) copy init.rc scripts to myfs folder...
-#	@$(COPY) -rfv $(INITRC_PATH)/init.rc $(MYFS_PATH)/
-#	@$(COPY) -rfv $(INITRC_PATH)/init.omap4430.rc $(MYFS_PATH)/
+	@$(ECHO) copy init.rc scripts to rootfs folder...
+	@$(MKDIR) -p $(MYFS_ROOT_PATH)
+	@$(COPY) -fv $(INITRC_PATH)/init.rc $(MYFS_ROOT_PATH)/
+	@$(COPY) -fv $(INITRC_PATH)/init.goldfish.rc $(MYFS_ROOT_PATH)/
+	@$(COPY) -fv $(INITRC_PATH)/init.omap4blazeboard.rc $(MYFS_ROOT_PATH)/
+	@$(COPY) -fv $(INITRC_PATH)/init.omap4blazeboard.usb.rc $(MYFS_ROOT_PATH)/
+	
+	@$(ECHO) install busybox links...
+	@$(MKDIR) -p $(MYFS_SYSTEM_PATH)/xbin/busybox
+	@cd $(MYFS_SYSTEM_PATH)/xbin/busybox ; source $(WIIST_PATH)/misc/scripts/create_busybox_symlink.sh
+	@$(CHMOD) -R 777 $(MYFS_SYSTEM_PATH)/xbin/busybox
+
+#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/root/* $(MYFS_PATH)
+#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/system/ $(MYFS_PATH)
+#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/data/ $(MYFS_PATH)
 	
 	@$(call print, "mydroid install done")
-
 
 binaries-install:
 	@$(MKDIR) -p $(BINARIES_PATH)
 	@$(ECHO) "OMAP's RELEASE: $(VERSION)" >$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "http://omapedia.org/wiki/L27.INC1.13.1_OMAP4430_GingerBread_ES2.2_Release_Notes" >>$(BINARIES_PATH)/version_ti.txt
+	@$(ECHO) "http://omapedia.org/wiki/L27.IS.1_OMAP4_Icecream_Sandwich_Release_Notes" >>$(BINARIES_PATH)/version_ti.txt
 	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
 ifeq ($(CONFIG_GPS), y)
 	@$(ECHO) "GPS version : NaviLink_MCP2.6_RC1.5" >>$(BINARIES_PATH)/version_ti.txt
@@ -216,7 +220,8 @@ endif
 	@$(ECHO) "CONFIG_NLCP: $(CONFIG_NLCP)" >>$(BINARIES_PATH)/version_ti.txt
 	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
 	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
-	@$(COPY) -rf $(BINARIES_PATH)/* $(MYFS_ROOT_PATH)
+	@if [ -d $(BINARIES_PATH)/system ] ; then $(COPY) -rf $(BINARIES_PATH)/system/* $(MYFS_SYSTEM_PATH)/ ; fi
+	$(ECHO) `$(COPY) $(BINARIES_PATH)/* $(MYFS_ROOT_PATH)`
 	@$(call print, "binaries copied to target directory")
 
 u-boot-clean: 		$(PROGRESS_BRINGUP_UBOOT)

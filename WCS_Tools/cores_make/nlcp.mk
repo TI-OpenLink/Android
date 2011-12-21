@@ -280,6 +280,9 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 	# add the kernel objects install project (only Android.mk, the binaries are copied during 'nlcp-make-private')
 	if [ -d $(MYDROID)/hardware/wlan/ko ] ; then $(MOVE) $(MYDROID)/hardware/wlan/ko $(TRASH_DIR)/hardware/wlan/ ; fi
 	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/ko $(MYDROID)/hardware/wlan/ko
+	# add the scripts folder
+	if [ -d $(MYDROID)/hardware/wlan/scripts ] ; then $(MOVE) $(MYDROID)/hardware/wlan/scripts $(TRASH_DIR)/hardware/wlan/ ; fi
+	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/scripts $(MYDROID)/hardware/wlan/scripts
 
 	$(MKDIR) -p $(TRASH_DIR)/hardware/ti/wlan/mac80211
 	# remove omap's ti-utils project from ics

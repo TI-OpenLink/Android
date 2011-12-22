@@ -221,7 +221,7 @@ endif
 	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
 	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
 	@if [ -d $(BINARIES_PATH)/system ] ; then $(COPY) -rf $(BINARIES_PATH)/system/* $(MYFS_SYSTEM_PATH)/ ; fi
-	$(ECHO) `$(COPY) $(BINARIES_PATH)/* $(MYFS_ROOT_PATH)`
+	@if [ -d $(BINARIES_PATH)/root ] ; then $(COPY) -rf $(BINARIES_PATH)/root/* $(MYFS_ROOT_PATH)/ ; fi
 	@$(call print, "binaries copied to target directory")
 
 u-boot-clean: 		$(PROGRESS_BRINGUP_UBOOT)

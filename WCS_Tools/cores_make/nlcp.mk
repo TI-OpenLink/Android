@@ -82,7 +82,7 @@ $(PROGRESS_NLCP_BRINGUP_WL12xx): $(PROGRESS_NLCP_FETCH_WL12xx)
 COMPAT_DIR:=$(WORKSPACE_DIR)/compat
 COMPAT_REPO:=$(NLCP_MAIN_REPO)/compat.git
 #git://github.com/mcgrof/compat.git
-COMPAT_BRANCH:=
+COMPAT_BRANCH:=master
 COMPAT_HASH:=
 #984ab77279488f3fea4436da76c0f81a618cef1b
 
@@ -98,15 +98,17 @@ $(PROGRESS_NLCP_FETCH_COMPAT):
 	
 $(PROGRESS_NLCP_BRINGUP_COMPAT): $(PROGRESS_NLCP_FETCH_COMPAT)
 	@$(ECHO) "compat bringup..."
-	cd $(COMPAT_DIR) ; git reset --hard $(COMPAT_HASH)
+	cd $(COMPAT_DIR) ; \
+	git checkout origin/$(COMPAT_BRANCH) -b $(COMPAT_BRANCH) ; \
+	git reset --hard $(COMPAT_HASH)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_COMPAT))
 	@$(call print, "compat bringup done")
 
 COMPAT_WIRELESS_DIR:=$(WORKSPACE_DIR)/compat-wireless
-COMPAT_REPO:=$(NLCP_MAIN_REPO)/compat-wireless.git
+COMPAT_WIRELESS_REPO:=$(NLCP_MAIN_REPO)/compat-wireless.git
 #git://github.com/mcgrof/compat-wireless.git
-COMPAT_WIRELESS_BRANCH:=
+COMPAT_WIRELESS_BRANCH:=master
 COMPAT_WIRELESS_HASH:=
 #22c9e40fe140f32a342810fe82a390a6df7827f1
 
@@ -128,9 +130,9 @@ $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS):
 	
 $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS): $(PROGRESS_NLCP_FETCH_COMPAT_WIRELESS)
 	@$(ECHO) "compat wireless bringup..."
-	cd $(COMPAT_WIRELESS_DIR) ; git reset --hard $(COMPAT_WIRELESS_HASH)
-#	$(DEL) $(COMPAT_WIRELESS_DIR)/patches/09-threaded-irq.patch
-#	$(DEL) $(COMPAT_WIRELESS_DIR)/patches/40*
+	cd $(COMPAT_WIRELESS_DIR) ; \
+	git checkout origin/$(COMPAT_WIRELESS_BRANCH) -b $(COMPAT_WIRELESS_BRANCH) ; \
+	git reset --hard $(COMPAT_WIRELESS_HASH)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS))
 	@$(call print, "compat wireless bringup done")
@@ -243,19 +245,6 @@ $(PROGRESS_NLCP_BRINGUP_TI_UTILS): $(PROGRESS_NLCP_FETCH_TI_UTILS)
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_TI_UTILS))
 	@$(call print, "ti-utils bringup done")
 	
-nlcp-update-firmware-files:			$(PROGRESS_NLCP_BRINGUP_TI_UTILS)
-#	latest firmwares are managed at the ti-utils project: mydroid/external/ti-utils/firmware,
-#	we move it to the android fw hardware project (which installs it during android make)
-	@$(MKDIR) -p $(MYDROID)/hardware/wlan/fw
-	@$(ECHO) "Updating latest firmware binaries from ti-utils project..."
-	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl128x-fw-mr.bin.r4 $(MYDROID)/hardware/wlan/fw
-	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl128x-fw-mr_plt.bin.r4 $(MYDROID)/hardware/wlan/fw
-	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl128x-fw-mr.bin.r5 $(MYDROID)/hardware/wlan/fw
-	@$(COPY) -f $(TI_UTILS_DIR)/firmware/wl128x-fw-mr_plt.bin.r5 $(MYDROID)/hardware/wlan/fw
-	@$(ECHO) "...done"
-	
-.PHONY += nlcp-update-firmware-files
-
 $(PROGRESS_NLCP_MYDROID_PATCHES): \
 				$(PROGRESS_BRINGUP_MYDROID) \
 				$(PROGRESS_NLCP_BRINGUP_WL12xx) \
@@ -276,9 +265,6 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 	# add an recursive Android.mk to new mydroid/hardware/wlan directory
 	if [ -f $(MYDROID)/hardware/wlan/Android.mk ] ; then $(MOVE) $(MYDROID)/hardware/wlan/Android.mk $(TRASH_DIR)/hardware/wlan/ ; fi
 	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/Android.mk $(MYDROID)/hardware/wlan/Android.mk
-	# add the firmware install project (only Android.mk, the binaries are copied during 'nlcp-update-firmware-files')
-	if [ -d $(MYDROID)/hardware/wlan/fw ] ; then $(MOVE) $(MYDROID)/hardware/wlan/fw $(TRASH_DIR)/hardware/wlan/ ; fi
-	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/fw $(MYDROID)/hardware/wlan/fw
 	# add the kernel objects install project (only Android.mk, the binaries are copied during 'nlcp-make-private')
 	if [ -d $(MYDROID)/hardware/wlan/ko ] ; then $(MOVE) $(MYDROID)/hardware/wlan/ko $(TRASH_DIR)/hardware/wlan/ ; fi
 	$(COPY) -r $(NLCP_ANDROID_PATCHES)/packages/hardware/wlan/ko $(MYDROID)/hardware/wlan/ko
@@ -297,7 +283,6 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_MYDROID_PATCHES))
-	$(MAKE) nlcp-update-firmware-files
 	@$(call print, "android patches and packages done")
 
 nlcp-invoke-fetch-private:	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
@@ -320,7 +305,6 @@ nlcp-sync-ver-private:	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
 	cd $(IW_DIR); 		git reset --hard $(NLCP_RELEASE_VERSION)
 	cd $(HOSTAP_DIR); 	git reset --hard $(NLCP_RELEASE_VERSION)
 	cd $(WL12xx_DIR); 	git reset --hard $(NLCP_RELEASE_VERSION)
-	$(MAKE) nlcp-update-firmware-files
 	
 nlcp-sync-repo-latest:	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
 			$(PROGRESS_NLCP_KERNEL_PATCHES) \
@@ -331,7 +315,6 @@ nlcp-sync-repo-latest:	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
 	cd $(WL12xx_DIR); 	git pull origin $(WL12xx_BRANCH)
 	cd $(LIBNL_DIR); 	git pull $(LIBNL_REMOTE_NAME) $(LIBNL_BRANCH)
 	cd $(HOSTAP_DIR); 	git pull $(HOSTAP_REMOTE_NAME) $(HOSTAP_BRANCH)
-	$(MAKE) nlcp-update-firmware-files
 
 nlcp-bringup-private: 	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
 			$(PROGRESS_NLCP_BRINGUP_COMPAT) \
@@ -347,8 +330,7 @@ nlcp-bringup-private: 	$(PROGRESS_NLCP_BRINGUP_WL12xx) \
 	
 nlcp-make-private:	$(PROGRESS_NLCP_BRINGUP_COMPAT) \
 			$(PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS) \
-			$(PROGRESS_NLCP_BRINGUP_WL12xx) \
-			nlcp-update-firmware-files
+			$(PROGRESS_NLCP_BRINGUP_WL12xx)
 	@$(ECHO) "nlcp make..."
 	cd $(COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh
 	cd $(COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl12xx

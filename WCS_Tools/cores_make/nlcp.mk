@@ -29,8 +29,7 @@
 #include $(PWD)/defs.mk
 include defs.mk
 
-NLCP_RELEASE_VERSION:=
-#ol_R5.00.02
+NLCP_RELEASE_VERSION:=ol_R5.00.03
 NLCP_SP_VERSION:=
 NLCP_MAIN_REPO:=git://github.com/TI-OpenLink
 
@@ -83,8 +82,7 @@ COMPAT_DIR:=$(WORKSPACE_DIR)/compat
 COMPAT_REPO:=$(NLCP_MAIN_REPO)/compat.git
 #git://github.com/mcgrof/compat.git
 COMPAT_BRANCH:=master
-COMPAT_HASH:=
-#984ab77279488f3fea4436da76c0f81a618cef1b
+COMPAT_HASH:=$(NLCP_RELEASE_VERSION)
 
 PROGRESS_NLCP_FETCH_COMPAT:=$(PROGRESS_DIR)/nlcp.compat.fetched
 PROGRESS_NLCP_BRINGUP_COMPAT:=$(PROGRESS_DIR)/nlcp.compat.bringup
@@ -109,8 +107,7 @@ COMPAT_WIRELESS_DIR:=$(WORKSPACE_DIR)/compat-wireless
 COMPAT_WIRELESS_REPO:=$(NLCP_MAIN_REPO)/compat-wireless.git
 #git://github.com/mcgrof/compat-wireless.git
 COMPAT_WIRELESS_BRANCH:=master
-COMPAT_WIRELESS_HASH:=
-#22c9e40fe140f32a342810fe82a390a6df7827f1
+COMPAT_WIRELESS_HASH:=$(NLCP_RELEASE_VERSION)
 
 PROGRESS_NLCP_FETCH_COMPAT_WIRELESS:=$(PROGRESS_DIR)/nlcp.compat-wireless.fetched
 PROGRESS_NLCP_BRINGUP_COMPAT_WIRELESS:=$(PROGRESS_DIR)/nlcp.compat-wireless.bringup
@@ -176,7 +173,7 @@ LIBNL_REPO:=$(NLCP_MAIN_REPO)/libnl.git
 LIBNL_DIR:=$(MYDROID)/system/core/libnl_2
 LIBNL_REMOTE_NAME:=ti-wcs
 LIBNL_BRANCH:=ics
-LIBNL_TAG:=
+LIBNL_TAG:=$(NLCP_RELEASE_VERSION)
 
 PROGRESS_NLCP_FETCH_LIBNL:=$(PROGRESS_DIR)/nlcp.libnl.fetched
 PROGRESS_NLCP_BRINGUP_LIBNL:=$(PROGRESS_DIR)/nlcp.libnl.bringup
@@ -201,7 +198,7 @@ $(PROGRESS_NLCP_BRINGUP_LIBNL): $(PROGRESS_NLCP_FETCH_LIBNL)
 IW_REPO:=$(NLCP_MAIN_REPO)/iw.git
 IW_DIR:=$(MYDROID)/external/iw
 IW_BRANCH:=ics
-IW_TAG:=
+IW_TAG:=$(NLCP_RELEASE_VERSION)
 
 PROGRESS_NLCP_FETCH_IW:=$(PROGRESS_DIR)/nlcp.iw.fetched
 PROGRESS_NLCP_BRINGUP_IW:=$(PROGRESS_DIR)/nlcp.iw.bringup
@@ -217,6 +214,7 @@ $(PROGRESS_NLCP_FETCH_IW): $(PROGRESS_BRINGUP_MYDROID)
 $(PROGRESS_NLCP_BRINGUP_IW): $(PROGRESS_NLCP_FETCH_IW)
 	@$(ECHO) "iw bringup..."
 	cd $(IW_DIR) ; git checkout origin/$(IW_BRANCH) -b $(IW_BRANCH)
+	cd $(IW_DIR) ; git reset --hard $(IW_TAG)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_IW))
 	@$(call print, "iw bringup done")
@@ -224,7 +222,7 @@ $(PROGRESS_NLCP_BRINGUP_IW): $(PROGRESS_NLCP_FETCH_IW)
 TI_UTILS_REPO:=$(NLCP_MAIN_REPO)/ti-utils.git
 TI_UTILS_DIR:=$(MYDROID)/external/ti-utils
 TI_UTILS_BRANCH:=ics
-TI_UTILS_TAG:=
+TI_UTILS_TAG:=$(NLCP_RELEASE_VERSION)
 
 PROGRESS_NLCP_FETCH_TI_UTILS:=$(PROGRESS_DIR)/nlcp.ti-utils.fetched
 PROGRESS_NLCP_BRINGUP_TI_UTILS:=$(PROGRESS_DIR)/nlcp.ti-utils.bringup
@@ -253,11 +251,6 @@ $(PROGRESS_NLCP_MYDROID_PATCHES): \
 				$(PROGRESS_NLCP_BRINGUP_IW) \
 				$(PROGRESS_NLCP_BRINGUP_TI_UTILS)
 	@$(ECHO) "patching android for nlcp..."
-
-#	cd $(MYDROID)/system/core/libnl_2; \
-#		git am $(NLCP_ANDROID_PATCHES)/patches/system/core/libnl_2/*.patch
-#	cd $(MYDROID)/device/ti/blaze ; \
-#		git am $(NLCP_ANDROID_PATCHES)/patches/device/ti/blaze/*.patch
 
 	@$(ECHO) "copying additional packages to mydroid directory..."
 	$(MKDIR) -p $(TRASH_DIR)/hardware/wlan

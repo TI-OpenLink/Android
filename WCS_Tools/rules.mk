@@ -187,39 +187,41 @@ mydroid-install:
 	
 	@$(call print, "mydroid install done")
 
+VERSION_TI_TXT_FILE:=$(BINARIES_PATH)/root/version_ti.txt
+
 binaries-install:
 	@$(MKDIR) -p $(BINARIES_PATH)
-	@$(ECHO) "OMAP's RELEASE: $(VERSION)" >$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "http://omapedia.org/wiki/L27.IS.1_OMAP4_Icecream_Sandwich_Release_Notes" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
+	@$(ECHO) "OMAP's RELEASE: $(VERSION)" >$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "http://omapedia.org/wiki/L27.IS.1_OMAP4_Icecream_Sandwich_Release_Notes" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "" >>$(VERSION_TI_TXT_FILE)
 ifeq ($(CONFIG_GPS), y)
-	@$(ECHO) "GPS version : NaviLink_MCP2.6_RC1.5" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
+	@$(ECHO) "GPS version : NaviLink_MCP2.6_RC1.5" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "" >>$(VERSION_TI_TXT_FILE)
 endif
 ifeq ($(CONFIG_NLCP), y)
-	@$(ECHO) "NLCP version : $(NLCP_RELEASE_VERSION)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "SP Version: $(NLCP_SP_VERSION)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "wl12xx commit id : $(WL12xx_HASH)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "compat commit id : $(COMPAT_HASH)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "compat-wireless commit id : $(COMPAT_WIRELESS_HASH)" >>$(BINARIES_PATH)/version_ti.txt
+	@$(ECHO) "NLCP version : $(NLCP_RELEASE_VERSION)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "SP Version: $(NLCP_SP_VERSION)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "wl12xx commit id : $(WL12xx_HASH)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "compat commit id : $(COMPAT_HASH)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "compat-wireless commit id : $(COMPAT_WIRELESS_HASH)" >>$(VERSION_TI_TXT_FILE)
 endif
-	@$(ECHO) "Built by :" `whoami` "@ " `date` ", on machine:" `hostname`>>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "CROSS COMPILE: $(CROSS_COMPILE)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "JAVA HOME: $(JAVA_HOME)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "BUILD PATH: $(PWD)" >>$(BINARIES_PATH)/version_ti.txt
-	@cat $(PROGRESS_FETCH_METHOD) >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "BUILD COMMAND: $(MAKECMDGOALS)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "KERNEL VERSION: $(KERNEL_VERSION)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "CONFIG_TIST: $(CONFIG_TIST)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "CONFIG_GPS: $(CONFIG_GPS)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "CONFIG_BT: $(CONFIG_BT)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "CONFIG_FM: $(CONFIG_FM)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "CONFIG_NLCP: $(CONFIG_NLCP)" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
-	@$(ECHO) "" >>$(BINARIES_PATH)/version_ti.txt
+	@$(ECHO) "Built by :" `whoami` "@ " `date` ", on machine:" `hostname`>>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "CROSS COMPILE: $(CROSS_COMPILE)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "JAVA HOME: $(JAVA_HOME)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "BUILD PATH: $(PWD)" >>$(VERSION_TI_TXT_FILE)
+	@cat $(PROGRESS_FETCH_METHOD) >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "BUILD COMMAND: $(MAKECMDGOALS)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "KERNEL VERSION: $(KERNEL_VERSION)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "CONFIG_TIST: $(CONFIG_TIST)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "CONFIG_GPS: $(CONFIG_GPS)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "CONFIG_BT: $(CONFIG_BT)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "CONFIG_FM: $(CONFIG_FM)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "CONFIG_NLCP: $(CONFIG_NLCP)" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "" >>$(VERSION_TI_TXT_FILE)
+	@$(ECHO) "" >>$(VERSION_TI_TXT_FILE)
 	@if [ -d $(BINARIES_PATH)/system ] ; then $(COPY) -rf $(BINARIES_PATH)/system/* $(MYFS_SYSTEM_PATH)/ ; fi
 	@if [ -d $(BINARIES_PATH)/root ] ; then $(COPY) -rf $(BINARIES_PATH)/root/* $(MYFS_ROOT_PATH)/ ; fi
 	@$(call print, "binaries copied to target directory")

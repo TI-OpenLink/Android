@@ -33,7 +33,10 @@ echo "creating new interface"
 $IW wlan0 del
 $IW `ls /sys/class/ieee80211/` interface add wlan1 type managed
 
-if [ ! -f $HOSTAPD_CONF ] ; then cp /etc/wifi/hostapd.conf $HOSTAPD_CONF ; fi
+if [ ! -f $HOSTAPD_CONF ] ; then \
+	cp /etc/wifi/hostapd.conf $HOSTAPD_CONF ; \
+	chmod 777 $HOSTAPD_CONF ; \
+fi
 
 echo "loading hostapd"
 setprop ctl.start $SERVICE_HOSTAPD

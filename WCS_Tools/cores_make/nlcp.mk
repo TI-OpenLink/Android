@@ -63,9 +63,9 @@ WL12xx_TAG:=$(NLCP_RELEASE_VERSION)
 PROGRESS_NLCP_FETCH_WL12xx:=$(PROGRESS_DIR)/nlcp.wl12xx.fetched
 PROGRESS_NLCP_BRINGUP_WL12xx:=$(PROGRESS_DIR)/nlcp.wl12xx.bringup
 
-$(PROGRESS_NLCP_FETCH_WL12xx):
+$(PROGRESS_NLCP_FETCH_WL12xx): $(PROGRESS_FETCH_KERNEL)
 	@$(ECHO) "getting wl12xx repository..."
-	git clone $(WL12xx_REPO) $(WL12xx_DIR)
+	git clone $(WL12xx_REPO) $(WL12xx_DIR) --shared --reference $(KERNEL_DIR)
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_FETCH_WL12xx))
 	@$(call print, "wl12xx repository fetched")

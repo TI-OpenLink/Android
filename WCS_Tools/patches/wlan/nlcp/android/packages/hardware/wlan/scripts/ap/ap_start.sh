@@ -35,8 +35,8 @@ $IW `ls /sys/class/ieee80211/` interface add wlan1 type managed
 
 if [ ! -f $HOSTAPD_CONF ] ; then \
 	cp /etc/wifi/hostapd.conf $HOSTAPD_CONF ; \
-	chmod 777 $HOSTAPD_CONF ; \
 fi
+chmod 777 $HOSTAPD_CONF
 
 echo "loading hostapd"
 setprop ctl.start $SERVICE_HOSTAPD

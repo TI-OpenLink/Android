@@ -32,8 +32,8 @@ $IFCONFIG $WLAN_IF
 
 if [ ! -f $SUPPLICANT_CONF ] ; then \
 	cp /etc/wifi/wpa_supplicant.conf $SUPPLICANT_CONF ; \
-	chmod 777 $SUPPLICANT_CONF ; \
 fi
+chmod 777 $SUPPLICANT_CONF
 
 echo "loading supplicant"
 setprop ctl.start "$SERVICE_SUPPLICANT:-i$WLAN_IF -c$SUPPLICANT_CONF"

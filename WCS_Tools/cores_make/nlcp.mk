@@ -29,7 +29,7 @@
 #include $(PWD)/defs.mk
 include defs.mk
 
-NLCP_RELEASE_VERSION:=ol_R5.00.03
+NLCP_RELEASE_VERSION:=ol_R5.00.04
 NLCP_SP_VERSION:=
 NLCP_MAIN_REPO:=git://github.com/TI-OpenLink
 

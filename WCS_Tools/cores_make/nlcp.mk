@@ -234,8 +234,13 @@ nlcp-private-pre-make-validation:
 #	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_TI_UTILS))
 #	@$(call print, "ti-utils bringup done")
 
+OL_MANIFEST_REPO:=$(NLCP_MAIN_REPO)/ti-ol-manifest.git
+OL_MANIFEST_BRANCH:=master
+OL_MANIFEST_FILE:=TI-OpenLink-R5.00.xx.xml
+
 WL12xx_MANIFEST_REPO:=git://github.com/TI-OpenLink/ti-ol-manifest.git
 
+OL_MANIFEST_DIR:=$(WORKSPACE_DIR)/ti-ol-manifest
 WL12xx_DIR:=$(WORKSPACE_DIR)/wl12xx
 COMPAT_DIR:=$(WORKSPACE_DIR)/compat
 COMPAT_WIRELESS_DIR:=$(WORKSPACE_DIR)/compat-wireless
@@ -246,12 +251,27 @@ LIBNL_DIR:=$(MYDROID)/system/core/libnl_2
 
 PROGRESS_NLCP_KERNEL_PATCHES:=$(PROGRESS_DIR)/nlcp.kernel.patched
 PROGRESS_NLCP_MYDROID_PATCHES:=$(PROGRESS_DIR)/nlcp.mydroid.patched
+PROGRESS_NLCP_FETCH_OL_MANIFEST:=$(PROGRESS_DIR)/nlcp.ti-ol-manifest.fetched
+PROGRESS_NLCP_BRINGUP_OL_MANIFEST:=$(PROGRESS_DIR)/nlcp.ti-ol-manifest.bringup
 
 GIT_COMPAT_TREE:=$(COMPAT_DIR)
 GIT_TREE:=$(WL12xx_DIR)
 
 export GIT_COMPAT_TREE
 export GIT_TREE
+
+$(PROGRESS_NLCP_FETCH_OL_MANIFEST):
+	@$(ECHO) "getting ti-ol-manifest repository..."
+	git clone $(OL_MANIFEST_REPO) $(OL_MANIFEST_DIR)
+	@$(ECHO) "...done"
+	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_FETCH_OL_MANIFEST))
+	@$(call print, "ti-ol-manifest repository fetched")
+	
+$(PROGRESS_NLCP_BRINGUP_OL_MANIFEST): $(PROGRESS_NLCP_FETCH_OL_MANIFEST)
+	@$(ECHO) "ti-ol-manifest bringup..."
+	@$(ECHO) "...done"
+	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_BRINGUP_OL_MANIFEST))
+	@$(call print, "ti-ol-manifest bringup done")
 
 $(PROGRESS_NLCP_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 	@$(ECHO) "patching kernel for nlcp..."
@@ -288,9 +308,11 @@ $(PROGRESS_NLCP_MYDROID_PATCHES):
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_MYDROID_PATCHES))
 	@$(call print, "android patches and packages done")
 
-nlcp-bringup-private: $(PROGRESS_NLCP_KERNEL_PATCHES) $(PROGRESS_NLCP_MYDROID_PATCHES)
+nlcp-bringup-private: 	$(PROGRESS_NLCP_BRINGUP_OL_MANIFEST) \
+						$(PROGRESS_NLCP_KERNEL_PATCHES) \
+						$(PROGRESS_NLCP_MYDROID_PATCHES)
 	@$(ECHO) "nlcp bringup..."
-	repo init -u $(WL12xx_MANIFEST_REPO) -b master -m TI-OpenLink-R5.00.xx.xml --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
+	repo init -u $(OL_MANIFEST_DIR) -b master -m $(OL_MANIFEST_FILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
 	repo sync --no-repo-verify
 	cd $(COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh
 	cd $(COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl12xx

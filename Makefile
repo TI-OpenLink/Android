@@ -194,6 +194,7 @@ distclean:
 	@if [ -d $(TRASH_DIR) ] ; then $(ECHO) removing $(TRASH_DIR) directory ; $(DEL) -rf $(TRASH_DIR) ; fi
 	@if [ -d $(OUTPUT_PATH) ] ; then $(ECHO) removing $(OUTPUT_PATH) directory ; $(DEL) -rf $(OUTPUT_PATH) ; fi
 	@if [ -d $(MANIFEST) ] ; then $(ECHO) removing $(MANIFEST) directory ; $(DEL) -rf $(MANIFEST) ; fi
+	@if [ -d .repo ] ; then $(ECHO) removing .repo directory ; $(DEL) -rf .repo ; fi
 	@if [ -d $(WORKSPACE_DIR) ] ; then $(ECHO) removing $(WORKSPACE_DIR) directory ; $(DEL) -rf $(WORKSPACE_DIR) ; fi
 	@$(ECHO) synchronizing...
 	@sync &

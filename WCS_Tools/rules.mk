@@ -67,7 +67,7 @@ $(PROGRESS_FETCH_MYDROID): $(PROGRESS_FETCH_MANIFEST)
 	@$(MAKE) $(PROGRESS_DIR)
 	@$(MKDIR) -p $(MYDROID)
 	cd $(MYDROID) ; \
-	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) ; \
+	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify ; \
 	repo sync --no-repo-verify
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MYDROID))
 	@$(call print, "android filesystem retrieved")

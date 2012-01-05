@@ -35,8 +35,8 @@ fm-make-private:
 	
 fm-install-private:
 	@$(ECHO) "<<<BLUEZ>>> Copying FM Init scripts."
-	@$(MKDIR) -p $(MYFS_SYSTEM_PATH)/system/etc/firmware/
-	@$(COPY) -vf $(FIRMWARE_PATH)/fm/* $(MYFS_SYSTEM_PATH)/system/etc/firmware/
+	@$(MKDIR) -p $(MYFS_SYSTEM_PATH)/etc/firmware/
+	@$(COPY) -vf $(FIRMWARE_PATH)/fm/* $(MYFS_SYSTEM_PATH)/etc/firmware/
 	@$(ECHO) "fm install..."
 	
 fm-clean-private:

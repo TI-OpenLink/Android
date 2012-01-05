@@ -37,8 +37,8 @@ bt-install-private:
 	@$(CAT) $(INITRC_PATH)/BLUEZ.rc.addon >> $(MYFS_ROOT_PATH)/init.rc
 
 	@$(ECHO) "<<<BLUEZ>>> Copying BT scripts"
-	@$(MKDIR) -p $(MYFS_SYSTEM_PATH)/system/etc/firmware/
-	@$(COPY) -vf $(FIRMWARE_PATH)/bt/* $(MYFS_SYSTEM_PATH)/system/etc/firmware/
+	@$(MKDIR) -p $(MYFS_SYSTEM_PATH)/etc/firmware/
+	@$(COPY) -vf $(FIRMWARE_PATH)/bt/* $(MYFS_SYSTEM_PATH)/etc/firmware/
 
 bt-clean-private:
 	@$(ECHO) "<<<BLUEZ>>> bt clean..."

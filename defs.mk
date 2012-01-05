@@ -116,9 +116,9 @@ MYFS_DATA_PATH:=$(OUTPUT_IMG_DIR)/data
 ################################################################################
 
 CONFIG_NLCP?=y
-CONFIG_BT?=n
+CONFIG_BT?=y
 CONFIG_TIST?=n
-CONFIG_FM?=n
+CONFIG_FM?=y
 CONFIG_GPS?=n
 
 WLAN_STA_SOURCE_PATH?=

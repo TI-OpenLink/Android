@@ -275,7 +275,8 @@ $(PROGRESS_NLCP_BRINGUP_OL_MANIFEST): $(PROGRESS_NLCP_FETCH_OL_MANIFEST)
 
 $(PROGRESS_NLCP_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 	@$(ECHO) "patching kernel for nlcp..."
-	# TODO: add dynamic debug support
+	# add dynamic debug support
+	cd $(KERNEL_DIR) ; $(PATCH) -p1 <  $(NLCP_KERNEL_PATCHES)/blaze.config.patch
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_NLCP_KERNEL_PATCHES))
 	@$(call print, "nlcp kernel patches done")	

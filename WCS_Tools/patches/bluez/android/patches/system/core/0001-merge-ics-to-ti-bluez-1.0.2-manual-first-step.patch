@@ -1,0 +1,28 @@
+From 66aabdc076a5f137658903684d7ace4948fd594e Mon Sep 17 00:00:00 2001
+From: Rashed Rashed <rashedr@ti.com>
+Date: Mon, 7 Nov 2011 10:36:23 +0200
+Subject: [PATCH] merge ics to ti-bluez-1.0.2 manual first step
+
+---
+ rootdir/init.rc |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+ mode change 100644 => 100755 rootdir/init.rc
+
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+old mode 100644
+new mode 100755
+index 3af0943..3d12307
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -439,7 +439,7 @@ service dbus /system/bin/dbus-daemon --system --nofork
+     user bluetooth
+     group bluetooth net_bt_admin
+ 
+-service bluetoothd /system/bin/bluetoothd -n
++service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -n -d
+     class main
+     socket bluetooth stream 660 bluetooth bluetooth
+     socket dbus_bluetooth stream 660 bluetooth bluetooth
+-- 
+1.7.0.4
+

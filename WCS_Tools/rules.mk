@@ -285,7 +285,7 @@ mydroid-create-local-manifest:
 	
 $(PROGRESS_FETCH_WLAN_ANDROID_MANIFEST):
 	@$(ECHO) "getting wlan android manifest..."
-ifeq ($(CONFIG_WLAN), Y)
+ifeq ($(CONFIG_WLAN), y)
 	git clone $(WLAN_ANDROID_MANIFEST_REPO) $(WLAN_ANDROID_MANIFEST_DIR)
 	@$(call print, "wlan manifest fetched")
 endif
@@ -296,7 +296,7 @@ $(PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST): \
 		$(PROGRESS_MYDROID_REPO_INIT) \
 		$(PROGRESS_FETCH_WLAN_ANDROID_MANIFEST)
 	@$(ECHO) "wlan android manifest bringup..."
-ifeq ($(CONFIG_WLAN), Y)
+ifeq ($(CONFIG_WLAN), y)
 	cd $(WLAN_ANDROID_MANIFEST_DIR) ; \
 	git checkout $(WLAN_ANDROID_MANIFEST_BRANCH) ; \
 	git reset --hard $(WLAN_ANDROID_MANIFEST_HASH)
@@ -313,7 +313,7 @@ wlan-create-local-android-manifest: $(PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST)
 
 $(PROGRESS_FETCH_BT_ANDROID_MANIFEST):
 	@$(ECHO) "getting bt android manifest..."
-ifeq ($(CONFIG_BT), Y)
+ifeq ($(CONFIG_BT), y)
 	git clone $(BT_ANDROID_MANIFEST_REPO) $(BT_ANDROID_MANIFEST_DIR)
 	@$(call print, "bt manifest fetched")
 endif
@@ -324,7 +324,7 @@ $(PROGRESS_BRINGUP_BT_ANDROID_MANIFEST): \
 		$(PROGRESS_MYDROID_REPO_INIT) \
 		$(PROGRESS_FETCH_BT_ANDROID_MANIFEST)
 	@$(ECHO) "bt android manifest bringup..."
-ifeq ($(CONFIG_BT), Y)
+ifeq ($(CONFIG_BT), y)
 	cd $(BT_ANDROID_MANIFEST_DIR) ; \
 	git checkout $(BT_ANDROID_MANIFEST_BRANCH) ; \
 	git reset --hard $(BT_ANDROID_MANIFEST_HASH)

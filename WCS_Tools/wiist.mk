@@ -2,7 +2,7 @@
 #
 # wiist.mk
 #
-# Makefile for Android project integrated with NLCP
+# Makefile for Android project integrated with WLAN
 #
 # Android Version	:	L27.INC1.13.1 OMAP4 GingerBread ES2
 # Platform	     	:	Blaze platform es2.2
@@ -301,78 +301,78 @@ else
 endif
 
 ###############################################################################
-# nlcp
+# wlan
 ###############################################################################
 
-.PHONY += nlcp-test-config
-.PHONY += nlcp-err-bringup
-.PHONY += nlcp-err-config
-.PHONY += nlcp-pre-bringup-validation
+.PHONY += wlan-test-config
+.PHONY += wlan-err-bringup
+.PHONY += wlan-err-config
+.PHONY += wlan-pre-bringup-validation
 
-nlcp-test-config:
-ifeq ($(CONFIG_NLCP), y)
-	@if [ ! -f $(PROGRESS_BRINGUP_NLCP) ] ; then $(MAKE) nlcp-err-bringup ; fi
+wlan-test-config:
+ifeq ($(CONFIG_WLAN), y)
+	@if [ ! -f $(PROGRESS_BRINGUP_WLAN) ] ; then $(MAKE) wlan-err-bringup ; fi
 else
-	@if [ -f $(PROGRESS_BRINGUP_NLCP) ] ; then $(MAKE) nlcp-err-config ; fi
+	@if [ -f $(PROGRESS_BRINGUP_WLAN) ] ; then $(MAKE) wlan-err-config ; fi
 endif
 
-nlcp-err-bringup:
-	$(error "nlcp configured, but bringup was not performed")
+wlan-err-bringup:
+	$(error "wlan configured, but bringup was not performed")
 	
-nlcp-err-config:
-	$(error "nlcp not configured, but bringup was performed")
+wlan-err-config:
+	$(error "wlan not configured, but bringup was performed")
 	
-$(PROGRESS_BRINGUP_NLCP):
-ifeq ($(CONFIG_NLCP), y)
-	@$(MAKE) nlcp-bringup-private
-	@$(call echo-to-file, "INCLUDED", $(PROGRESS_BRINGUP_NLCP))
-	@$(call print, "nlcp bringup done")
+$(PROGRESS_BRINGUP_WLAN):
+ifeq ($(CONFIG_WLAN), y)
+	@$(MAKE) wlan-bringup-private
+	@$(call echo-to-file, "INCLUDED", $(PROGRESS_BRINGUP_WLAN))
+	@$(call print, "wlan bringup done")
 else
-	@$(call print, "nlcp bringup excluded")
+	@$(call print, "wlan bringup excluded")
 endif
 
-nlcp-pre-bringup-validation:
-ifeq ($(CONFIG_NLCP), y)
-	@$(MAKE) nlcp-private-pre-bringup-validation
+wlan-pre-bringup-validation:
+ifeq ($(CONFIG_WLAN), y)
+	@$(MAKE) wlan-private-pre-bringup-validation
 endif
 
-nlcp-bringup: nlcp-pre-bringup-validation
-	@$(MAKE) $(PROGRESS_BRINGUP_NLCP)
+wlan-bringup: wlan-pre-bringup-validation
+	@$(MAKE) $(PROGRESS_BRINGUP_WLAN)
 
-nlcp-make: $(PROGRESS_BRINGUP_NLCP)
-	@$(MAKE) nlcp-test-config
-ifeq ($(CONFIG_NLCP), y)
-	@$(MAKE) nlcp-private-pre-make-validation
-	@$(MAKE) nlcp-make-private
-	@$(call print, "nlcp make done")
+wlan-make: $(PROGRESS_BRINGUP_WLAN)
+	@$(MAKE) wlan-test-config
+ifeq ($(CONFIG_WLAN), y)
+	@$(MAKE) wlan-private-pre-make-validation
+	@$(MAKE) wlan-make-private
+	@$(call print, "wlan make done")
 else
-	@$(call print, "nlcp make excluded")
+	@$(call print, "wlan make excluded")
 endif
 
-nlcp-install: $(PROGRESS_BRINGUP_NLCP)
-	@$(MAKE) nlcp-test-config
-ifeq ($(CONFIG_NLCP), y)
-	@$(MAKE) nlcp-install-private
-	@$(call print, "nlcp install done")
+wlan-install: $(PROGRESS_BRINGUP_WLAN)
+	@$(MAKE) wlan-test-config
+ifeq ($(CONFIG_WLAN), y)
+	@$(MAKE) wlan-install-private
+	@$(call print, "wlan install done")
 else
-	@$(call print, "nlcp install excluded")
+	@$(call print, "wlan install excluded")
 endif
 
-nlcp-clean: $(PROGRESS_BRINGUP_NLCP)
-	@$(MAKE) nlcp-test-config
-ifeq ($(CONFIG_NLCP), y)
-	@$(MAKE) nlcp-clean-private
-	@$(call print, "nlcp clean done")
+wlan-clean: $(PROGRESS_BRINGUP_WLAN)
+	@$(MAKE) wlan-test-config
+ifeq ($(CONFIG_WLAN), y)
+	@$(MAKE) wlan-clean-private
+	@$(call print, "wlan clean done")
 else
-	@$(call print, "nlcp clean excluded")
+	@$(call print, "wlan clean excluded")
 endif
 
-nlcp-distclean:
+wlan-distclean:
 	@$(MAKE) bt-test-config
 ifeq ($(CONFIG_BT), y)
-	@$(MAKE) nlcp-distclean-private
-	@if [ -f $(PROGRESS_BRINGUP_NLCP) ] ; then $(DEL) $(PROGRESS_BRINGUP_NLCP) ; fi
-	@$(call print, "nlcp distclean done")
+	@$(MAKE) wlan-distclean-private
+	@if [ -f $(PROGRESS_BRINGUP_WLAN) ] ; then $(DEL) $(PROGRESS_BRINGUP_WLAN) ; fi
+	@$(call print, "wlan distclean done")
 else
-	@$(call print, "nlcp distclean excluded")
+	@$(call print, "wlan distclean excluded")
 endif

@@ -4,7 +4,7 @@
 #
 # Makefile for Android project integrated with NLCP (general definitions)
 #
-# Android Version	:	L27.INC1.13.1 OMAP4 GingerBread ES2
+# Android Version	:	L27.IS.1 OMAP4 Icecream Sandwich
 # Platform	     	:	Blaze platform es2.2
 # Date				:	July 2011
 #
@@ -29,7 +29,7 @@
 ifndef DEFS_MK_INCLUDED
 DEFS_MK_INCLUDED:=included
 
-VERSION:=ICS-DailyBuild_305
+VERSION:=RLS27.IS.1_IcecreamSandwich.xml
 AFS_BUILD_OPTION:=PRODUCT-full_blaze-userdebug
 
 YOUR_PATH:=$(PWD)
@@ -46,6 +46,7 @@ BINARIES_PATH=$(WIIST_PATH)/binaries
 MAKEFILES_PATH:=$(WIIST_PATH)/cores_make
 INITRC_PATH:=$(WIIST_PATH)/init.rc
 FIRMWARE_PATH:=$(WIIST_PATH)/firmware
+SCRIPTS_PATH:=$(WIIST_PATH)/misc/scripts
 
 ################################################################################
 # 
@@ -111,22 +112,20 @@ MYFS_ROOT_PATH:=$(OUTPUT_IMG_DIR)/root
 MYFS_SYSTEM_PATH:=$(OUTPUT_IMG_DIR)/system
 MYFS_DATA_PATH:=$(OUTPUT_IMG_DIR)/data
 
-################################################################################
-# project configration
-################################################################################
-
-CONFIG_NLCP?=y
-CONFIG_BT?=y
-CONFIG_TIST?=n
-CONFIG_FM?=y
-CONFIG_GPS?=n
-
 WLAN_STA_SOURCE_PATH?=
 WLAN_SOFTAP_SOURCE_PATH?=
 # TODO: remove default value for bt/gps/fm source path
 BT_SOURCE_PATH?=$(WLAN_STA_SOURCE_PATH)
 GPS_SOURCE_PATH?=$(WLAN_STA_SOURCE_PATH)
 FM_SOURCE_PATH?=$(WLAN_STA_SOURCE_PATH)
+
+################################################################################
+# local manifest file names
+################################################################################
+
+WLAN_ANDROID_LOCAL_MANIFEST_NAME:=wlan_android_local_manifest.xml
+BT_ANDROID_LOCAL_MANIFEST_NAME:=bt_android_local_manifest.xml
+FM_ANDROID_LOCAL_MANIFEST_NAME:=fm_android_local_manifest.xml
 
 ################################################################################
 # progress files
@@ -142,16 +141,23 @@ PROGRESS_FETCH_XLOADER:=$(PROGRESS_DIR)/x-loader.fetched
 
 PROGRESS_FETCH_METHOD:=$(PROGRESS_DIR)/bringup-fetch-method
 
+PROGRESS_BRINGUP_MANIFEST:=$(PROGRESS_DIR)/manifest.bringup
+PROGRESS_MYDROID_REPO_INIT:=$(PROGRESS_DIR)/mydroid.repo.inited
 PROGRESS_BRINGUP_MYDROID:=$(PROGRESS_DIR)/mydroid.bringup
 PROGRESS_BRINGUP_KERNEL:=$(PROGRESS_DIR)/kernel.bringup
 PROGRESS_BRINGUP_UBOOT:=$(PROGRESS_DIR)/u-boot.bringup
 PROGRESS_BRINGUP_XLOADER:=$(PROGRESS_DIR)/x-loader.bringup
 
+PROGRESS_FETCH_BT_ANDROID_MANIFEST:=$(PROGRESS_DIR)/bt-android-manifest.fetched
+PROGRESS_BRINGUP_BT_ANDROID_MANIFEST:=$(PROGRESS_DIR)/bt-android-manifest.bringup
+PROGRESS_FETCH_WLAN_ANDROID_MANIFEST:=$(PROGRESS_DIR)/wlan-android-manifest.fetched
+PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST:=$(PROGRESS_DIR)/wlan-android-manifest.bringup
+
 PROGRESS_BRINGUP_TIST:=$(PROGRESS_DIR)/ti-st.bringup
 PROGRESS_BRINGUP_GPS:=$(PROGRESS_DIR)/gps.bringup
 PROGRESS_BRINGUP_BT:=$(PROGRESS_DIR)/bt.bringup
 PROGRESS_BRINGUP_FM:=$(PROGRESS_DIR)/fm.bringup
-PROGRESS_BRINGUP_NLCP:=$(PROGRESS_DIR)/nlcp.bringup
+PROGRESS_BRINGUP_WLAN:=$(PROGRESS_DIR)/wlan.bringup
 
 ################################################################################
 # private progress files

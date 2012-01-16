@@ -27,6 +27,7 @@
 MAKEFLAGS += --no-print-directory
 SHELL=/bin/bash
 
+include .config
 include defs.mk
 include $(WIIST_PATH)/utils.mk
 include $(WIIST_PATH)/repo.mk
@@ -62,14 +63,14 @@ endif
 	@$(MAKE) bt-pre-bringup-validation
 	@$(MAKE) gps-pre-bringup-validation
 	@$(MAKE) fm-pre-bringup-validation
-	@$(MAKE) nlcp-pre-bringup-validation
+	@$(MAKE) wlan-pre-bringup-validation
 	
 	@$(MAKE) mydroid-bringup
 	@$(MAKE) kernel-bringup
 	@$(MAKE) u-boot-bringup
 	@$(MAKE) x-loader-bringup
 	
-	@$(MAKE) nlcp-bringup
+	@$(MAKE) wlan-bringup
 	@$(MAKE) ti-st-bringup
 	@$(MAKE) bt-bringup
 	@$(MAKE) gps-bringup	
@@ -90,7 +91,7 @@ endif
 	$(MAKE) u-boot-make
 	$(MAKE) x-loader-make
 	$(MAKE) kernel-make
-	$(MAKE) nlcp-make
+	$(MAKE) wlan-make
 	$(MAKE) mydroid-make
 	$(MAKE) ti-st-make
 	$(MAKE) bt-make
@@ -118,7 +119,7 @@ endif
 	$(MAKE) u-boot-install
 	$(MAKE) x-loader-install
 	$(MAKE) kernel-install
-	$(MAKE) nlcp-install
+	$(MAKE) wlan-install
 	$(MAKE) mydroid-install
 	$(MAKE) ti-st-install
 	$(MAKE) bt-install
@@ -179,7 +180,7 @@ clean: bringup
 	$(MAKE) x-loader-clean
 	$(MAKE) kernel-clean
 	$(MAKE) mydroid-clean
-	$(MAKE) nlcp-clean
+	$(MAKE) wlan-clean
 	$(MAKE) ti-st-clean
 	$(MAKE) bt-clean
 	$(MAKE) gps-clean
@@ -208,4 +209,4 @@ include $(MAKEFILES_PATH)/ti-st.mk
 include $(MAKEFILES_PATH)/bt.mk
 include $(MAKEFILES_PATH)/gps.mk
 include $(MAKEFILES_PATH)/fm.mk
-include $(MAKEFILES_PATH)/nlcp.mk
+include $(MAKEFILES_PATH)/wlan.mk

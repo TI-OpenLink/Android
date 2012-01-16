@@ -31,16 +31,21 @@ $(PROGRESS_DIR):
 	@$(MKDIR) -p $(PROGRESS_DIR)
 
 $(PROGRESS_FETCH_MANIFEST):
-	@$(ECHO) "getting manifest"...
+	@$(ECHO) "getting manifest..."
 	@$(MAKE) $(PROGRESS_DIR)
 	@$(ECHO) "$(PROGRESS_FETCH_MANIFEST)"
 	@git clone $(OMAPMANIFEST_REPO) $(MANIFEST)
-	@cd $(MANIFEST) ; git checkout origin/$(OMAPMANIFEST_BRANCH) -b $(OMAPMANIFEST_BRANCH)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MANIFEST))
 	@$(call print, "manifest for $(OMAPMANIFEST_BRANCH) retrieved")
 	@$(call echo-to-file, "PACKAGE SOURCE: git -> $(GIT_PROTOCOL_USE)", $(PROGRESS_FETCH_METHOD))
-	
-omapmanifest-bringup: $(PROGRESS_FETCH_MANIFEST)
+
+$(PROGRESS_BRINGUP_MANIFEST): $(PROGRESS_FETCH_MANIFEST)
+	@$(ECHO) "manifest bringup..."
+	@cd $(MANIFEST) ; git checkout $(OMAPMANIFEST_BRANCH)
+	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_MANIFEST))
+	@$(call print, "manifest for $(OMAPMANIFEST_BRANCH) ready to use")
+
+omapmanifest-bringup: $(PROGRESS_BRINGUP_MANIFEST)
 
 ifeq ($(GIT_PROTOCOL_USE), opbu)
 $(PROGRESS_FETCH_MYDROID):
@@ -62,13 +67,17 @@ endif
 error-opbu_missing:
 	$(error OPBU tar file is missing or not defined)
 else
-$(PROGRESS_FETCH_MYDROID): $(PROGRESS_FETCH_MANIFEST)
-	@$(ECHO) "$(PROGRESS_FETCH_MYDROID)"
-	@$(MAKE) $(PROGRESS_DIR)
+$(PROGRESS_MYDROID_REPO_INIT): $(PROGRESS_BRINGUP_MANIFEST)
 	@$(MKDIR) -p $(MYDROID)
 	cd $(MYDROID) ; \
-	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify ; \
-	repo sync --no-repo-verify
+	repo init -u $(MANIFEST) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
+#	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
+	@$(call echo-to-file, "DONE", $(PROGRESS_MYDROID_REPO_INIT))
+	@$(call print, "android repo inited")
+
+$(PROGRESS_FETCH_MYDROID): $(PROGRESS_MYDROID_REPO_INIT)
+	$(MAKE) mydroid-create-local-manifest
+	cd $(MYDROID) ; repo sync --no-repo-verify
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MYDROID))
 	@$(call print, "android filesystem retrieved")
 endif
@@ -118,9 +127,7 @@ kernel-bringup: 	$(PROGRESS_BRINGUP_KERNEL)
 
 $(PROGRESS_BRINGUP_MYDROID): $(PROGRESS_FETCH_MYDROID)
 	@$(ECHO) "$(PROGRESS_BRINGUP_MYDROID)"
-#	@$(COPY) -Rfp $(MYDROID)/device/ti/blaze/buildspec.mk.default $(MYDROID)/buildspec.mk
 	@cd $(MYDROID) ; source build/envsetup.sh ; $(MAKE) -j$(NTHREADS) clean 2>&1
-#	$(DEL) $(MYDROID)/device/ti/blaze/overlay/packages/apps/Launcher2/res/layout/all_apps.xml
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_MYDROID))
 	@$(call print, "mydroid bringup done")
 
@@ -260,3 +267,78 @@ mydroid-clean: 		$(PROGRESS_BRINGUP_MYDROID)
 mydroid-distclean:
 	$(MAKE) mydroid-clean
 	
+mydroid-create-local-manifest:
+	$(MAKE) wlan-create-local-android-manifest
+	$(MAKE) bt-create-local-android-manifest
+	$(MAKE) gps-create-local-android-manifest
+	$(MAKE) fm-create-local-android-manifest
+	# merge local manifest and align main manifest.xml
+	@$(call print, "align wlan and bt manifests")
+	cd $(MYDROID)/.repo ; \
+	$(SCRIPTS_PATH)/align_manifest.py $(WLAN_ANDROID_LOCAL_MANIFEST_NAME) $(BT_ANDROID_LOCAL_MANIFEST_NAME)
+	@$(call print, "merge wlan and bt manifests")	
+	cd $(MYDROID)/.repo ; \
+	$(SCRIPTS_PATH)/merge_wcs_manifest.py local_manifest.xml $(WLAN_ANDROID_LOCAL_MANIFEST_NAME) $(BT_ANDROID_LOCAL_MANIFEST_NAME)
+	@$(call print, "align local and repo manifests")
+	cd $(MYDROID)/.repo ; \
+	$(SCRIPTS_PATH)/align_manifest.py local_manifest.xml manifest.xml
+	
+$(PROGRESS_FETCH_WLAN_ANDROID_MANIFEST):
+	@$(ECHO) "getting wlan android manifest..."
+ifeq ($(CONFIG_WLAN), Y)
+	git clone $(WLAN_ANDROID_MANIFEST_REPO) $(WLAN_ANDROID_MANIFEST_DIR)
+	@$(call print, "wlan manifest fetched")
+endif
+	@$(call echo-to-file, "DONE", $(PROGRESS_WLAN_FETCH_OL_MANIFEST))
+	@$(ECHO) "...done"
+	
+$(PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST): \
+		$(PROGRESS_MYDROID_REPO_INIT) \
+		$(PROGRESS_FETCH_WLAN_ANDROID_MANIFEST)
+	@$(ECHO) "wlan android manifest bringup..."
+ifeq ($(CONFIG_WLAN), Y)
+	cd $(WLAN_ANDROID_MANIFEST_DIR) ; \
+	git checkout $(WLAN_ANDROID_MANIFEST_BRANCH) ; \
+	git reset --hard $(WLAN_ANDROID_MANIFEST_HASH)
+	# copy manifest to .repo folder of android
+	$(COPY) $(WLAN_ANDROID_MANIFEST_DIR)/$(WLAN_ANDROID_MANIFEST_NAME) $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
+else
+	$(TOUCH) $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
+endif
+	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST))
+	@$(call print, "wlan manifest bringup done")
+	@$(ECHO) "...done"
+
+wlan-create-local-android-manifest: $(PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST)
+
+$(PROGRESS_FETCH_BT_ANDROID_MANIFEST):
+	@$(ECHO) "getting bt android manifest..."
+ifeq ($(CONFIG_BT), Y)
+	git clone $(BT_ANDROID_MANIFEST_REPO) $(BT_ANDROID_MANIFEST_DIR)
+	@$(call print, "bt manifest fetched")
+endif
+	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_BT_ANDROID_MANIFEST))
+	@$(ECHO) "...done"
+	
+$(PROGRESS_BRINGUP_BT_ANDROID_MANIFEST): \
+		$(PROGRESS_MYDROID_REPO_INIT) \
+		$(PROGRESS_FETCH_BT_ANDROID_MANIFEST)
+	@$(ECHO) "bt android manifest bringup..."
+ifeq ($(CONFIG_BT), Y)
+	cd $(BT_ANDROID_MANIFEST_DIR) ; \
+	git checkout $(BT_ANDROID_MANIFEST_BRANCH) ; \
+	git reset --hard $(BT_ANDROID_MANIFEST_HASH)
+	# copy manifest to .repo folder of android
+	$(COPY) $(BT_ANDROID_MANIFEST_DIR)/$(BT_ANDROID_MANIFEST_NAME) $(MYDROID)/.repo/$(BT_ANDROID_LOCAL_MANIFEST_NAME)
+else
+	$(TOUCH) $(MYDROID)/.repo/$(BT_ANDROID_LOCAL_MANIFEST_NAME)
+endif
+	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_BT_ANDROID_MANIFEST))
+	@$(call print, "bt manifest bringup done")
+	@$(ECHO) "...done"
+
+bt-create-local-android-manifest: $(PROGRESS_BRINGUP_BT_ANDROID_MANIFEST)
+
+gps-create-local-android-manifest:
+
+fm-create-local-android-manifest:

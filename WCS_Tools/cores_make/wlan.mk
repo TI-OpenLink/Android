@@ -88,7 +88,7 @@ $(PROGRESS_WLAN_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 	@$(call echo-to-file, "DONE", $(PROGRESS_WLAN_KERNEL_PATCHES))
 	@$(call print, "wlan kernel patches done")	
 
-$(PROGRESS_WLAN_MYDROID_PATCHES):
+$(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	@$(ECHO) "patching android for wlan..."
 	
 	# patch libnl

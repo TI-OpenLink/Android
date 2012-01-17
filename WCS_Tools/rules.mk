@@ -289,7 +289,7 @@ ifeq ($(CONFIG_WLAN), y)
 	git clone $(WLAN_ANDROID_MANIFEST_REPO) $(WLAN_ANDROID_MANIFEST_DIR)
 	@$(call print, "wlan manifest fetched")
 endif
-	@$(call echo-to-file, "DONE", $(PROGRESS_WLAN_FETCH_OL_MANIFEST))
+	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_WLAN_ANDROID_MANIFEST))
 	@$(ECHO) "...done"
 	
 $(PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST): \
@@ -333,7 +333,7 @@ ifeq ($(CONFIG_BT), y)
 else
 	$(TOUCH) $(MYDROID)/.repo/$(BT_ANDROID_LOCAL_MANIFEST_NAME)
 endif
-	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_BT_ANDROID_MANIFEST))
+	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_BT_ANDROID_MANIFEST))
 	@$(call print, "bt manifest bringup done")
 	@$(ECHO) "...done"
 

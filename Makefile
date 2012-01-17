@@ -92,11 +92,11 @@ endif
 	$(MAKE) x-loader-make
 	$(MAKE) kernel-make
 	$(MAKE) wlan-make
-	$(MAKE) mydroid-make
-	$(MAKE) ti-st-make
 	$(MAKE) bt-make
 	$(MAKE) gps-make
 	$(MAKE) fm-make
+	$(MAKE) ti-st-make
+	$(MAKE) mydroid-make
 	
 	@$(call print, "MAKE ALL DONE")
 	@$(call print, "The build process took $$(( $(call GET_TIME)-$(MAKE_START_TIME) )) seconds")

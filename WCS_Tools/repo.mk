@@ -31,26 +31,26 @@ OMAP_REPO_TOOL:=git://git.omapzoom.org/tools/repo
 OMAP_REPO_BRANCH:=master
 
 #REPO_INIT_DEF_PARAMS:=--repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
-REPO_INIT_DEF_PARAMS:=--quiet --no-repo-verify
+REPO_INIT_DEF_PARAMS:=--quiet
 REPO_SYNC_DEF_PARAMS:=-j16
 
 # -----------------------------------------------------------------------------
 # x-loader repository definitions
 # -----------------------------------------------------------------------------
 XLOADER_REPO:=git://git.omapzoom.org/repo/x-loader.git
-XLOADER_TAG_HASH:=7e049cfbf85735a34633581141e8bd568cefce34
+XLOADER_TAG_HASH:=83cc7f5e242ab82f64f7a868df0fb5ed88830971
 
 # -----------------------------------------------------------------------------
 # u-boot repository definitions
 # -----------------------------------------------------------------------------
 UBOOT_REPO:=git://git.omapzoom.org/repo/u-boot.git
-UBOOT_TAG_HASH:=3a7cc9ef9dcaeda2715a2c864293eadb4fef0afc
+UBOOT_TAG_HASH:=375e17deb1855185f429e36713b31f5ee453c443
 
 # -----------------------------------------------------------------------------
 # kernel repository definitions
 # -----------------------------------------------------------------------------
 KERNEL_REPO:=git://git.omapzoom.org/kernel/omap.git
-KERNEL_TAG_HASH:=042a2c41c2445220892ac0562de286dd955ebed9
+KERNEL_TAG_HASH:=358ad6f8ca2bb5939d12f0d26b32aed92d70caef
 
 # -----------------------------------------------------------------------------
 # mydroid repository definitions
@@ -58,7 +58,7 @@ KERNEL_TAG_HASH:=042a2c41c2445220892ac0562de286dd955ebed9
 
 OMAPMANIFEST_REPO:=git://git.omapzoom.org/platform/omapmanifest.git
 OMAPMANIFEST_BRANCH:=27.x
-OMAPMANIFEST_XMLFILE:=RLS27.IS.1_IcecreamSandwich.xml
+OMAPMANIFEST_XMLFILE:=RLS27.IS.2.P1_IcecreamSandwich.xml
 OMAPMANIFEST_HASH:=
 
 # -----------------------------------------------------------------------------

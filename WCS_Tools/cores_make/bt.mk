@@ -38,6 +38,7 @@ BLUETOOTH_NEXT:=$(BT_ROOT_DIR)/bluetooth-next
 BLUEZ_DIR:=$(BT_ROOT_DIR)/bluez
 BT_COMPAT_DIR:=$(BT_ROOT_DIR)/compat
 BT_COMPAT_WIRELESS_DIR:=$(BT_ROOT_DIR)/compat-wireless
+BT_KO_INSTALLER:=$(MYDROID)/external/bluez_ko_installer
 
 PROGRESS_BT_KERNEL_PATCHES:=$(PROGRESS_DIR)/bt.kernel.patched
 PROGRESS_BT_MYDROID_PATCHES:=$(PROGRESS_DIR)/bt.mydroid.patched
@@ -88,6 +89,8 @@ $(PROGRESS_BT_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 
 $(PROGRESS_BT_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	@$(ECHO) "patching android for bt..."
+	# TODO: the patch is temporary solution
+	cd $(INITRC_PATH) ; $(PATCH) -p1 < init.omap4blazeboard.rc-bluetooth.patch
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_BT_MYDROID_PATCHES))
 	@$(call print, "android patches and packages done")
@@ -117,6 +120,7 @@ bt-make-private:
 	export KLIB_BUILD=$(KERNEL_DIR) ; \
 	cd $(BT_COMPAT_WIRELESS_DIR) ; ./tibluez.sh
 #	$(MAKE) -C $(BT_COMPAT_WIRELESS_DIR) KLIB=$(KERNEL_DIR) KLIB_BUILD=$(KERNEL_DIR) -j$(NTHREADS)
+	$(FIND) $(BT_COMPAT_WIRELESS_DIR) -name "*.ko" -exec $(COPY) {} $(BT_KO_INSTALLER) \;
 	@$(ECHO) "...done"
 	
 bt-install-private:

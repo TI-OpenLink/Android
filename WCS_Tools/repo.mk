@@ -30,7 +30,8 @@ include defs.mk
 OMAP_REPO_TOOL:=git://git.omapzoom.org/tools/repo
 OMAP_REPO_BRANCH:=master
 
-REPO_INIT_DEF_PARAMS:=--repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
+#REPO_INIT_DEF_PARAMS:=--repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
+REPO_INIT_DEF_PARAMS:=--quiet --no-repo-verify
 
 # -----------------------------------------------------------------------------
 # x-loader repository definitions
@@ -56,8 +57,7 @@ KERNEL_TAG_HASH:=042a2c41c2445220892ac0562de286dd955ebed9
 
 OMAPMANIFEST_REPO:=git://git.omapzoom.org/platform/omapmanifest.git
 OMAPMANIFEST_BRANCH:=27.x
-OMAPMANIFEST_XMLFILE:=RLS27.IS.2.P1_IcecreamSandwich.xml
-#RLS27.IS.1_IcecreamSandwich.xml
+OMAPMANIFEST_XMLFILE:=RLS27.IS.1_IcecreamSandwich.xml
 OMAPMANIFEST_HASH:=
 
 # -----------------------------------------------------------------------------

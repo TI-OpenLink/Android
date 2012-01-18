@@ -70,8 +70,7 @@ else
 $(PROGRESS_MYDROID_REPO_INIT): $(PROGRESS_BRINGUP_MANIFEST)
 	@$(MKDIR) -p $(MYDROID)
 	cd $(MYDROID) ; \
-	repo init -u $(MANIFEST) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
-#	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
+	repo init -u $(MANIFEST) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) $(REPO_INIT_DEF_PARAMS)
 	@$(call echo-to-file, "DONE", $(PROGRESS_MYDROID_REPO_INIT))
 	@$(call print, "android repo inited")
 

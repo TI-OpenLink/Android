@@ -91,9 +91,6 @@ $(PROGRESS_WLAN_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 $(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	@$(ECHO) "patching android for wlan..."
 	
-	# patch libnl
-	cd $(LIBNL_DIR) ; git am $(WLAN_ANDROID_PATCHES)/system/core/*.patch
-
 	# remove omap's ti-utils project from ics
 	$(MKDIR) -p $(TRASH_DIR)/mydroid/hardware/ti/wlan/mac80211
 	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils $(TRASH_DIR)/mydroid/hardware/ti/wlan/mac80211/ ; fi

@@ -76,12 +76,12 @@ $(PROGRESS_BT_BRINGUP_DRIVER_MANIFEST): $(PROGRESS_BT_FETCH_DRIVER_MANIFEST)
 $(PROGRESS_BT_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 	@$(ECHO) "patching kernel to include bt modules as M"
 	cd $(KERNEL_DIR) ; $(SED) -rie 's/CONFIG_BT=y/CONFIG_BT=m/' .config
-	cd $(KERNEL_DIR) ; $(SED) -rie 's/CONFIG_BT_L2CAP=y/CONFIG_BT_L2CAP=m/' .config
-	cd $(KERNEL_DIR) ; $(SED) -rie 's/CONFIG_BT_SCO=y/CONFIG_BT_SCO=m/' .config
+#	cd $(KERNEL_DIR) ; $(SED) -rie 's/CONFIG_BT_L2CAP=y/CONFIG_BT_L2CAP=m/' .config
+#	cd $(KERNEL_DIR) ; $(SED) -rie 's/CONFIG_BT_SCO=y/CONFIG_BT_SCO=m/' .config
 	cd $(KERNEL_DIR) ; $(SED) -rie 's/CONFIG_BT_RFCOMM=y/CONFIG_BT_RFCOMM=m/' .config
 	cd $(KERNEL_DIR) ; $(SED) -rie 's/CONFIG_BT_HIDP=y/CONFIG_BT_HIDP=m/' .config
 	cd $(KERNEL_DIR) ; $(SED) -rie 's/# CONFIG_CRYPTO_AES is not set/CONFIG_CRYPTO_AES=y/' .config
-	cd $(KERNEL_DIR) ; $(SED) -rie 's/CONFIG_CRYPTO_AES=y/CONFIG_CRYPTO_AES=m/' .config
+#	cd $(KERNEL_DIR) ; $(SED) -rie 's/CONFIG_CRYPTO_AES=m/CONFIG_CRYPTO_AES=y/' .config
 	cd $(KERNEL_DIR) ; $(SED) -rie 's/CONFIG_CRYPTO_ECB=m/CONFIG_CRYPTO_ECB=y/' .config
 	@$(call echo-to-file, "DONE", $(PROGRESS_BT_KERNEL_PATCHES))
 	@$(call print, "kernel configured to use bt as modules")
@@ -112,7 +112,7 @@ bt-make-private:
 	export GIT_TREE=$(BT_GIT_TREE) ; \
 	export GIT_COMPAT_TREE=$(BT_GIT_COMPAT_TREE) ; \
 	cd $(BT_COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh ; \
-	cd $(BT_COMPAT_WIRELESS_DIR) ; ./scripts/driver-select bt
+	cd $(BT_COMPAT_WIRELESS_DIR) ; ./scripts/driver-select bt ; \
 	export KLIB=$(KERNEL_DIR) ; \
 	export KLIB_BUILD=$(KERNEL_DIR) ; \
 	cd $(BT_COMPAT_WIRELESS_DIR) ; ./tibluez.sh

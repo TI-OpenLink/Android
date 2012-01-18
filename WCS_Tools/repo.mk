@@ -56,7 +56,8 @@ KERNEL_TAG_HASH:=042a2c41c2445220892ac0562de286dd955ebed9
 
 OMAPMANIFEST_REPO:=git://git.omapzoom.org/platform/omapmanifest.git
 OMAPMANIFEST_BRANCH:=27.x
-OMAPMANIFEST_XMLFILE:=RLS27.IS.1_IcecreamSandwich.xml
+OMAPMANIFEST_XMLFILE:=RLS27.IS.2.P1_IcecreamSandwich.xml
+#RLS27.IS.1_IcecreamSandwich.xml
 OMAPMANIFEST_HASH:=
 
 # -----------------------------------------------------------------------------

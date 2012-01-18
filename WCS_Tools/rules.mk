@@ -77,7 +77,7 @@ $(PROGRESS_MYDROID_REPO_INIT): $(PROGRESS_BRINGUP_MANIFEST)
 
 $(PROGRESS_FETCH_MYDROID): $(PROGRESS_MYDROID_REPO_INIT)
 	$(MAKE) mydroid-create-local-manifest
-	cd $(MYDROID) ; repo sync --no-repo-verify
+	cd $(MYDROID) ; repo sync -j32 --no-repo-verify
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MYDROID))
 	@$(call print, "android filesystem retrieved")
 endif
@@ -303,6 +303,7 @@ ifeq ($(CONFIG_WLAN), y)
 	# copy manifest to .repo folder of android
 	$(COPY) $(WLAN_ANDROID_MANIFEST_DIR)/$(WLAN_ANDROID_MANIFEST_NAME) $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
 else
+	$(COPY) $(WIIST_PATH)/misc/empty_manifest.xml $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
 	$(TOUCH) $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
 endif
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST))
@@ -331,6 +332,7 @@ ifeq ($(CONFIG_BT), y)
 	# copy manifest to .repo folder of android
 	$(COPY) $(BT_ANDROID_MANIFEST_DIR)/$(BT_ANDROID_MANIFEST_NAME) $(MYDROID)/.repo/$(BT_ANDROID_LOCAL_MANIFEST_NAME)
 else
+	$(COPY) $(WIIST_PATH)/misc/empty_manifest.xml $(MYDROID)/.repo/$(BT_ANDROID_LOCAL_MANIFEST_NAME)
 	$(TOUCH) $(MYDROID)/.repo/$(BT_ANDROID_LOCAL_MANIFEST_NAME)
 endif
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_BT_ANDROID_MANIFEST))

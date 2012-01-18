@@ -32,6 +32,7 @@ OMAP_REPO_BRANCH:=master
 
 #REPO_INIT_DEF_PARAMS:=--repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
 REPO_INIT_DEF_PARAMS:=--quiet --no-repo-verify
+REPO_SYNC_DEF_PARAMS:=-j16
 
 # -----------------------------------------------------------------------------
 # x-loader repository definitions

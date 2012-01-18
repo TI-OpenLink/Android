@@ -76,7 +76,7 @@ $(PROGRESS_MYDROID_REPO_INIT): $(PROGRESS_BRINGUP_MANIFEST)
 
 $(PROGRESS_FETCH_MYDROID): $(PROGRESS_MYDROID_REPO_INIT)
 	$(MAKE) mydroid-create-local-manifest
-	cd $(MYDROID) ; repo sync -j32 --no-repo-verify
+	cd $(MYDROID) ; repo sync $(REPO_SYNC_DEF_PARAMS)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MYDROID))
 	@$(call print, "android filesystem retrieved")
 endif

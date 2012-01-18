@@ -112,7 +112,7 @@ wlan-bringup-private: 	$(PROGRESS_WLAN_BRINGUP_OL_MANIFEST) \
 	$(MKDIR) -p $(WLAN_ROOT_DIR)
 	cd $(WLAN_ROOT_DIR) ; \
 	repo init -u $(WLAN_DRIVER_MANIFEST_DIR) -b $(WLAN_DRIVER_MANIFEST_BRANCH) -m $(WLAN_DRIVER_MANIFEST_NAME) $(REPO_INIT_DEF_PARAMS) ; \
-	repo sync --no-repo-verify
+	repo sync $(REPO_SYNC_DEF_PARAMS)
 	
 	export GIT_TREE=$(WLAN_GIT_TREE) ; \
 	export GIT_COMPAT_TREE=$(WLAN_GIT_COMPAT_TREE) ; \

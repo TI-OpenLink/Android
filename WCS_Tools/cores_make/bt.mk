@@ -102,7 +102,7 @@ bt-bringup-private: $(PROGRESS_BT_BRINGUP_DRIVER_MANIFEST) \
 	$(MKDIR) -p $(BT_ROOT_DIR)
 	cd $(BT_ROOT_DIR) ; \
 	repo init -u $(BT_DRIVER_MANIFEST_DIR) -b $(BT_DRIVER_MANIFEST_BRANCH) -m $(BT_DRIVER_MANIFEST_NAME) $(REPO_INIT_DEF_PARAMS) ; \
-	repo sync --no-repo-verify
+	repo sync $(REPO_SYNC_DEF_PARAMS)
 
 	export GIT_TREE=$(BT_GIT_TREE) ; \
 	export GIT_COMPAT_TREE=$(BT_GIT_COMPAT_TREE) ; \

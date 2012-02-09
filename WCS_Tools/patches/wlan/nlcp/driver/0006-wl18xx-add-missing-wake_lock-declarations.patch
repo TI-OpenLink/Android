@@ -1,0 +1,29 @@
+From fa43f4419f0490d6a694bbeaab4a6ac2551e86a4 Mon Sep 17 00:00:00 2001
+From: Eliad Peller <eliad@wizery.com>
+Date: Mon, 23 Jan 2012 17:59:11 +0200
+Subject: [PATCH 6/8] wl18xx: add missing wake_lock declarations
+
+Signed-off-by: Eliad Peller <eliad@wizery.com>
+---
+ drivers/net/wireless/ti/wlcore/wlcore.h |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/net/wireless/ti/wlcore/wlcore.h b/drivers/net/wireless/ti/wlcore/wlcore.h
+index 25c27a6..69f77dd 100644
+--- a/drivers/net/wireless/ti/wlcore/wlcore.h
++++ b/drivers/net/wireless/ti/wlcore/wlcore.h
+@@ -257,6 +257,11 @@ struct wl1271 {
+ 	/* in dBm */
+ 	int power_level;
+ 
++#ifdef CONFIG_HAS_WAKELOCK
++	struct wake_lock wake_lock;
++	struct wake_lock rx_wake;
++#endif
++
+ 	struct wl1271_stats stats;
+ 
+ 	__le32 buffer_32;
+-- 
+1.7.0.4
+

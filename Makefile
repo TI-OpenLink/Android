@@ -148,10 +148,6 @@ create-images:
 	$(COPY) -f $(BOOT_PATH)/MLO* $(EMMC_PATH)
 	$(COPY) -f $(KERNEL_DIR)/arch/arm/boot/zImage $(EMMC_PATH)
 
-#	# echo instead of just copy since there are ommited directories (which causes errors)
-#	$(ECHO) `$(COPY) $(MYFS_PATH)/* $(OUTPUT_IMG_DIR)/root`
-#	$(COPY) -rf $(MYFS_PATH)/system/* $(OUTPUT_IMG_DIR)/system
-#	$(COPY) -rf $(MYFS_PATH)/data/* $(OUTPUT_IMG_DIR)/data
 	$(FIND) $(OUTPUT_IMG_DIR) -name *.img -exec rm -f {} \;	
 	$(MAKE) mydroid-make
 	

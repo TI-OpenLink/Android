@@ -25,6 +25,9 @@
 #
 ################################################################################
 
+ifndef REPO_MK_INCLUDED
+REPO_MK_INCLUDED:=included
+
 include defs.mk
 
 OMAP_REPO_TOOL:=git://git.omapzoom.org/tools/repo
@@ -64,17 +67,12 @@ OMAPMANIFEST_HASH:=
 # -----------------------------------------------------------------------------
 # wlan repository definitions
 # -----------------------------------------------------------------------------
-WLAN_DRIVER_MANIFEST_REPO:=git://github.com/TI-OpenLink/ti-ol-driver-manifest.git
-WLAN_DRIVER_MANIFEST_BRANCH:=master
-WLAN_DRIVER_MANIFEST_HASH:=
-WLAN_DRIVER_MANIFEST_DIR:=$(WORKSPACE_DIR)/wlan-driver-manifest
-WLAN_DRIVER_MANIFEST_NAME:=TI-OpenLink-driver-R5.00.xx.xml
-
-WLAN_ANDROID_MANIFEST_REPO:=git://github.com/TI-OpenLink/ti-ol-android-manifest.git
-WLAN_ANDROID_MANIFEST_BRANCH:=master
-WLAN_ANDROID_MANIFEST_HASH:=
-WLAN_ANDROID_MANIFEST_DIR:=$(WORKSPACE_DIR)/wlan-android-manifest
-WLAN_ANDROID_MANIFEST_NAME:=TI-OpenLink-android-R5.00.xx.xml
+WLAN_MANIFEST_REPO:=git://github.com/TI-OpenLink/ti-ol-manifest.git
+WLAN_MANIFEST_BRANCH:=int
+WLAN_MANIFEST_HASH:=
+WLAN_MANIFEST_DIR:=$(WORKSPACE_DIR)/ti-ol-manifest
+WLAN_DRIVER_MANIFEST_NAME:=ti-ol-driver-manifest.R5.xx.xml
+WLAN_ANDROID_MANIFEST_NAME:=ti-ol-android-manifest.R5.xx.xml
 
 # -----------------------------------------------------------------------------
 # bt repository definitions
@@ -100,4 +98,4 @@ FM_ANDROID_MANIFEST_HASH:=
 FM_ANDROID_MANIFEST_DIR:=
 FM_ANDROID_MANIFEST_NAME:=
 
-
+endif #REPO_MK_INCLUDED

@@ -150,8 +150,8 @@ PROGRESS_BRINGUP_XLOADER:=$(PROGRESS_DIR)/x-loader.bringup
 
 PROGRESS_FETCH_BT_ANDROID_MANIFEST:=$(PROGRESS_DIR)/bt-android-manifest.fetched
 PROGRESS_BRINGUP_BT_ANDROID_MANIFEST:=$(PROGRESS_DIR)/bt-android-manifest.bringup
-PROGRESS_FETCH_WLAN_ANDROID_MANIFEST:=$(PROGRESS_DIR)/wlan-android-manifest.fetched
-PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST:=$(PROGRESS_DIR)/wlan-android-manifest.bringup
+PROGRESS_FETCH_WLAN_MANIFEST:=$(PROGRESS_DIR)/wlan-manifest.fetched
+PROGRESS_BRINGUP_WLAN_MANIFEST:=$(PROGRESS_DIR)/wlan-manifest.bringup
 
 PROGRESS_BRINGUP_TIST:=$(PROGRESS_DIR)/ti-st.bringup
 PROGRESS_BRINGUP_GPS:=$(PROGRESS_DIR)/gps.bringup
@@ -195,6 +195,3 @@ export product_tag
 export sd2
 
 endif #DEFS_MK_INCLUDED
-
-
-

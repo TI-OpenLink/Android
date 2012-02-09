@@ -26,6 +26,7 @@
 ################################################################################
 
 include defs.mk
+include $(WIIST_PATH)/repo.mk
 
 $(PROGRESS_DIR):
 	@$(MKDIR) -p $(PROGRESS_DIR)
@@ -187,10 +188,6 @@ mydroid-install:
 	@cd $(MYFS_SYSTEM_PATH)/xbin/busybox ; source $(WIIST_PATH)/misc/scripts/create_busybox_symlink.sh
 	@$(CHMOD) -R 777 $(MYFS_SYSTEM_PATH)/xbin/busybox
 
-#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/root/* $(MYFS_PATH)
-#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/system/ $(MYFS_PATH)
-#	@$(COPY) -rf $(MYDROID)/out/target/product/blaze/data/ $(MYFS_PATH)
-	
 	@$(call print, "mydroid install done")
 
 VERSION_TI_TXT_FILE:=$(BINARIES_PATH)/root/version_ti.txt
@@ -282,34 +279,34 @@ mydroid-create-local-manifest:
 	cd $(MYDROID)/.repo ; \
 	$(SCRIPTS_PATH)/align_manifest.py local_manifest.xml manifest.xml
 	
-$(PROGRESS_FETCH_WLAN_ANDROID_MANIFEST):
+$(PROGRESS_FETCH_WLAN_MANIFEST):
 	@$(ECHO) "getting wlan android manifest..."
 ifeq ($(CONFIG_WLAN), y)
-	git clone $(WLAN_ANDROID_MANIFEST_REPO) $(WLAN_ANDROID_MANIFEST_DIR)
+	git clone $(WLAN_MANIFEST_REPO) $(WLAN_MANIFEST_DIR)
 	@$(call print, "wlan manifest fetched")
 endif
-	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_WLAN_ANDROID_MANIFEST))
+	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_WLAN_MANIFEST))
 	@$(ECHO) "...done"
 	
-$(PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST): \
+$(PROGRESS_BRINGUP_WLAN_MANIFEST): \
 		$(PROGRESS_MYDROID_REPO_INIT) \
-		$(PROGRESS_FETCH_WLAN_ANDROID_MANIFEST)
+		$(PROGRESS_FETCH_WLAN_MANIFEST)
 	@$(ECHO) "wlan android manifest bringup..."
 ifeq ($(CONFIG_WLAN), y)
-	cd $(WLAN_ANDROID_MANIFEST_DIR) ; \
-	git checkout $(WLAN_ANDROID_MANIFEST_BRANCH) ; \
-	git reset --hard $(WLAN_ANDROID_MANIFEST_HASH)
+	cd $(WLAN_MANIFEST_DIR) ; \
+	git checkout $(WLAN_MANIFEST_BRANCH) ; \
+	git reset --hard $(WLAN_MANIFEST_HASH)
 	# copy manifest to .repo folder of android
-	$(COPY) $(WLAN_ANDROID_MANIFEST_DIR)/$(WLAN_ANDROID_MANIFEST_NAME) $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
+	$(COPY) $(WLAN_MANIFEST_DIR)/$(WLAN_ANDROID_MANIFEST_NAME) $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
 else
 	$(COPY) $(WIIST_PATH)/misc/empty_manifest.xml $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
 	$(TOUCH) $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
 endif
-	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST))
+	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_WLAN_MANIFEST))
 	@$(call print, "wlan manifest bringup done")
 	@$(ECHO) "...done"
 
-wlan-create-local-android-manifest: $(PROGRESS_BRINGUP_WLAN_ANDROID_MANIFEST)
+wlan-create-local-android-manifest: $(PROGRESS_BRINGUP_WLAN_MANIFEST)
 
 $(PROGRESS_FETCH_BT_ANDROID_MANIFEST):
 	@$(ECHO) "getting bt android manifest..."

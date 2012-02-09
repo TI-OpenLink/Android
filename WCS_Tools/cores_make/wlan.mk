@@ -111,9 +111,9 @@ $(PROGRESS_WLAN_DRIVER_FETCH): $(PROGRESS_BRINGUP_WLAN_MANIFEST)
 	
 $(PROGRESS_WLAN_COMPAT_BRINGUP): $(PROGRESS_WLAN_DRIVER_FETCH)
 	@$(ECHO) "compat-wireless bringup for wlcore..."		
-	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
+#	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
 	git am $(WLAN_COMPAT_WIRELESS_PATCHES)/*.patch	 
-	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
+#	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
 	if [ -f patches/06-header-changes.patch ] ; then $(DEL) patches/06-header-changes.patch ; fi ; \
 	if [ -f patches/09-threaded-irq.patch ] ; then $(DEL) patches/09-threaded-irq.patch ; fi ; \
 	if [ -f patches/11-dev-pm-ops.patch ] ; then $(DEL) patches/11-dev-pm-ops.patch ; fi ; \

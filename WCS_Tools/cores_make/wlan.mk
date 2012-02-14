@@ -171,4 +171,13 @@ wlan-clean-private:
 	cd $(WLAN_COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-clean.sh
 	$(FIND) $(WL12xx_KO_INSTALLER) -name "*.ko" -exec $(DEL) {} \;
 	@$(ECHO) "...done"
-
+	
+wlan-update-codebase-private: $(PROGRESS_BRINGUP_WLAN_MANIFEST)
+	cd $(WLAN_MANIFEST_DIR) ; \
+	git reset --hard $(WLAN_MANIFEST_HASH)
+	$(MAKE) mydroid-create-local-manifest
+	$(DEL) $(PROGRESS_WLAN_DRIVER_FETCH)
+	$(MAKE) $(PROGRESS_WLAN_DRIVER_FETCH)
+	cd $(MYDROID) ; repo sync
+	$(DEL) $(PROGRESS_WLAN_MYDROID_PATCHES)
+	$(MAKE) $(PROGRESS_WLAN_MYDROID_PATCHES)

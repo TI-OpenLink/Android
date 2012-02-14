@@ -35,7 +35,8 @@ OMAP_REPO_BRANCH:=master
 
 #REPO_INIT_DEF_PARAMS:=--repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
 REPO_INIT_DEF_PARAMS:=--quiet --no-repo-verify
-REPO_SYNC_DEF_PARAMS:=-j16
+REPO_SYNC_NTHREADS:=16
+REPO_SYNC_DEF_PARAMS:=-j$(REPO_SYNC_NTHREADS)
 
 # -----------------------------------------------------------------------------
 # x-loader repository definitions
@@ -69,24 +70,21 @@ OMAPMANIFEST_HASH:=
 # -----------------------------------------------------------------------------
 WLAN_MANIFEST_REPO:=git://github.com/TI-OpenLink/ti-ol-manifest.git
 WLAN_MANIFEST_BRANCH:=int
-WLAN_MANIFEST_HASH:=
 WLAN_MANIFEST_DIR:=$(WORKSPACE_DIR)/ti-ol-manifest
-WLAN_DRIVER_MANIFEST_NAME:=ti-ol-driver-manifest.R5.xx.xml
-WLAN_ANDROID_MANIFEST_NAME:=ti-ol-android-manifest.R5.xx.xml
+WLAN_MANIFEST_HASH?=
+WLAN_MANIFEST_EXT?=xx
+WLAN_DRIVER_MANIFEST_NAME:=ti-ol-driver-manifest.R5.$(WLAN_MANIFEST_EXT).xml
+WLAN_ANDROID_MANIFEST_NAME:=ti-ol-android-manifest.R5.$(WLAN_MANIFEST_EXT).xml
 
 # -----------------------------------------------------------------------------
 # bt repository definitions
 # -----------------------------------------------------------------------------
-BT_DRIVER_MANIFEST_REPO:=git://gitorious.tif.ti.com/tibluez-ws/tibluez-driver-manifest.git
-BT_DRIVER_MANIFEST_BRANCH:=master
-BT_DRIVER_MANIFEST_HASH:=
-BT_DRIVER_MANIFEST_DIR:=$(WORKSPACE_DIR)/bt-driver-manifest
+BT_MANIFEST_REPO:=/tmp/.idor/ti-bt-manifest
+BT_MANIFEST_BRANCH:=master
+BT_MANIFEST_DIR:=$(WORKSPACE_DIR)/ti-bt-manifest
+BT_MANIFEST_HASH?=
+BT_MANIFEST_EXT?=xx
 BT_DRIVER_MANIFEST_NAME:=blueti-driver-1.1.0.xml
-
-BT_ANDROID_MANIFEST_REPO:=git://gitorious.tif.ti.com/tibluez-ws/tibluez-android-manifest.git
-BT_ANDROID_MANIFEST_BRANCH:=master
-BT_ANDROID_MANIFEST_HASH:=
-BT_ANDROID_MANIFEST_DIR:=$(WORKSPACE_DIR)/bt-android-manifest
 BT_ANDROID_MANIFEST_NAME:=blueti-android-1.1.0.xml
 
 # -----------------------------------------------------------------------------

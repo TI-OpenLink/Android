@@ -292,50 +292,52 @@ $(PROGRESS_BRINGUP_WLAN_MANIFEST): \
 		$(PROGRESS_MYDROID_REPO_INIT) \
 		$(PROGRESS_FETCH_WLAN_MANIFEST)
 	@$(ECHO) "wlan android manifest bringup..."
-ifeq ($(CONFIG_WLAN), y)
 	cd $(WLAN_MANIFEST_DIR) ; \
 	git checkout $(WLAN_MANIFEST_BRANCH) ; \
 	git reset --hard $(WLAN_MANIFEST_HASH)
+	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_WLAN_MANIFEST))
+	@$(call print, "wlan manifest bringup done")
+	@$(ECHO) "...done"
+
+wlan-create-local-android-manifest:
+ifeq ($(CONFIG_WLAN), y)
+	$(MAKE) $(PROGRESS_BRINGUP_WLAN_MANIFEST)
 	# copy manifest to .repo folder of android
 	$(COPY) $(WLAN_MANIFEST_DIR)/$(WLAN_ANDROID_MANIFEST_NAME) $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
 else
 	$(COPY) $(WIIST_PATH)/misc/empty_manifest.xml $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
 	$(TOUCH) $(MYDROID)/.repo/$(WLAN_ANDROID_LOCAL_MANIFEST_NAME)
 endif
-	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_WLAN_MANIFEST))
-	@$(call print, "wlan manifest bringup done")
-	@$(ECHO) "...done"
 
-wlan-create-local-android-manifest: $(PROGRESS_BRINGUP_WLAN_MANIFEST)
-
-$(PROGRESS_FETCH_BT_ANDROID_MANIFEST):
+$(PROGRESS_FETCH_BT_MANIFEST):
 	@$(ECHO) "getting bt android manifest..."
 ifeq ($(CONFIG_BT), y)
-	git clone $(BT_ANDROID_MANIFEST_REPO) $(BT_ANDROID_MANIFEST_DIR)
+	git clone $(BT_MANIFEST_REPO) $(BT_MANIFEST_DIR)
 	@$(call print, "bt manifest fetched")
 endif
-	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_BT_ANDROID_MANIFEST))
+	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_BT_MANIFEST))
 	@$(ECHO) "...done"
 	
-$(PROGRESS_BRINGUP_BT_ANDROID_MANIFEST): \
+$(PROGRESS_BRINGUP_BT_MANIFEST): \
 		$(PROGRESS_MYDROID_REPO_INIT) \
-		$(PROGRESS_FETCH_BT_ANDROID_MANIFEST)
+		$(PROGRESS_FETCH_BT_MANIFEST)
 	@$(ECHO) "bt android manifest bringup..."
+	cd $(BT_MANIFEST_DIR) ; \
+	git checkout $(BT_MANIFEST_BRANCH) ; \
+	git reset --hard $(BT_MANIFEST_HASH)
+	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_BT_MANIFEST))
+	@$(call print, "bt manifest bringup done")
+	@$(ECHO) "...done"
+	
+bt-create-local-android-manifest:
 ifeq ($(CONFIG_BT), y)
-	cd $(BT_ANDROID_MANIFEST_DIR) ; \
-	git checkout $(BT_ANDROID_MANIFEST_BRANCH) ; \
-	git reset --hard $(BT_ANDROID_MANIFEST_HASH)
+	$(MAKE)  $(PROGRESS_BRINGUP_BT_MANIFEST)
 	# copy manifest to .repo folder of android
-	$(COPY) $(BT_ANDROID_MANIFEST_DIR)/$(BT_ANDROID_MANIFEST_NAME) $(MYDROID)/.repo/$(BT_ANDROID_LOCAL_MANIFEST_NAME)
+	$(COPY) $(BT_MANIFEST_DIR)/$(BT_ANDROID_MANIFEST_NAME) $(MYDROID)/.repo/$(BT_ANDROID_LOCAL_MANIFEST_NAME)
 else
 	$(COPY) $(WIIST_PATH)/misc/empty_manifest.xml $(MYDROID)/.repo/$(BT_ANDROID_LOCAL_MANIFEST_NAME)
 	$(TOUCH) $(MYDROID)/.repo/$(BT_ANDROID_LOCAL_MANIFEST_NAME)
 endif
-	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_BT_ANDROID_MANIFEST))
-	@$(call print, "bt manifest bringup done")
-	@$(ECHO) "...done"
-
-bt-create-local-android-manifest: $(PROGRESS_BRINGUP_BT_ANDROID_MANIFEST)
 
 gps-create-local-android-manifest:
 

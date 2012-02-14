@@ -42,8 +42,7 @@ BT_KO_INSTALLER:=$(MYDROID)/external/bluez_ko_installer
 
 PROGRESS_BT_KERNEL_PATCHES:=$(PROGRESS_DIR)/bt.kernel.patched
 PROGRESS_BT_MYDROID_PATCHES:=$(PROGRESS_DIR)/bt.mydroid.patched
-PROGRESS_BT_FETCH_DRIVER_MANIFEST:=$(PROGRESS_DIR)/bt-driver-manifest.fetched
-PROGRESS_BT_BRINGUP_DRIVER_MANIFEST:=$(PROGRESS_DIR)/bt-driver-manifest.bringup
+PROGRESS_BT_DRIVER_FETCH:=$(PROGRESS_DIR)/bt.driver.fetched
 
 BT_GIT_COMPAT_TREE:=$(BT_COMPAT_DIR)
 BT_GIT_TREE:=$(BLUETOOTH_NEXT)
@@ -57,22 +56,6 @@ bt-private-pre-bringup-validation:
 
 bt-private-pre-make-validation:
 	@$(ECHO) "bt pre-make validation passed..."
-	
-$(PROGRESS_BT_FETCH_DRIVER_MANIFEST):
-	@$(ECHO) "getting bt-driver-manifest repository..."
-	git clone $(BT_DRIVER_MANIFEST_REPO) $(BT_DRIVER_MANIFEST_DIR)
-	@$(ECHO) "...done"
-	@$(call echo-to-file, "DONE", $(PROGRESS_BT_FETCH_DRIVER_MANIFEST))
-	@$(call print, "bt-driver-manifest repository fetched")
-	
-$(PROGRESS_BT_BRINGUP_DRIVER_MANIFEST): $(PROGRESS_BT_FETCH_DRIVER_MANIFEST)
-	@$(ECHO) "bt-driver-manifest bringup..."
-	cd $(BT_DRIVER_MANIFEST_DIR) ; \
-	git checkout $(BT_DRIVER_MANIFEST_BRANCH) ; \
-	git reset --hard $(BT_DRIVER_MANIFEST_HASH)
-	@$(ECHO) "...done"
-	@$(call echo-to-file, "DONE", $(PROGRESS_BT_BRINGUP_DRIVER_MANIFEST))
-	@$(call print, "bt-driver-manifest bringup done")
 	
 $(PROGRESS_BT_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 	@$(ECHO) "patching kernel to include bt modules as M"
@@ -90,20 +73,23 @@ $(PROGRESS_BT_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 $(PROGRESS_BT_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	@$(ECHO) "patching android for bt..."
 	# TODO: the patch is temporary solution
-	cd $(INITRC_PATH) ; $(PATCH) -p1 < init.omap4blazeboard.rc-bluetooth.patch
+#	cd $(INITRC_PATH) ; $(PATCH) -p1 < init.omap4blazeboard.rc-bluetooth.patch	
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_BT_MYDROID_PATCHES))
 	@$(call print, "android patches and packages done")
-
-bt-bringup-private: $(PROGRESS_BT_BRINGUP_DRIVER_MANIFEST) \
-					$(PROGRESS_BT_KERNEL_PATCHES) \
-					$(PROGRESS_BT_MYDROID_PATCHES)
-	@$(ECHO) "bt bringup..."
+	
+$(PROGRESS_BT_DRIVER_FETCH): $(PROGRESS_BRINGUP_BT_MANIFEST)
 	$(MKDIR) -p $(BT_ROOT_DIR)
 	cd $(BT_ROOT_DIR) ; \
-	repo init -u $(BT_DRIVER_MANIFEST_DIR) -b $(BT_DRIVER_MANIFEST_BRANCH) -m $(BT_DRIVER_MANIFEST_NAME) $(REPO_INIT_DEF_PARAMS) ; \
+	repo init -u $(BT_MANIFEST_DIR) -b $(BT_MANIFEST_BRANCH) -m $(BT_DRIVER_MANIFEST_NAME) $(REPO_INIT_DEF_PARAMS) ; \
 	repo sync $(REPO_SYNC_DEF_PARAMS)
+	@$(call echo-to-file, "DONE", $(PROGRESS_BT_DRIVER_FETCH))
+	@$(call print, "bt driver components fetched")
 
+bt-bringup-private: $(PROGRESS_BT_KERNEL_PATCHES) \
+					$(PROGRESS_BT_MYDROID_PATCHES) \
+					$(PROGRESS_BT_DRIVER_FETCH)
+	@$(ECHO) "bt bringup..."
 	export GIT_TREE=$(BT_GIT_TREE) ; \
 	export GIT_COMPAT_TREE=$(BT_GIT_COMPAT_TREE) ; \
 	cd $(BT_COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh ; \

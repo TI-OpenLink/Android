@@ -30,7 +30,13 @@ ifndef DEFS_MK_INCLUDED
 DEFS_MK_INCLUDED:=included
 
 VERSION:=RLS27.IS.1_IcecreamSandwich.xml
+
+AFS_TARGET_BUILD=tablet
+ifeq ($(AFS_TARGET_BUILD), tablet)
+AFS_BUILD_OPTION:=PRODUCT-blaze_tablet-userdebug
+else
 AFS_BUILD_OPTION:=PRODUCT-full_blaze-userdebug
+endif
 
 YOUR_PATH:=$(PWD)
 export YOUR_PATH
@@ -92,15 +98,24 @@ endif
 # platform configuration
 ################################################################################
 
+ifeq ($(AFS_TARGET_BUILD), tablet)
+UBOOT_PLATFORM_CONFIG:=omap44XXtablet_config
+XLOADER_PLATFORM_CONFIG:=omap44XXtablet_config
+else
 UBOOT_PLATFORM_CONFIG:=omap4430sdp_config
 XLOADER_PLATFORM_CONFIG:=omap4430sdp_config
+endif
 KERNEL_PLATFORM_CONFIG:=blaze_defconfig
 
 ################################################################################
 # output paths
 ################################################################################
 
+ifeq ($(AFS_TARGET_BUILD), tablet)
+OUTPUT_IMG_DIR=$(MYDROID)/out/target/product/blaze_tablet
+else
 OUTPUT_IMG_DIR=$(MYDROID)/out/target/product/blaze
+endif
 
 OUTPUT_PATH:=$(YOUR_PATH)/output
 OUTPUT_PATH_SD:=$(OUTPUT_PATH)/sd
@@ -148,8 +163,8 @@ PROGRESS_BRINGUP_KERNEL:=$(PROGRESS_DIR)/kernel.bringup
 PROGRESS_BRINGUP_UBOOT:=$(PROGRESS_DIR)/u-boot.bringup
 PROGRESS_BRINGUP_XLOADER:=$(PROGRESS_DIR)/x-loader.bringup
 
-PROGRESS_FETCH_BT_ANDROID_MANIFEST:=$(PROGRESS_DIR)/bt-android-manifest.fetched
-PROGRESS_BRINGUP_BT_ANDROID_MANIFEST:=$(PROGRESS_DIR)/bt-android-manifest.bringup
+PROGRESS_FETCH_BT_MANIFEST:=$(PROGRESS_DIR)/bt-manifest.fetched
+PROGRESS_BRINGUP_BT_MANIFEST:=$(PROGRESS_DIR)/bt-manifest.bringup
 PROGRESS_FETCH_WLAN_MANIFEST:=$(PROGRESS_DIR)/wlan-manifest.fetched
 PROGRESS_BRINGUP_WLAN_MANIFEST:=$(PROGRESS_DIR)/wlan-manifest.bringup
 

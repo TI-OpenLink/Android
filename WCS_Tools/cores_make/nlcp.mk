@@ -108,6 +108,9 @@ $(PROGRESS_NLCP_MYDROID_PATCHES):
 	cd $(MYDROID)/device/ti/blaze ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze/0004-wlan-add-band-settings-in-Advanced-Wi-Fi-settings.patch
 	cd $(MYDROID)/device/ti/blaze_tablet ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze_tablet/0003-wlan-add-band-settings-in-Advanced-Wi-Fi-settings.patch
 
+	# add the exec functionality in system/core
+	cd $(MYDROID)/system/core ; git am $(WLAN_ANDROID_PATCHES)/system/core/*.patch
+
 	@$(ECHO) "copying additional packages to mydroid directory..."
 	# add an recursive Android.mk to new mydroid/hardware/wlan directory
 	$(MKDIR) -p $(TRASH_DIR)/hardware/wlan

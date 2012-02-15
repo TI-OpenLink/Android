@@ -63,6 +63,8 @@ PROGRESS_WLAN_IBI_BRINGUP:=$(PROGRESS_DIR)/wlan.ibi.bringup
 WLAN_GIT_COMPAT_TREE:=$(WLAN_COMPAT_DIR)
 WLAN_GIT_TREE:=$(WLCORE_DIR)
 
+WLAN_DEFAULT_DRIVER_LOAD_SCRIPT:=load_wlcore_com8_siso40.sh
+
 ################################################################################
 # rules
 ################################################################################
@@ -164,6 +166,7 @@ wlan-make-private:
 
 wlan-install-private:
 	@$(ECHO) "wlan install..."
+	@cd $(MYFS_DATA_PATH)/misc/wifi ; $(LINK) -svf $(WLAN_DEFAULT_DRIVER_LOAD_SCRIPT) load_wlcore.sh
 	@$(ECHO) "...done"
 	
 wlan-clean-private:

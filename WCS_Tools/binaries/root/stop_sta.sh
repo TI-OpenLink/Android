@@ -1,1 +1,0 @@
-/data/misc/wifi/sta/sta_stop.sh

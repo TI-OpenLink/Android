@@ -31,7 +31,8 @@ DEFS_MK_INCLUDED:=included
 
 VERSION:=RLS27.IS.1_IcecreamSandwich.xml
 
-AFS_TARGET_BUILD=tablet
+AFS_TARGET_BUILD=
+#tablet
 ifeq ($(AFS_TARGET_BUILD), tablet)
 AFS_BUILD_OPTION:=PRODUCT-blaze_tablet-userdebug
 else

@@ -1,1 +1,0 @@
-/data/misc/wifi/ap/ap_start.sh

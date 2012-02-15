@@ -111,14 +111,10 @@ bt-make-private:
 	
 bt-install-private:
 	@$(ECHO) "bt install..."
+	@$(ECHO) "<<<BLUEZ>>> Copying BT scripts"
+	@$(MKDIR) -p $(MYFS_SYSTEM_PATH)/etc/firmware/
+	@$(COPY) -vf $(FIRMWARE_PATH)/bt/* $(MYFS_SYSTEM_PATH)/etc/firmware/
 	@$(ECHO) "...done"
-	
-#	@$(ECHO) "<<<BLUEZ>>> Modifying init.rc."
-#	@$(CAT) $(INITRC_PATH)/BLUEZ.rc.addon >> $(MYFS_ROOT_PATH)/init.rc
-#
-#	@$(ECHO) "<<<BLUEZ>>> Copying BT scripts"
-#	@$(MKDIR) -p $(MYFS_SYSTEM_PATH)/etc/firmware/
-#	@$(COPY) -vf $(FIRMWARE_PATH)/bt/* $(MYFS_SYSTEM_PATH)/etc/firmware/
 
 bt-clean-private:
 	@$(ECHO) "bt clean..."

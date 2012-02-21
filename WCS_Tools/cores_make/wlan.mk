@@ -94,6 +94,9 @@ $(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	# patch wpa_supplicant_lib
 	cd $(MYDROID)/hardware/ti/wlan/mac80211/wpa_supplicant_lib ; git am $(WLAN_ANDROID_PATCHES)/hardware/ti/wlan/mac80211/wpa_supplicant_lib/*.patch
 	
+	# remove omap's firmware project from ics
+	$(MKDIR) -p $(TRASH_DIR)/mydroid/device/ti/proprietary-open
+	if [ -d $(MYDROID)/device/ti/proprietary-open/wl12xx ] ; then $(MOVE) $(MYDROID)/device/ti/proprietary-open/wl12xx $(TRASH_DIR)/mydroid/device/ti/proprietary-open/ ; fi
 	# remove omap's ti-utils project from ics
 	$(MKDIR) -p $(TRASH_DIR)/mydroid/hardware/ti/wlan/mac80211
 	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils $(TRASH_DIR)/mydroid/hardware/ti/wlan/mac80211/ ; fi

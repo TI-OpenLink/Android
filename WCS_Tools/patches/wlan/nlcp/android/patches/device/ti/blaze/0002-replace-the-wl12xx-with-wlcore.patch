@@ -1,7 +1,7 @@
-From c0ddd0c7cb567f50fbf0bfdb911fc714116db582 Mon Sep 17 00:00:00 2001
+From 2ca6ea483adfb27ed873c940614b67912d122925 Mon Sep 17 00:00:00 2001
 From: Ido Reis <idor@ti.com>
 Date: Wed, 8 Feb 2012 12:12:39 +0200
-Subject: [PATCH] replace the wl12xx with wlcore
+Subject: [PATCH 2/3] replace the wl12xx with wlcore
 
 Change-Id: I3cadcc0b25eccbf65245a9d0bc7610e9034eb882
 Signed-off-by: Ido Reis <idor@ti.com>

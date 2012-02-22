@@ -15,6 +15,7 @@ pushd workspace/ti-ol-manifest/
 git commit -a -m $1
 git tag -f -a $1 -m $1
 git remote set-url --push origin git@github.com:TI-OpenLink/ti-ol-manifest.git
+git push origin int
 git push -f origin $1
 popd
 

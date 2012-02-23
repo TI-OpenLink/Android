@@ -29,8 +29,14 @@
 ifndef DEFS_MK_INCLUDED
 DEFS_MK_INCLUDED:=included
 
-VERSION:=ICS-DailyBuild_305
+VERSION:=RLS27.IS.2.P1_IcecreamSandwich.xml
+
+AFS_TARGET_BUILD:=
+ifeq ($(AFS_TARGET_BUILD), tablet)
+AFS_BUILD_OPTION:=PRODUCT-blaze_tablet-userdebug
+else
 AFS_BUILD_OPTION:=PRODUCT-full_blaze-userdebug
+endif
 
 YOUR_PATH:=$(PWD)
 export YOUR_PATH

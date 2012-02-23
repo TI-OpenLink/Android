@@ -184,6 +184,6 @@ wlan-update-codebase-private: $(PROGRESS_BRINGUP_WLAN_MANIFEST)
 	$(MAKE) mydroid-create-local-manifest
 	$(DEL) $(PROGRESS_WLAN_DRIVER_FETCH)
 	$(MAKE) $(PROGRESS_WLAN_DRIVER_FETCH)
-	cd $(MYDROID) ; repo sync
-	$(DEL) $(PROGRESS_WLAN_MYDROID_PATCHES)
+	cd $(MYDROID) ; repo sync -j2
+	if [ -f PROGRESS_WLAN_MYDROID_PATCHES ] ; then $(DEL) $(PROGRESS_WLAN_MYDROID_PATCHES) ; fi
 	$(MAKE) $(PROGRESS_WLAN_MYDROID_PATCHES)

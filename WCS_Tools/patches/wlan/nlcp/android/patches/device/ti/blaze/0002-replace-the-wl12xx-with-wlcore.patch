@@ -1,4 +1,4 @@
-From 2ca6ea483adfb27ed873c940614b67912d122925 Mon Sep 17 00:00:00 2001
+From 27e951e63ac40caa5d795c9c53db35ad6d255155 Mon Sep 17 00:00:00 2001
 From: Ido Reis <idor@ti.com>
 Date: Wed, 8 Feb 2012 12:12:39 +0200
 Subject: [PATCH 2/3] replace the wl12xx with wlcore
@@ -10,10 +10,10 @@ Signed-off-by: Ido Reis <idor@ti.com>
  1 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/BoardConfig.mk b/BoardConfig.mk
-index a93f0a6..15a16d9 100644
+index 2b211e3..75f1df2 100644
 --- a/BoardConfig.mk
 +++ b/BoardConfig.mk
-@@ -72,8 +72,8 @@ BOARD_HOSTAPD_DRIVER             := NL80211
+@@ -71,8 +71,8 @@ BOARD_HOSTAPD_DRIVER             := NL80211
  BOARD_HOSTAPD_PRIVATE_LIB        := lib_driver_cmd_wl12xx
  BOARD_WLAN_DEVICE                := wl12xx_mac80211
  BOARD_SOFTAP_DEVICE              := wl12xx_mac80211

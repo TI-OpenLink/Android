@@ -29,7 +29,7 @@
 ifndef DEFS_MK_INCLUDED
 DEFS_MK_INCLUDED:=included
 
-VERSION:=RLS27.IS.1_IcecreamSandwich.xml
+VERSION:=RLS27.IS.2.P1_IcecreamSandwich.xml
 
 AFS_TARGET_BUILD=
 #tablet

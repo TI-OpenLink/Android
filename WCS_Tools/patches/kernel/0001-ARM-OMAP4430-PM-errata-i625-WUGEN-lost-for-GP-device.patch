@@ -1,0 +1,98 @@
+From 6f3fa12e69070c30cd8f863d6df436574b0259a1 Mon Sep 17 00:00:00 2001
+From: Konstantin Shlyakhovoy <x0155534@ti.com>
+Date: Thu, 19 Jan 2012 15:39:50 +0200
+Subject: [PATCH] ARM: OMAP4430: PM: errata i625, WUGEN lost for GP devices after OFF mode
+
+This patch implements errata i625.
+
+When coming back from device off mode, the Cortex-A9 WUGEN enable registers
+are not restored by ROM code. The work around disables device power OFF
+to maintain the proper register settings.
+The affected devices are OMAP4430GP ES2.0 to ES2.2.
+
+Change-Id: I6621c7a28d6657ec67d1af2b4a23b777b25510db
+Signed-off-by: Mykola Oleksiienko <x0174904@ti.com>
+Signed-off-by: K.Shlyakhovoy <x0155534@ti.com>
+---
+ arch/arm/mach-omap2/pm44xx.c |   51 +++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 50 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/pm44xx.c b/arch/arm/mach-omap2/pm44xx.c
+index 22d572d..2eb587d 100644
+--- a/arch/arm/mach-omap2/pm44xx.c
++++ b/arch/arm/mach-omap2/pm44xx.c
+@@ -105,6 +105,46 @@ static struct clockdomain *emif_clkdm, *mpuss_clkdm;
+  */
+ #define OMAP4_PM_ERRATUM_MPU_EMIF_NO_DYNDEP_IDLE_iXXX	BIT(4)
+ 
++/*
++ * There is a HW bug in CMD PHY which gives ISO signals as same for both
++ * PADn and PADp on differential IO pad, because of which IO leaks higher
++ * as pull controls are differential internally and pull value does not
++ * match A value.
++ * Though there is no functionality impact due to this bug, it is seen
++ * that by disabling the pulls there is a savings ~500uA in OSWR, but draws
++ * ~300uA more during OFF mode.
++ * To save power during both idle/suspend following approach taken:
++ * 1) Enable WA during boot-up.
++ * 2) Disable WA while attempting suspend and enable during resume.
++ *
++ * CDDS no: OMAP4460-1.0BUG00291 (OMAP official errata ID yet to be available).
++ */
++#define OMAP4_PM_ERRATUM_LPDDR_CLK_IO_iXXX		BIT(5)
++#define LPDDR_WD_PULL_DOWN				0x02
++
++/*
++ * The OFF mode isn't fully supported for OMAP4430GP ES2.0 - ES2.2
++ * When coming back from device off mode, the Cortex-A9 WUGEN enable registers
++ * are not restored by ROM code due to i625. The work around is using an
++ * alternative power state (instead of off mode) which maintains the proper
++ * register settings.
++ */
++#define OMAP4_PM_ERRATUM_WUGEN_LOST_i625	BIT(6)
++
++/* TI Errata i612 - Wkup Clk Recycling Needed After Warm Reset
++ * CRITICALITY: Low
++ * REVISIONS IMPACTED: OMAP4430 all
++ * Hardware does not recycle the I/O wake-up clock upon a global warm reset.
++ * When a warm reset is done, wakeups of daisy I/Os are disabled,
++ * but without the wake-up clock running, this change is not latched.
++ * Hence there is a possibility of seeing unexpected I/O wake-up events
++ * after warm reset.
++ *
++ * As W/A the call to omap4_trigger_ioctrl() has been added
++ * at PM initialization time for I/O pads daisy chain reseting.
++ **/
++#define OMAP4_PM_ERRATUM_IO_WAKEUP_CLOCK_NOT_RECYCLED_i612	BIT(7)
++
+ u8 pm44xx_errata;
+ #define is_pm44xx_erratum(erratum) (pm44xx_errata & OMAP4_PM_ERRATUM_##erratum)
+ 
+@@ -1201,7 +1241,7 @@ static void omap_default_idle(void)
+ void omap4_device_set_state_off(u8 enable)
+ {
+ #ifdef CONFIG_OMAP_ALLOW_OSWR
+-	if (enable)
++	if (enable && !(is_pm44xx_erratum(WUGEN_LOST_i625)))
+ 		omap4_prminst_write_inst_reg(0x1 <<
+ 				OMAP4430_DEVICE_OFF_ENABLE_SHIFT,
+ 		OMAP4430_PRM_PARTITION, OMAP4430_PRM_DEVICE_INST,
+@@ -1270,6 +1310,15 @@ static void __init omap4_pm_setup_errata(void)
+ 		pm44xx_errata |= OMAP4_PM_ERRATUM_MPU_EMIF_NO_DYNDEP_i688;
+ 	else
+ 		pm44xx_errata |= OMAP4_PM_ERRATUM_MPU_EMIF_NO_DYNDEP_IDLE_iXXX;
++
++	/*
++	 * The OFF mode isn't fully supported for OMAP4430GP ES2.0 - ES2.2
++	 * due to errata i625
++	 * On ES1.0 OFF mode is not supported due to errata i498
++	 */
++	if (cpu_is_omap443x() && (omap_type() == OMAP2_DEVICE_TYPE_GP) &&
++			(omap_rev() < OMAP4430_REV_ES2_3))
++		pm44xx_errata |= OMAP4_PM_ERRATUM_WUGEN_LOST_i625;
+ }
+ 
+ /**
+-- 
+1.7.0.4
+

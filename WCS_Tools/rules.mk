@@ -71,7 +71,7 @@ else
 $(PROGRESS_MYDROID_REPO_INIT): $(PROGRESS_BRINGUP_MANIFEST)
 	@$(MKDIR) -p $(MYDROID)
 	cd $(MYDROID) ; \
-	repo init -u $(MANIFEST) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) $(REPO_INIT_DEF_PARAMS)
+	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) $(REPO_INIT_DEF_PARAMS)
 	@$(call echo-to-file, "DONE", $(PROGRESS_MYDROID_REPO_INIT))
 	@$(call print, "android repo inited")
 
@@ -85,23 +85,21 @@ endif
 $(PROGRESS_FETCH_KERNEL): $(PROGRESS_FETCH_MANIFEST)
 	@$(MKDIR) -p $(KERNEL_DIR)
 	git clone $(KERNEL_REPO) $(KERNEL_DIR)
-	cd $(KERNEL_DIR) ; git checkout $(KERNEL_TAG_HASH) -b vanilla
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_KERNEL))
 	@$(call print, "kernel version $(KERNEL_VERSION) retrieved")
 
 $(PROGRESS_FETCH_UBOOT): 
 	git clone $(UBOOT_REPO) $(UBOOT_DIR)
-	cd $(UBOOT_DIR) ; git checkout $(UBOOT_TAG_HASH) -b vanilla
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_UBOOT))
 	@$(call print, "u-boot retrieved")
 
 $(PROGRESS_FETCH_XLOADER): 
 	git clone $(XLOADER_REPO) $(XLOADER_DIR)
-	cd $(XLOADER_DIR) ; git checkout $(XLOADER_TAG_HASH) -b vanilla
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_XLOADER))
 	@$(call print, "x-loader retrieved")
 
 $(PROGRESS_BRINGUP_UBOOT): $(PROGRESS_FETCH_UBOOT)
+	cd $(UBOOT_DIR) ; git checkout $(UBOOT_TAG_HASH)
 	$(MAKE) -C $(UBOOT_DIR) distclean
 	$(MAKE) -C $(UBOOT_DIR) ARCH=arm $(UBOOT_PLATFORM_CONFIG)
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_UBOOT))
@@ -110,6 +108,7 @@ $(PROGRESS_BRINGUP_UBOOT): $(PROGRESS_FETCH_UBOOT)
 u-boot-bringup: 	$(PROGRESS_BRINGUP_UBOOT)
 
 $(PROGRESS_BRINGUP_XLOADER): $(PROGRESS_FETCH_XLOADER)
+	cd $(XLOADER_DIR) ; git checkout $(XLOADER_TAG_HASH)
 	$(MAKE) -C $(XLOADER_DIR) distclean	
 	$(MAKE) -C $(XLOADER_DIR) ARCH=arm $(XLOADER_PLATFORM_CONFIG)
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_XLOADER))
@@ -118,7 +117,9 @@ $(PROGRESS_BRINGUP_XLOADER): $(PROGRESS_FETCH_XLOADER)
 x-loader-bringup: 	$(PROGRESS_BRINGUP_XLOADER)
 
 $(PROGRESS_BRINGUP_KERNEL): $(PROGRESS_FETCH_KERNEL)
-	$(MAKE) -C $(KERNEL_DIR) -j$(NTHREADS) ARCH=arm distclean	
+	cd $(KERNEL_DIR) ; git checkout $(KERNEL_TAG_HASH)
+	cd $(KERNEL_DIR) ; git am $(PATCHES_PATH)/kernel/*.patch
+	$(MAKE) -C $(KERNEL_DIR) -j$(NTHREADS) ARCH=arm distclean
 	$(MAKE) -C $(KERNEL_DIR) ARCH=arm $(KERNEL_PLATFORM_CONFIG)
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_KERNEL))
 	@$(call print, "kernel bringup done")

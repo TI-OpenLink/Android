@@ -35,7 +35,7 @@ $(PROGRESS_FETCH_MANIFEST):
 	@$(MAKE) $(PROGRESS_DIR)
 	@$(ECHO) "$(PROGRESS_FETCH_MANIFEST)"
 	@git clone $(OMAPMANIFEST_REPO) $(MANIFEST)
-	@cd $(MANIFEST) ; git checkout origin/$(OMAPMANIFEST_BRANCH) -b $(OMAPMANIFEST_BRANCH)
+	@cd $(MANIFEST) ; git checkout $(OMAPMANIFEST_BRANCH)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MANIFEST))
 	@$(call print, "manifest for $(OMAPMANIFEST_BRANCH) retrieved")
 	@$(call echo-to-file, "PACKAGE SOURCE: git -> $(GIT_PROTOCOL_USE)", $(PROGRESS_FETCH_METHOD))
@@ -67,8 +67,8 @@ $(PROGRESS_FETCH_MYDROID): $(PROGRESS_FETCH_MANIFEST)
 	@$(MAKE) $(PROGRESS_DIR)
 	@$(MKDIR) -p $(MYDROID)
 	cd $(MYDROID) ; \
-	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify ; \
-	repo sync --no-repo-verify
+	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) $(REPO_INIT_DEF_PARAMS) ; \
+	repo sync $(REPO_SYNC_DEF_PARAMS)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MYDROID))
 	@$(call print, "android filesystem retrieved")
 endif

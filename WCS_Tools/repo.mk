@@ -5,9 +5,9 @@
 # Makefile for Android project integrated with NLCP
 # repositories definitions
 #
-# Android Version	:	L27.INC1.13.1 OMAP4 GingerBread ES2
-# Platform	     	:	Blaze platform es2.2
-# Date				:	July 2011
+# Android Version	:	L27.IS.2.P1 OMAP4 Icecream Sandwich
+# Platform	     	:	Blaze platform
+# Date			:	Feb 2012
 #
 # Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
 #
@@ -25,8 +25,36 @@
 #
 ################################################################################
 
+ifndef REPO_MK_INCLUDED
+REPO_MK_INCLUDED:=included
+
+include defs.mk
+
 OMAP_REPO_TOOL:=git://git.omapzoom.org/tools/repo
 OMAP_REPO_BRANCH:=master
+
+#REPO_INIT_DEF_PARAMS:=--repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
+REPO_INIT_DEF_PARAMS:=--quiet --no-repo-verify
+REPO_SYNC_NTHREADS:=16
+REPO_SYNC_DEF_PARAMS:=-j$(REPO_SYNC_NTHREADS)
+
+# -----------------------------------------------------------------------------
+# x-loader repository definitions
+# -----------------------------------------------------------------------------
+XLOADER_REPO:=git://git.omapzoom.org/repo/x-loader.git
+XLOADER_TAG_HASH:=83cc7f5e242ab82f64f7a868df0fb5ed88830971
+
+# -----------------------------------------------------------------------------
+# u-boot repository definitions
+# -----------------------------------------------------------------------------
+UBOOT_REPO:=git://git.omapzoom.org/repo/u-boot.git
+UBOOT_TAG_HASH:=375e17deb1855185f429e36713b31f5ee453c443
+
+# -----------------------------------------------------------------------------
+# kernel repository definitions
+# -----------------------------------------------------------------------------
+KERNEL_REPO:=git://git.omapzoom.org/kernel/omap.git
+KERNEL_TAG_HASH:=358ad6f8ca2bb5939d12f0d26b32aed92d70caef
 
 # -----------------------------------------------------------------------------
 # mydroid repository definitions
@@ -34,27 +62,7 @@ OMAP_REPO_BRANCH:=master
 
 OMAPMANIFEST_REPO:=git://git.omapzoom.org/platform/omapmanifest.git
 OMAPMANIFEST_BRANCH:=27.x
-#ics-mr0
-OMAPMANIFEST_XMLFILE:=RLS27.IS.1_IcecreamSandwich.xml
-OMAPMANIFEST_HASH:= 
+OMAPMANIFEST_XMLFILE:=RLS27.IS.2.P1_IcecreamSandwich.xml
+OMAPMANIFEST_HASH:=
 
-# -----------------------------------------------------------------------------
-# kernel repository definitions
-# -----------------------------------------------------------------------------
-KERNEL_REPO:=git://git.omapzoom.org/kernel/omap.git
-KERNEL_TAG_HASH:=042a2c41c2445220892ac0562de286dd955ebed9
-
-# -----------------------------------------------------------------------------
-# x-loader repository definitions
-# -----------------------------------------------------------------------------
-XLOADER_REPO:=git://git.omapzoom.org/repo/x-loader.git
-XLOADER_TAG_HASH:=7e049cfbf85735a34633581141e8bd568cefce34
-
-# -----------------------------------------------------------------------------
-# u-boot repository definitions
-# -----------------------------------------------------------------------------
-# Note: 
-# L27.INC1.11.1 u-boot release is corrupted - sd card boot is not available,
-# we are using an older version (L27.INC1.10.1) 
-UBOOT_REPO:=git://git.omapzoom.org/repo/u-boot.git
-UBOOT_TAG_HASH:=3a7cc9ef9dcaeda2715a2c864293eadb4fef0afc
+endif #REPO_MK_INCLUDED

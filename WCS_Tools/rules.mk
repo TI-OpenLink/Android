@@ -172,9 +172,6 @@ mydroid-install:
 	@$(ECHO) copy init.rc scripts to rootfs folder...
 	@$(MKDIR) -p $(MYFS_ROOT_PATH)
 	@$(COPY) -fv $(INITRC_PATH)/init.rc $(MYFS_ROOT_PATH)/
-	@$(COPY) -fv $(INITRC_PATH)/init.goldfish.rc $(MYFS_ROOT_PATH)/
-	@$(COPY) -fv $(INITRC_PATH)/init.omap4blazeboard.rc $(MYFS_ROOT_PATH)/
-	@$(COPY) -fv $(INITRC_PATH)/init.omap4blazeboard.usb.rc $(MYFS_ROOT_PATH)/
 	
 	@$(ECHO) install busybox links...
 	@$(MKDIR) -p $(MYFS_SYSTEM_PATH)/xbin/busybox

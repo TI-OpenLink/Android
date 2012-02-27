@@ -131,8 +131,8 @@ nlcp-bringup-private: 	$(PROGRESS_NLCP_BRINGUP_OL_MANIFEST) \
 						$(PROGRESS_NLCP_KERNEL_PATCHES) \
 						$(PROGRESS_NLCP_MYDROID_PATCHES)
 	@$(ECHO) "nlcp bringup..."
-	repo init -u $(OL_MANIFEST_DIR) -b master -m $(OL_MANIFEST_FILE) --repo-branch=$(OMAP_REPO_BRANCH) --repo-url=$(OMAP_REPO_TOOL) --quiet --no-repo-verify
-	repo sync --no-repo-verify
+	repo init -u $(OL_MANIFEST_DIR) -b master -m $(OL_MANIFEST_FILE) $(REPO_INIT_DEF_PARAMS)
+	repo sync --no-repo-verify $(REPO_SYNC_DEF_PARAMS)
 	cd $(COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh
 	cd $(COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl12xx
 	$(TOUCH) $(COMPAT_WIRELESS_DIR)/drivers/net/Makefile

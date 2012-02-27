@@ -296,6 +296,7 @@ $(PROGRESS_BRINGUP_WLAN_MANIFEST): \
 		$(PROGRESS_FETCH_WLAN_MANIFEST)
 	@$(ECHO) "wlan android manifest bringup..."
 	cd $(WLAN_MANIFEST_DIR) ; \
+	git fetch origin ; \
 	git checkout $(WLAN_MANIFEST_BRANCH) ; \
 	git reset --hard $(WLAN_MANIFEST_HASH)
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_WLAN_MANIFEST))

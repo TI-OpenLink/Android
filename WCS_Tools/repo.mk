@@ -69,7 +69,7 @@ OMAPMANIFEST_HASH:=
 # wlan repository definitions
 # -----------------------------------------------------------------------------
 WLAN_MANIFEST_REPO:=git://github.com/TI-OpenLink/ti-ol-manifest.git
-WLAN_MANIFEST_BRANCH:=int
+WLAN_MANIFEST_BRANCH?=int
 WLAN_MANIFEST_DIR:=$(WORKSPACE_DIR)/ti-ol-manifest
 WLAN_MANIFEST_HASH?=
 WLAN_MANIFEST_EXT?=xx

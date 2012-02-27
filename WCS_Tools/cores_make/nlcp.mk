@@ -112,9 +112,9 @@ $(PROGRESS_NLCP_MYDROID_PATCHES):
 	# remove omap's hostap project (wpa_supplicant_8) from ics
 	$(MKDIR) -p $(TRASH_DIR)/mydroid/external
 	if [ -d $(MYDROID)/external/wpa_supplicant_8 ] ; then $(MOVE) $(MYDROID)/external/wpa_supplicant_8 $(TRASH_DIR)/mydroid/external/ ; fi
-	# remove omap's system/core/libnl_2 project
-	$(MKDIR) -p $(TRASH_DIR)/system
-	if [ -d $(MYDROID)/system/core ] ; then $(MOVE) $(MYDROID)/system/core $(TRASH_DIR)/system/ ; fi
+#	# remove omap's system/core/libnl_2 project
+#	$(MKDIR) -p $(TRASH_DIR)/system
+#	if [ -d $(MYDROID)/system/core ] ; then $(MOVE) $(MYDROID)/system/core $(TRASH_DIR)/system/ ; fi
 
 	# remove omap's ti-utils project from ics
 	$(MKDIR) -p $(TRASH_DIR)/mydroid/hardware/ti/wlan/mac80211

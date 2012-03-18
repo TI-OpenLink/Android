@@ -39,6 +39,7 @@ NLCP_COMPAT_PATCHES_DIR:=$(NLCP_PATCHES_PATH)/r4/compat
 NLCP_COMPAT_WIRELESS_PATCHES_DIR:=$(NLCP_PATCHES_PATH)/r4/compat-wireless
 NLCP_KERNEL_PATCHES:=$(NLCP_PATCHES_PATH)/kernel
 NLCP_ANDROID_PATCHES:=$(NLCP_PATCHES_PATH)/android
+WLAN_ANDROID_PATCHES:=$(NLCP_PATCHES_PATH)/android/patches
 
 NLCP_BINARIES_PATH=$(NLCP_PATCHES_PATH)/binaries
 
@@ -101,6 +102,11 @@ $(PROGRESS_NLCP_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 
 $(PROGRESS_NLCP_MYDROID_PATCHES):
 	@$(ECHO) "patching android for nlcp..."
+
+
+        # patch support for band settings in Wi-Fi advanced options
+	cd $(MYDROID)/device/ti/blaze ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze/0004-wlan-add-band-settings-in-Advanced-Wi-Fi-settings.patch
+	cd $(MYDROID)/device/ti/blaze_tablet ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze_tablet/0003-wlan-add-band-settings-in-Advanced-Wi-Fi-settings.patch
 
 	@$(ECHO) "copying additional packages to mydroid directory..."
 	# add an recursive Android.mk to new mydroid/hardware/wlan directory

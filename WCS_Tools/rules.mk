@@ -229,6 +229,7 @@ endif
 	@$(ECHO) "" >>$(VERSION_TI_TXT_FILE)
 	@$(ECHO) "" >>$(VERSION_TI_TXT_FILE)
 	@if [ -d $(BINARIES_PATH)/system ] ; then $(COPY) -rf $(BINARIES_PATH)/system/* $(MYFS_SYSTEM_PATH)/ ; fi
+	@if [ -d $(BINARIES_PATH)/data ] ; then $(COPY) -rf $(BINARIES_PATH)/data/* $(MYFS_DATA_PATH)/ ; fi
 	@if [ -d $(BINARIES_PATH)/root ] ; then $(COPY) -rf $(BINARIES_PATH)/root/* $(MYFS_ROOT_PATH)/ ; fi
 	@$(call print, "binaries copied to target directory")
 

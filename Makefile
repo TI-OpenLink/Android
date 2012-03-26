@@ -32,13 +32,16 @@ include defs.mk
 include $(WIIST_PATH)/utils.mk
 include $(WIIST_PATH)/repo.mk
 
-.PHONY: all install clean distclean help update-internals test
+.PHONY: all install clean distclean help update-internals version test
 
 help:
 	@cat $(WIIST_PATH)/README
 
 /data/git/repositories/wiist/Android/R4.xx/internals:
 	$(error, "internal repository does not exist, are you sure you're in TI's IL network?"
+
+version:
+	@$(ECHO) $(VERSION)
 	
 update-internals: /data/git/repositories/wiist/Android/R4.xx/internals
 	@$(ECHO) getting internals from local repository

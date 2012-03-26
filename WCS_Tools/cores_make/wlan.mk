@@ -77,7 +77,7 @@ wlan-private-pre-make-validation:
 
 $(PROGRESS_WLAN_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 	@$(ECHO) "patching kernel for wlan..."
-	cd $(KERNEL_DIR) ; git am $(WLAN_KERNEL_PATCHES)/0013-mmc-recognise-SDIO-cards-with-SDIO_CCCR_REV-3.00.patch
+	cd $(KERNEL_DIR) ; git am $(WLAN_KERNEL_PATCHES)/0001-mmc-recognise-SDIO-cards-with-SDIO_CCCR_REV-3.00.patch
 	# add dynamic debug support
 	cd $(KERNEL_DIR) ; $(PATCH) -p1 <  $(WLAN_KERNEL_PATCHES)/blaze.config.patch
 	@$(ECHO) "...done"

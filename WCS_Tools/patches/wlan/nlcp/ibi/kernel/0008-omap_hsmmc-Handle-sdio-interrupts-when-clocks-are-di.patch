@@ -1,7 +1,8 @@
-From 912c4b9dea16d81ae9b1bd1f4d4ea697d4979c19 Mon Sep 17 00:00:00 2001
+From 75daa4d07c40c83dcd9d6013e009f5cff1574180 Mon Sep 17 00:00:00 2001
 From: Ido Yariv <ido@wizery.com>
 Date: Tue, 27 Sep 2011 14:18:01 +0300
-Subject: [PATCH 08/14] omap_hsmmc: Handle sdio interrupts when clocks are disabled *PRELIMINARY*
+Subject: [PATCH 08/18] omap_hsmmc: Handle sdio interrupts when clocks are
+ disabled *PRELIMINARY*
 
 When the mmc host disables its internal clocks, it can no longer detect
 sdio interrupts on dat1. To continue being able to serve such interrupts,
@@ -78,7 +79,7 @@ index b95aabd..41c4702 100644
  		void (*before_set_reg)(struct device *dev, int slot,
  				       int power_on, int vdd);
 diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index f184e63..e02884c 100644
+index d55fcaa..736dd20 100644
 --- a/drivers/mmc/host/omap_hsmmc.c
 +++ b/drivers/mmc/host/omap_hsmmc.c
 @@ -608,8 +608,23 @@ static int omap_hsmmc_gpio_init(struct omap_mmc_platform_data *pdata)
@@ -131,7 +132,7 @@ index f184e63..e02884c 100644
  static void set_sd_bus_power(struct omap_hsmmc_host *host)
  {
  	unsigned long i;
-@@ -2186,6 +2213,12 @@ static int omap_hsmmc_enable_simple(struct mmc_host *mmc)
+@@ -2214,6 +2241,12 @@ static int omap_hsmmc_enable_simple(struct mmc_host *mmc)
  
  	pm_runtime_get_sync(host->dev);
  
@@ -144,7 +145,7 @@ index f184e63..e02884c 100644
  	dev_dbg(mmc_dev(host->mmc), "enabled\n");
  	return 0;
  }
-@@ -2193,6 +2226,18 @@ static int omap_hsmmc_enable_simple(struct mmc_host *mmc)
+@@ -2221,6 +2254,18 @@ static int omap_hsmmc_enable_simple(struct mmc_host *mmc)
  static int omap_hsmmc_disable_simple(struct mmc_host *mmc, int lazy)
  {
  	struct omap_hsmmc_host *host = mmc_priv(mmc);
@@ -164,5 +165,5 @@ index f184e63..e02884c 100644
  	pm_runtime_put_sync(host->dev);
  
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

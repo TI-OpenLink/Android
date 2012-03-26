@@ -1,7 +1,8 @@
-From 7b669a8cb6127ba4561882e0cf4322c36bbe3be9 Mon Sep 17 00:00:00 2001
+From 7a08ee9290e8b0c45892d2c66e63a115159399d0 Mon Sep 17 00:00:00 2001
 From: Ido Yariv <ido@wizery.com>
 Date: Thu, 1 Dec 2011 13:55:08 +0200
-Subject: [PATCH 12/14] genirq: Fix race condition when stopping the irq thread
+Subject: [PATCH 12/18] genirq: Fix race condition when stopping the irq
+ thread
 
 In irq_wait_for_interrupt(), the should_stop member is verified before
 setting the task's state to TASK_INTERRUPTIBLE and calling schedule().
@@ -40,7 +41,7 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  1 files changed, 4 insertions(+), 1 deletions(-)
 
 diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 0a7840a..a1aadab 100644
+index 0a7840ae..a1aadab 100644
 --- a/kernel/irq/manage.c
 +++ b/kernel/irq/manage.c
 @@ -620,8 +620,9 @@ static irqreturn_t irq_nested_primary_handler(int irq, void *dev_id)
@@ -65,5 +66,5 @@ index 0a7840a..a1aadab 100644
  }
  
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

@@ -1,7 +1,7 @@
-From 1e63c6593dda3fa75ce4452207a31ed4988a699c Mon Sep 17 00:00:00 2001
+From 51cdd175233ed0b87f607741f401e811d499a4cb Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Mon, 23 Jan 2012 13:54:51 +0200
-Subject: [PATCH 14/14] sync include/linux/wl12xx.h
+Subject: [PATCH 13/18] sync include/linux/wl12xx.h
 
 Needed in order to update the platform data struct
 
@@ -71,5 +71,5 @@ index 4b69739..0d63731 100644
  
  #endif
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

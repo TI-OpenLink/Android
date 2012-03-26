@@ -1,7 +1,7 @@
-From 3df4d40c535126a65fa19151dcb880851e9d5475 Mon Sep 17 00:00:00 2001
+From 822c0fdb9e905d88bfdf61fb7b12f0c81bb255cc Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Sun, 11 Sep 2011 11:05:29 +0300
-Subject: [PATCH 04/14] add MMC_CAP_ASYNC_SDIO_IRQ
+Subject: [PATCH 04/18] add MMC_CAP_ASYNC_SDIO_IRQ
 
 additionaly, move MMC_CAP_SDIO_IRQ support declaration to board file,
 rather than the generic omap_hsmmc.
@@ -14,10 +14,10 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  3 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/mach-omap2/board-4430sdp.c b/arch/arm/mach-omap2/board-4430sdp.c
-index 5975e66..6cfaf5a 100644
+index 9e11ce1..5b5d839 100644
 --- a/arch/arm/mach-omap2/board-4430sdp.c
 +++ b/arch/arm/mach-omap2/board-4430sdp.c
-@@ -450,7 +450,8 @@ static struct omap2_hsmmc_info mmc[] = {
+@@ -451,7 +451,8 @@ static struct omap2_hsmmc_info mmc[] = {
  	},
  	{
  		.mmc		= 5,
@@ -28,10 +28,10 @@ index 5975e66..6cfaf5a 100644
  		.gpio_wp	= -EINVAL,
  		.ocr_mask	= MMC_VDD_165_195,
 diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index fb79cff..eec4d32 100644
+index 2750772..60bf3c5 100644
 --- a/drivers/mmc/host/omap_hsmmc.c
 +++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -2437,8 +2437,7 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
+@@ -2465,8 +2465,7 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
  	mmc->max_seg_size = mmc->max_req_size;
  
  	mmc->caps |= MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED |
@@ -54,5 +54,5 @@ index 2cfa8d0..4f47b33 100644
  	mmc_pm_flag_t		pm_caps;	/* supported pm features */
  
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

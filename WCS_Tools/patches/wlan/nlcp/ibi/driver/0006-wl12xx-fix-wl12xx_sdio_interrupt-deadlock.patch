@@ -1,7 +1,7 @@
-From 7f291b265e9f0da945a22ad0cd73fffe8130da4f Mon Sep 17 00:00:00 2001
+From ed0bf0c858e3e8ac9234856f7ad98e3417ee8e2a Mon Sep 17 00:00:00 2001
 From: Ido Reis <idor@ti.com>
 Date: Thu, 9 Feb 2012 17:54:48 +0200
-Subject: [PATCH 6/6] wl12xx: fix wl12xx_sdio_interrupt() deadlock
+Subject: [PATCH 6/9] wl12xx: fix wl12xx_sdio_interrupt() deadlock
 
 TODO: this patch breaks a bit the abstractions layer. we
 should clean it later on...
@@ -26,10 +26,10 @@ Signed-off-by: Ido Reis <idor@ti.com>
  3 files changed, 18 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index e0852b5..9b5768e 100644
+index 8f241fc..ba74c27 100644
 --- a/drivers/net/wireless/ti/wlcore/main.c
 +++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -640,6 +640,16 @@ out:
+@@ -643,6 +643,16 @@ out:
  	return IRQ_HANDLED;
  }
  
@@ -46,7 +46,7 @@ index e0852b5..9b5768e 100644
  static int wl12xx_fetch_firmware(struct wl1271 *wl, bool plt)
  {
  	const struct firmware *fw;
-@@ -4981,6 +4991,7 @@ struct ieee80211_hw *wlcore_alloc_hw(size_t priv_size)
+@@ -5033,6 +5043,7 @@ struct ieee80211_hw *wlcore_alloc_hw(size_t priv_size)
  	INIT_DELAYED_WORK(&wl->elp_work, wl1271_elp_work);
  	INIT_WORK(&wl->netstack_work, wl1271_netstack_work);
  	INIT_WORK(&wl->tx_work, wl1271_tx_work);
@@ -95,10 +95,10 @@ index a6405e0..53d2ccf 100644
  
  
 diff --git a/drivers/net/wireless/ti/wlcore/wlcore.h b/drivers/net/wireless/ti/wlcore/wlcore.h
-index 3848027..6543c6b 100644
+index d6d1254..e4de80d 100644
 --- a/drivers/net/wireless/ti/wlcore/wlcore.h
 +++ b/drivers/net/wireless/ti/wlcore/wlcore.h
-@@ -204,6 +204,7 @@ struct wl1271 {
+@@ -218,6 +218,7 @@ struct wl1271 {
  	struct sk_buff_head deferred_tx_queue;
  
  	struct work_struct tx_work;
@@ -107,5 +107,5 @@ index 3848027..6543c6b 100644
  
  	/* Pending TX frames */
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

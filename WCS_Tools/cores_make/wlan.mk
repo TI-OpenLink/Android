@@ -69,10 +69,23 @@ WLAN_DEFAULT_DRIVER_LOAD_SCRIPT:=load_wlcore_hdk_rld2_rdl7_siso40.sh
 # rules
 ################################################################################
 
+.PHONY += 	wlan-private-pre-bringup-validation \
+			wlan-private-pre-make-validation 
+
 wlan-private-pre-bringup-validation:
+ifneq ($(CONFIG_WLAN_IBI), y)
+ifneq ($(CONFIG_WLAN_IBI), n)
+	$(error "IBI must be set explicitly to either 'y' or 'n'")
+endif
+endif
 	@$(ECHO) "wlan pre-bringup validation passed..."
 	
 wlan-private-pre-make-validation:
+ifneq ($(CONFIG_WLAN_IBI), y)
+ifneq ($(CONFIG_WLAN_IBI), n)
+	$(error "IBI must be set explicitly to either 'y' or 'n'")
+endif
+endif
 	@$(ECHO) "wlan pre-make validation passed..."
 
 $(PROGRESS_WLAN_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
@@ -118,8 +131,6 @@ $(PROGRESS_WLAN_DRIVER_FETCH): $(PROGRESS_BRINGUP_WLAN_MANIFEST)
 $(PROGRESS_WLAN_COMPAT_BRINGUP): $(PROGRESS_WLAN_DRIVER_FETCH)
 	@$(ECHO) "compat-wireless bringup for wlcore..."		
 #	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
-	git am $(WLAN_COMPAT_WIRELESS_PATCHES)/*.patch	 
-#	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
 	if [ -f patches/06-header-changes.patch ] ; then $(DEL) patches/06-header-changes.patch ; fi ; \
 	if [ -f patches/09-threaded-irq.patch ] ; then $(DEL) patches/09-threaded-irq.patch ; fi ; \
 	if [ -f patches/11-dev-pm-ops.patch ] ; then $(DEL) patches/11-dev-pm-ops.patch ; fi ; \
@@ -146,7 +157,10 @@ wlan-bringup-private: 	$(PROGRESS_BRINGUP_WLAN_MANIFEST) \
 						$(PROGRESS_WLAN_DRIVER_FETCH) \
 						$(PROGRESS_WLAN_COMPAT_BRINGUP)
 	@$(ECHO) "wlan bringup..."
-ifeq ($(CONFIG_WLAN_IBI), y)
+ifneq ($(CONFIG_WLAN_IBI), y)
+	cd $(WL12xx_TARGET_SCRIPTS) ; \
+	$(FIND) . -name 'load_wlcore*.sh' -exec $(SED) -rie 's/wlcore.ko irq=sdio/wlcore.ko/' {} \;
+else
 	$(MAKE) $(PROGRESS_WLAN_IBI_BRINGUP)
 endif
 	export GIT_TREE=$(WLAN_GIT_TREE) ; \

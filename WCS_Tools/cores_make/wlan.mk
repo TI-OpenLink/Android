@@ -144,6 +144,9 @@ $(PROGRESS_WLAN_COMPAT_BRINGUP): $(PROGRESS_WLAN_DRIVER_FETCH)
 	@$(call print, "compat-wireless patched and ready for wlcore")
 	
 $(PROGRESS_WLAN_IBI_BRINGUP): $(PROGRESS_WLAN_DRIVER_FETCH) $(PROGRESS_BRINGUP_KERNEL)
+ifneq ($(CONFIG_WLAN_IBI), y)
+	$(error "ibi is disabled in .config")
+endif
 	@$(ECHO) "driver and kernel bringup for ibi..." 	
 	cd $(WLCORE_DIR) ; git am $(WLAN_IBI_DRIVER_PATCHES)/*.patch
 	cd $(KERNEL_DIR) ; git am $(WLAN_IBI_KERNEL_PATCHES)/*.patch	
@@ -151,22 +154,35 @@ $(PROGRESS_WLAN_IBI_BRINGUP): $(PROGRESS_WLAN_DRIVER_FETCH) $(PROGRESS_BRINGUP_K
 	@$(call echo-to-file, "DONE", $(PROGRESS_WLAN_IBI_BRINGUP))
 	@$(call print, "driver and kernel patched for ibi")
 	
+wlan-bringup-ibi: wlan-private-pre-bringup-validation
+ifneq ($(CONFIG_WLAN_IBI), y)
+	$(error "ibi is disabled in .config")
+endif
+	$(MAKE) $(PROGRESS_WLAN_IBI_BRINGUP)
+	# we need to make sure that the we add the ismod irq argument
+	$(FIND) $(WL12xx_TARGET_SCRIPTS) -name 'load_wlcore*.sh' -exec $(SED) -rie 's/insmod \/system\/lib\/modules\/wlcore.ko$$/insmod \/system\/lib\/modules\/wlcore.ko irq=sdio/' {} \;
+	$(FIND) $(WL12xx_TARGET_SCRIPTS) -name 'load_wlcore*.sh' -exec $(SED) -rie 's/insmod \/system\/lib\/modules\/wlcore.ko irq=gpio/insmod \/system\/lib\/modules\/wlcore.ko irq=sdio/' {} \;
+	
 wlan-bringup-private: 	$(PROGRESS_BRINGUP_WLAN_MANIFEST) \
 						$(PROGRESS_WLAN_KERNEL_PATCHES) \
 						$(PROGRESS_WLAN_MYDROID_PATCHES) \
 						$(PROGRESS_WLAN_DRIVER_FETCH) \
 						$(PROGRESS_WLAN_COMPAT_BRINGUP)
 	@$(ECHO) "wlan bringup..."
-ifneq ($(CONFIG_WLAN_IBI), y)
-	cd $(WL12xx_TARGET_SCRIPTS) ; \
-	$(FIND) . -name 'load_wlcore*.sh' -exec $(SED) -rie 's/wlcore.ko irq=sdio/wlcore.ko/' {} \;
+	@$(ECHO) "starting branches"
+	sh $(SCRIPTS_PATH)/start_ti-ol_components.sh
+ifeq ($(CONFIG_WLAN_IBI), n)
+	# since the irq parameter for wlcore is only added with ibi patches, we need to make sure that the ismod line is without the irq argument
+	$(FIND) $(WL12xx_TARGET_SCRIPTS) -name 'load_wlcore*.sh' -exec $(SED) -rie 's/insmod \/system\/lib\/modules\/wlcore.ko irq=gpio/insmod \/system\/lib\/modules\/wlcore.ko/' {} \;
+	$(FIND) $(WL12xx_TARGET_SCRIPTS) -name 'load_wlcore*.sh' -exec $(SED) -rie 's/insmod \/system\/lib\/modules\/wlcore.ko irq=sdio/insmod \/system\/lib\/modules\/wlcore.ko/' {} \;
 else
-	$(MAKE) $(PROGRESS_WLAN_IBI_BRINGUP)
+	$(MAKE) wlan-bringup-ibi
 endif
 	export GIT_TREE=$(WLAN_GIT_TREE) ; \
 	export GIT_COMPAT_TREE=$(WLAN_GIT_COMPAT_TREE) ; \
-	cd $(WLAN_COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh ; \
-	cd $(WLAN_COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl_ti
+	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
+	sh ./scripts/admin-refresh.sh ; \
+	./scripts/driver-select wl_ti
 	$(TOUCH) $(WLAN_COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	@$(ECHO) "...done"
 
@@ -174,8 +190,9 @@ wlan-make-private:
 	@$(ECHO) "wlan make..."
 	export GIT_TREE=$(WLAN_GIT_TREE) ; \
 	export GIT_COMPAT_TREE=$(WLAN_GIT_COMPAT_TREE) ; \
-	cd $(WLAN_COMPAT_WIRELESS_DIR) ; sh ./scripts/admin-refresh.sh ; \
-	cd $(WLAN_COMPAT_WIRELESS_DIR) ; ./scripts/driver-select wl_ti
+	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
+	sh ./scripts/admin-refresh.sh ; \
+	./scripts/driver-select wl_ti
 	$(TOUCH) $(WLAN_COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	$(MAKE) -C $(WLAN_COMPAT_WIRELESS_DIR) KLIB=$(KERNEL_DIR) KLIB_BUILD=$(KERNEL_DIR) -j$(NTHREADS)
 	$(FIND) $(WLAN_COMPAT_WIRELESS_DIR) -name "*.ko" -exec $(COPY) {} $(WL12xx_KO_INSTALLER) \;

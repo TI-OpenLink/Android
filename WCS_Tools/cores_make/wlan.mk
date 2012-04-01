@@ -42,7 +42,7 @@ WLAN_IBI_DRIVER_PATCHES:=$(WLAN_IBI_PATCHES)/driver
 WLAN_IBI_KERNEL_PATCHES:=$(WLAN_IBI_PATCHES)/kernel
 
 WLAN_ROOT_DIR:=$(WORKSPACE_DIR)/wlan
-WLCORE_DIR:=$(WLAN_ROOT_DIR)/wl18xx
+WLCORE_DIR:=$(WLAN_ROOT_DIR)/wl12xx
 WLAN_COMPAT_DIR:=$(WLAN_ROOT_DIR)/compat
 WLAN_COMPAT_WIRELESS_DIR:=$(WLAN_ROOT_DIR)/compat-wireless
 
@@ -50,8 +50,8 @@ HOSTAP_DIR:=$(MYDROID)/external/wpa_supplicant_8
 TI_UTILS_DIR:=$(MYDROID)/external/ti-utils
 IW_DIR:=$(MYDROID)/external/iw
 LIBNL_DIR:=$(MYDROID)/system/core/libnl_2
-WL12xx_KO_INSTALLER:=$(MYDROID)/external/wlcore_ko_installer
-WL12xx_TARGET_SCRIPTS:=$(MYDROID)/external/wlcore_target_scripts
+WL12xx_KO_INSTALLER:=$(MYDROID)/external/wl12xx_ko_installer
+WL12xx_TARGET_SCRIPTS:=$(MYDROID)/external/wl12xx_target_scripts
 
 PROGRESS_WLAN_KERNEL_PATCHES:=$(PROGRESS_DIR)/wlan.kernel.patched
 PROGRESS_WLAN_MYDROID_PATCHES:=$(PROGRESS_DIR)/wlan.mydroid.patched
@@ -63,8 +63,6 @@ PROGRESS_WLAN_IBI_BRINGUP:=$(PROGRESS_DIR)/wlan.ibi.bringup
 WLAN_GIT_COMPAT_TREE:=$(WLAN_COMPAT_DIR)
 WLAN_GIT_TREE:=$(WLCORE_DIR)
 
-WLAN_DEFAULT_DRIVER_LOAD_SCRIPT:=load_wlcore_hdk_rld2_rdl7_siso40.sh
-
 ################################################################################
 # rules
 ################################################################################
@@ -73,19 +71,9 @@ WLAN_DEFAULT_DRIVER_LOAD_SCRIPT:=load_wlcore_hdk_rld2_rdl7_siso40.sh
 			wlan-private-pre-make-validation 
 
 wlan-private-pre-bringup-validation:
-ifneq ($(CONFIG_WLAN_IBI), y)
-ifneq ($(CONFIG_WLAN_IBI), n)
-	$(error "IBI must be set explicitly to either 'y' or 'n'")
-endif
-endif
 	@$(ECHO) "wlan pre-bringup validation passed..."
 	
 wlan-private-pre-make-validation:
-ifneq ($(CONFIG_WLAN_IBI), y)
-ifneq ($(CONFIG_WLAN_IBI), n)
-	$(error "IBI must be set explicitly to either 'y' or 'n'")
-endif
-endif
 	@$(ECHO) "wlan pre-make validation passed..."
 
 $(PROGRESS_WLAN_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
@@ -104,8 +92,6 @@ $(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	# patch BoardConfig.mk
 	cd $(MYDROID)/device/ti/blaze ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze/*.patch
 	cd $(MYDROID)/device/ti/blaze_tablet ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze_tablet/*.patch	
-	# patch wpa_supplicant_lib
-	cd $(MYDROID)/hardware/ti/wlan/mac80211/wpa_supplicant_lib ; git am $(WLAN_ANDROID_PATCHES)/hardware/ti/wlan/mac80211/wpa_supplicant_lib/*.patch
 	
 	# remove omap's firmware project from ics
 	$(MKDIR) -p $(TRASH_DIR)/mydroid/device/ti/proprietary-open
@@ -143,26 +129,6 @@ $(PROGRESS_WLAN_COMPAT_BRINGUP): $(PROGRESS_WLAN_DRIVER_FETCH)
 	@$(call echo-to-file, "DONE", $(PROGRESS_WLAN_COMPAT_BRINGUP))
 	@$(call print, "compat-wireless patched and ready for wlcore")
 	
-$(PROGRESS_WLAN_IBI_BRINGUP): $(PROGRESS_WLAN_DRIVER_FETCH) $(PROGRESS_BRINGUP_KERNEL)
-ifneq ($(CONFIG_WLAN_IBI), y)
-	$(error "ibi is disabled in .config")
-endif
-	@$(ECHO) "driver and kernel bringup for ibi..." 	
-	cd $(WLCORE_DIR) ; git am $(WLAN_IBI_DRIVER_PATCHES)/*.patch
-	cd $(KERNEL_DIR) ; git am $(WLAN_IBI_KERNEL_PATCHES)/*.patch	
-	@$(ECHO) "...done"
-	@$(call echo-to-file, "DONE", $(PROGRESS_WLAN_IBI_BRINGUP))
-	@$(call print, "driver and kernel patched for ibi")
-	
-wlan-bringup-ibi: wlan-private-pre-bringup-validation
-ifneq ($(CONFIG_WLAN_IBI), y)
-	$(error "ibi is disabled in .config")
-endif
-	$(MAKE) $(PROGRESS_WLAN_IBI_BRINGUP)
-	# we need to make sure that the we add the ismod irq argument
-	$(FIND) $(WL12xx_TARGET_SCRIPTS) -name 'load_wlcore*.sh' -exec $(SED) -rie 's/insmod \/system\/lib\/modules\/wlcore.ko$$/insmod \/system\/lib\/modules\/wlcore.ko irq=sdio/' {} \;
-	$(FIND) $(WL12xx_TARGET_SCRIPTS) -name 'load_wlcore*.sh' -exec $(SED) -rie 's/insmod \/system\/lib\/modules\/wlcore.ko irq=gpio/insmod \/system\/lib\/modules\/wlcore.ko irq=sdio/' {} \;
-	
 wlan-bringup-private: 	$(PROGRESS_BRINGUP_WLAN_MANIFEST) \
 						$(PROGRESS_WLAN_KERNEL_PATCHES) \
 						$(PROGRESS_WLAN_MYDROID_PATCHES) \
@@ -171,18 +137,11 @@ wlan-bringup-private: 	$(PROGRESS_BRINGUP_WLAN_MANIFEST) \
 	@$(ECHO) "wlan bringup..."
 	@$(ECHO) "starting branches"
 	sh $(SCRIPTS_PATH)/start_ti-ol_components.sh
-ifeq ($(CONFIG_WLAN_IBI), n)
-	# since the irq parameter for wlcore is only added with ibi patches, we need to make sure that the ismod line is without the irq argument
-	$(FIND) $(WL12xx_TARGET_SCRIPTS) -name 'load_wlcore*.sh' -exec $(SED) -rie 's/insmod \/system\/lib\/modules\/wlcore.ko irq=gpio/insmod \/system\/lib\/modules\/wlcore.ko/' {} \;
-	$(FIND) $(WL12xx_TARGET_SCRIPTS) -name 'load_wlcore*.sh' -exec $(SED) -rie 's/insmod \/system\/lib\/modules\/wlcore.ko irq=sdio/insmod \/system\/lib\/modules\/wlcore.ko/' {} \;
-else
-	$(MAKE) wlan-bringup-ibi
-endif
 	export GIT_TREE=$(WLAN_GIT_TREE) ; \
 	export GIT_COMPAT_TREE=$(WLAN_GIT_COMPAT_TREE) ; \
 	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
 	sh ./scripts/admin-refresh.sh ; \
-	./scripts/driver-select wl_ti
+	./scripts/driver-select wl12xx
 	$(TOUCH) $(WLAN_COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	@$(ECHO) "...done"
 
@@ -192,7 +151,7 @@ wlan-make-private:
 	export GIT_COMPAT_TREE=$(WLAN_GIT_COMPAT_TREE) ; \
 	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
 	sh ./scripts/admin-refresh.sh ; \
-	./scripts/driver-select wl_ti
+	./scripts/driver-select wl12xx
 	$(TOUCH) $(WLAN_COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	$(MAKE) -C $(WLAN_COMPAT_WIRELESS_DIR) KLIB=$(KERNEL_DIR) KLIB_BUILD=$(KERNEL_DIR) -j$(NTHREADS)
 	$(FIND) $(WLAN_COMPAT_WIRELESS_DIR) -name "*.ko" -exec $(COPY) {} $(WL12xx_KO_INSTALLER) \;
@@ -200,7 +159,6 @@ wlan-make-private:
 
 wlan-install-private:
 	@$(ECHO) "wlan install..."
-	@cd $(MYFS_DATA_PATH)/misc/wifi ; $(LINK) -svf $(WLAN_DEFAULT_DRIVER_LOAD_SCRIPT) load_wlcore.sh
 	@$(ECHO) "...done"
 	
 wlan-clean-private:
@@ -218,3 +176,4 @@ wlan-update-codebase-private: $(PROGRESS_BRINGUP_WLAN_MANIFEST)
 	cd $(MYDROID) ; repo sync $(REPO_SYNC_DEF_PARAMS)
 	if [ -f $(PROGRESS_WLAN_MYDROID_PATCHES) ] ; then $(DEL) $(PROGRESS_WLAN_MYDROID_PATCHES) ; fi
 	$(MAKE) $(PROGRESS_WLAN_MYDROID_PATCHES)
+

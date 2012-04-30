@@ -1,7 +1,7 @@
-From 6047d0b76dc25eaaf15d1561672707c7b08fe20b Mon Sep 17 00:00:00 2001
+From f9b46c7f98c177a1f3f01974f06d26e253cb0af3 Mon Sep 17 00:00:00 2001
 From: Sourav Poddar <sourav.poddar@ti.com>
 Date: Thu, 2 Jun 2011 13:09:09 +0530
-Subject: [PATCH 03/18] Support to keep cards always on
+Subject: [PATCH 03/19] Support to keep cards always on
 
 To keep cards always ON and to make mmc_release_host
 call only once.
@@ -13,10 +13,10 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  1 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 5aa2b9c..2750772 100644
+index 32507f5..41baec0 100644
 --- a/drivers/mmc/host/omap_hsmmc.c
 +++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -1914,8 +1914,7 @@ static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
+@@ -1916,8 +1916,7 @@ static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
  	unsigned long flags;
  	host->inband_status = enable;
  	/*
@@ -26,7 +26,7 @@ index 5aa2b9c..2750772 100644
  
  	 * DAT1 input buffer (or the card interrupt is always
  	 * asserted) and FCLK must be enabled as wake-up does not
-@@ -2077,7 +2076,12 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
+@@ -2079,7 +2078,12 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
  	      mmc_slot(host).card_detect ||
  	      (mmc_slot(host).get_cover_state &&
  	       mmc_slot(host).get_cover_state(host->dev, host->slot_id)))) {
@@ -40,7 +40,7 @@ index 5aa2b9c..2750772 100644
  	}
  	mmc_slot(host).set_power(host->dev, host->slot_id, 0, 0);
  	host->vdd = 0;
-@@ -2087,7 +2091,8 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
+@@ -2089,7 +2093,8 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
  		host->dpm_state == CARDSLEEP ? "CARDSLEEP" : "REGSLEEP");
  
  	host->dpm_state = OFF;
@@ -51,5 +51,5 @@ index 5aa2b9c..2750772 100644
  }
  
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

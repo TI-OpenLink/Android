@@ -1,7 +1,7 @@
-From bbf4e07cdaa2872400be1cd2a2037c60d820f76c Mon Sep 17 00:00:00 2001
+From f657e78b84cc3e9a40a388f51c1dbc1f649bed70 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Sun, 11 Mar 2012 14:58:34 +0200
-Subject: [PATCH 17/18] PM: fix might_sleep_if in __pm_runtime_idle
+Subject: [PATCH 16/19] PM: fix might_sleep_if in __pm_runtime_idle
 
 commit b1d0d5f ("PM: runtime: add might_sleep to PM runtime functions")
 added might_sleep_if() checks for __pm_runtime_* functions. But while
@@ -18,10 +18,10 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 577f4fd..4369f7f7 100644
+index 184cf54..c1cdc29 100644
 --- a/drivers/base/power/runtime.c
 +++ b/drivers/base/power/runtime.c
-@@ -732,7 +732,7 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
+@@ -746,7 +746,7 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
  	unsigned long flags;
  	int retval;
  
@@ -31,5 +31,5 @@ index 577f4fd..4369f7f7 100644
  	if (rpmflags & RPM_GET_PUT) {
  		if (!atomic_dec_and_test(&dev->power.usage_count))
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

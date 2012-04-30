@@ -1,8 +1,7 @@
-From 37ebf03f67743c5128f5c5f2e4bfcefa535ad8f0 Mon Sep 17 00:00:00 2001
+From 9111950f532cc8311bd64a3f72096453e72a8579 Mon Sep 17 00:00:00 2001
 From: Ido Yariv <ido@wizery.com>
 Date: Mon, 2 Jan 2012 21:42:04 +0200
-Subject: [PATCH 16/18] sdio: Add lock-less handlers host claiming function
- *EXPERIMENTAL*
+Subject: [PATCH 15/19] sdio: Add lock-less handlers host claiming function *EXPERIMENTAL*
 
 Lock-less handlers which are called without the host being claimed
 probably need to claim the host by themselves. In order to avoid a
@@ -58,5 +57,5 @@ index 5dff5e9..608c83b 100755
  
  extern int sdio_enable_func(struct sdio_func *func);
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

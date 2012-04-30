@@ -1,7 +1,7 @@
-From 567cbd1e5c8b917e7213ea2289db1463c865bf21 Mon Sep 17 00:00:00 2001
+From 7eed715594a38b51907d64508d7799bfa153e72f Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Wed, 7 Sep 2011 02:34:51 +0300
-Subject: [PATCH 06/18] Write to Interrupt Signal Enable (ISE) as well
+Subject: [PATCH 06/19] Write to Interrupt Signal Enable (ISE) as well
 
 We want the Card Interrupt to trigger an irq (in addition
 to setting the correct CIRQ bit in the status register)
@@ -12,10 +12,10 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  1 files changed, 5 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 60bf3c5..a79d26c 100644
+index 17a6a59..0676d88 100644
 --- a/drivers/mmc/host/omap_hsmmc.c
 +++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -1910,7 +1910,7 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
+@@ -1912,7 +1912,7 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
  static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
  {
  	struct omap_hsmmc_host *host = mmc_priv(mmc);
@@ -24,7 +24,7 @@ index 60bf3c5..a79d26c 100644
  	unsigned long flags;
  	host->inband_status = enable;
  	/*
-@@ -1930,14 +1930,18 @@ static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
+@@ -1932,14 +1932,18 @@ static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
  	pm_runtime_get_sync(host->dev);
  	con = OMAP_HSMMC_READ(host->base, CON) | CLKEXTFREE;
  	ie = OMAP_HSMMC_READ(host->base, IE);
@@ -44,5 +44,5 @@ index 60bf3c5..a79d26c 100644
  	OMAP_HSMMC_READ(host->base, IE); /* flush posted write */
  	pm_runtime_put_sync(host->dev);
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

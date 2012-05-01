@@ -1,7 +1,7 @@
-From 07a84f6360f7d39755e43bb383b4817553f0f699 Mon Sep 17 00:00:00 2001
-From: Sourav Poddar <sourav.poddar@ti.com>
-Date: Mon, 6 Jun 2011 15:30:44 +0530
-Subject: [PATCH 02/18] Enable Asynchronous Int featute for SDIO host
+From e2ba86fe3a2d7cea75c5e0721cad2b7a8283a24f Mon Sep 17 00:00:00 2001
+From: Ido Reis <idor@ti.com>
+Date: Mon, 30 Apr 2012 13:50:38 +0300
+Subject: [PATCH 02/19] Enable Asynchronous Int featute for SDIO host
 
 Enble the use of SDIO card interrupts.
 
@@ -17,12 +17,13 @@ inabnd interrupt differently.
 Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
 [Eliad: Fix omap_hsmmc_enable_sdio_irq prototype]
 Signed-off-by: Eliad Peller <eliad@wizery.com>
+Signed-off-by: Ido Reis <idor@ti.com>
 ---
  drivers/mmc/host/omap_hsmmc.c |   92 ++++++++++++++++++++++++++++++++++++-----
  1 files changed, 81 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 73ce8ac..5aa2b9c 100644
+index e073dce..32507f5 100644
 --- a/drivers/mmc/host/omap_hsmmc.c
 +++ b/drivers/mmc/host/omap_hsmmc.c
 @@ -73,6 +73,7 @@
@@ -67,8 +68,8 @@ index 73ce8ac..5aa2b9c 100644
  #define ADMA_XFER_INT		(1 << 3)
 +#define CLKEXTFREE		(1 << 16)
  
- #define ADMA_TABLE_SZ (PAGE_SIZE)
- #define ADMA_TABLE_NUM_ENTRIES \
+ #define DMA_TABLE_NUM_ENTRIES	1024
+ #define ADMA_TABLE_SZ 	\
 @@ -230,6 +236,7 @@ struct omap_hsmmc_host {
  	int			use_reg;
  	int			req_in_progress;
@@ -141,7 +142,7 @@ index 73ce8ac..5aa2b9c 100644
  }
  
  /*
-@@ -1881,6 +1907,44 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
+@@ -1883,6 +1909,44 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
  		mmc_slot(host).init_card(card);
  }
  
@@ -186,7 +187,7 @@ index 73ce8ac..5aa2b9c 100644
  static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
  {
  	u32 hctl, capa, value;
-@@ -1898,7 +1962,10 @@ static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
+@@ -1900,7 +1964,10 @@ static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
  		hctl |= DMAS;
  
  	value = OMAP_HSMMC_READ(host->base, HCTL) & ~SDVS_MASK;
@@ -198,7 +199,7 @@ index 73ce8ac..5aa2b9c 100644
  
  	if (host->dma_type == ADMA_XFER) {
  		value = OMAP_HSMMC_READ(host->base, CON);
-@@ -1910,7 +1977,10 @@ static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
+@@ -1912,7 +1979,10 @@ static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
  
  	/* Set the controller to AUTO IDLE mode */
  	value = OMAP_HSMMC_READ(host->base, SYSCONFIG);
@@ -210,7 +211,7 @@ index 73ce8ac..5aa2b9c 100644
  
  	/* Set SD bus power bit */
  	set_sd_bus_power(host);
-@@ -2008,9 +2078,7 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
+@@ -2010,9 +2080,7 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
  	      (mmc_slot(host).get_cover_state &&
  	       mmc_slot(host).get_cover_state(host->dev, host->slot_id)))) {
  		mmc_release_host(host->mmc);
@@ -220,7 +221,7 @@ index 73ce8ac..5aa2b9c 100644
  	mmc_slot(host).set_power(host->dev, host->slot_id, 0, 0);
  	host->vdd = 0;
  	host->power_mode = MMC_POWER_OFF;
-@@ -2020,8 +2088,6 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
+@@ -2022,8 +2090,6 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
  
  	host->dpm_state = OFF;
  
@@ -229,7 +230,7 @@ index 73ce8ac..5aa2b9c 100644
  	return 0;
  }
  
-@@ -2152,6 +2218,7 @@ static const struct mmc_host_ops omap_hsmmc_ops = {
+@@ -2154,6 +2220,7 @@ static const struct mmc_host_ops omap_hsmmc_ops = {
  	.get_cd = omap_hsmmc_get_cd,
  	.get_ro = omap_hsmmc_get_ro,
  	.init_card = omap_hsmmc_init_card,
@@ -237,7 +238,7 @@ index 73ce8ac..5aa2b9c 100644
  	/* NYET -- enable_sdio_irq */
  };
  
-@@ -2163,6 +2230,7 @@ static const struct mmc_host_ops omap_hsmmc_ps_ops = {
+@@ -2165,6 +2232,7 @@ static const struct mmc_host_ops omap_hsmmc_ps_ops = {
  	.get_cd = omap_hsmmc_get_cd,
  	.get_ro = omap_hsmmc_get_ro,
  	.init_card = omap_hsmmc_init_card,
@@ -245,7 +246,7 @@ index 73ce8ac..5aa2b9c 100644
  	/* NYET -- enable_sdio_irq */
  };
  
-@@ -2294,6 +2362,7 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
+@@ -2296,6 +2364,7 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
  	}
  	host->power_mode = MMC_POWER_OFF;
  	host->flags	= AUTO_CMD12;
@@ -253,7 +254,7 @@ index 73ce8ac..5aa2b9c 100644
  
  	host->master_clock = OMAP_MMC_MASTER_CLOCK;
  	if (mmc_slot(host).features & HSMMC_HAS_48MHZ_MASTER_CLK)
-@@ -2391,7 +2460,8 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
+@@ -2400,7 +2469,8 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
  	mmc->max_seg_size = mmc->max_req_size;
  
  	mmc->caps |= MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED |
@@ -264,5 +265,5 @@ index 73ce8ac..5aa2b9c 100644
  	mmc->caps |= mmc_slot(host).caps;
  	if (mmc->caps & MMC_CAP_8_BIT_DATA)
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

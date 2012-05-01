@@ -1,7 +1,7 @@
-From 2f7bae3d1402796cf4898e95099c00df2918d605 Mon Sep 17 00:00:00 2001
+From d64285628140608c43527d45f9578dc12cd6beb5 Mon Sep 17 00:00:00 2001
 From: Ido Yariv <ido@wizery.com>
 Date: Thu, 22 Dec 2011 11:27:06 +0200
-Subject: [PATCH 14/18] mmc: Toggle power while host is claimed
+Subject: [PATCH 13/19] mmc: Toggle power while host is claimed
 
 Runtime PM ops might be called when the host isn't claimed. This can be
 problematic, as the mmc disable/enable callbacks might be called
@@ -20,10 +20,10 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  1 files changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
-index 5e593fd..d630d19 100644
+index 44191b1..a2bdeb5 100644
 --- a/drivers/mmc/core/bus.c
 +++ b/drivers/mmc/core/bus.c
-@@ -147,15 +147,25 @@ static int mmc_bus_resume(struct device *dev)
+@@ -147,15 +147,25 @@ static int mmc_bus_pm_resume(struct device *dev)
  static int mmc_runtime_suspend(struct device *dev)
  {
  	struct mmc_card *card = mmc_dev_to_card(dev);
@@ -52,5 +52,5 @@ index 5e593fd..d630d19 100644
  
  static int mmc_runtime_idle(struct device *dev)
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

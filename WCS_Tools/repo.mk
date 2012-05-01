@@ -42,19 +42,19 @@ REPO_SYNC_DEF_PARAMS:=-j$(REPO_SYNC_NTHREADS)
 # x-loader repository definitions
 # -----------------------------------------------------------------------------
 XLOADER_REPO:=git://git.omapzoom.org/repo/x-loader.git
-XLOADER_TAG_HASH:=83cc7f5e242ab82f64f7a868df0fb5ed88830971
+XLOADER_TAG_HASH:=0ad87f4b34c69a68209b9d0a0e77326e78b3fa90
 
 # -----------------------------------------------------------------------------
 # u-boot repository definitions
 # -----------------------------------------------------------------------------
 UBOOT_REPO:=git://git.omapzoom.org/repo/u-boot.git
-UBOOT_TAG_HASH:=375e17deb1855185f429e36713b31f5ee453c443
+UBOOT_TAG_HASH:=90d3cc4479e5c54963d2bb80ed3e7dfeb7ad81b5
 
 # -----------------------------------------------------------------------------
 # kernel repository definitions
 # -----------------------------------------------------------------------------
 KERNEL_REPO:=git://git.omapzoom.org/kernel/omap.git
-KERNEL_TAG_HASH:=358ad6f8ca2bb5939d12f0d26b32aed92d70caef
+KERNEL_TAG_HASH:=de492e1e12b10e2d89b21ebe7228d22ea2210100
 
 # -----------------------------------------------------------------------------
 # mydroid repository definitions
@@ -62,7 +62,7 @@ KERNEL_TAG_HASH:=358ad6f8ca2bb5939d12f0d26b32aed92d70caef
 
 OMAPMANIFEST_REPO:=git://git.omapzoom.org/platform/omapmanifest.git
 OMAPMANIFEST_BRANCH:=27.x
-OMAPMANIFEST_XMLFILE:=RLS27.IS.2.P1_IcecreamSandwich.xml
+OMAPMANIFEST_XMLFILE:=RLS4AI.1.2_IcecreamSandwich.xml
 OMAPMANIFEST_HASH:=
 
 # -----------------------------------------------------------------------------

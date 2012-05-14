@@ -32,8 +32,8 @@ $(PROGRESS_DIR):
 	@$(MKDIR) -p $(PROGRESS_DIR)
 
 $(PROGRESS_FETCH_MANIFEST):
+	@$(MKDIR) -p $(PROGRESS_DIR)
 	@$(ECHO) "getting manifest..."
-	@$(MAKE) $(PROGRESS_DIR)
 	@$(ECHO) "$(PROGRESS_FETCH_MANIFEST)"
 	@git clone $(OMAPMANIFEST_REPO) $(MANIFEST)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MANIFEST))
@@ -69,6 +69,7 @@ error-opbu_missing:
 	$(error OPBU tar file is missing or not defined)
 else
 $(PROGRESS_MYDROID_REPO_INIT): $(PROGRESS_BRINGUP_MANIFEST)
+	@$(MKDIR) -p $(PROGRESS_DIR)
 	@$(MKDIR) -p $(MYDROID)
 	cd $(MYDROID) ; \
 	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) $(REPO_INIT_DEF_PARAMS)
@@ -76,24 +77,27 @@ $(PROGRESS_MYDROID_REPO_INIT): $(PROGRESS_BRINGUP_MANIFEST)
 	@$(call print, "android repo inited")
 
 $(PROGRESS_FETCH_MYDROID): $(PROGRESS_MYDROID_REPO_INIT)
+	@$(MKDIR) -p $(PROGRESS_DIR)
 	$(MAKE) mydroid-create-local-manifest
 	cd $(MYDROID) ; repo sync $(REPO_SYNC_DEF_PARAMS)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MYDROID))
 	@$(call print, "android filesystem retrieved")
 endif
 
-$(PROGRESS_FETCH_KERNEL): $(PROGRESS_FETCH_MANIFEST)
+$(PROGRESS_FETCH_KERNEL):
+	@$(MKDIR) -p $(PROGRESS_DIR)
 	@$(MKDIR) -p $(KERNEL_DIR)
 	git clone $(KERNEL_REPO) $(KERNEL_DIR)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_KERNEL))
 	@$(call print, "kernel version $(KERNEL_VERSION) retrieved")
 
-$(PROGRESS_FETCH_UBOOT): 
+$(PROGRESS_FETCH_UBOOT):
+	@$(MKDIR) -p $(PROGRESS_DIR) 
 	git clone $(UBOOT_REPO) $(UBOOT_DIR)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_UBOOT))
 	@$(call print, "u-boot retrieved")
 
-$(PROGRESS_FETCH_XLOADER): 
+$(PROGRESS_FETCH_XLOADER):
 	git clone $(XLOADER_REPO) $(XLOADER_DIR)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_XLOADER))
 	@$(call print, "x-loader retrieved")

@@ -1,7 +1,7 @@
-From 12dcfca252f45bba77d4646df02fa354f25e1373 Mon Sep 17 00:00:00 2001
+From c082932eba344708cfe702a3d11bb8d5591aa7f9 Mon Sep 17 00:00:00 2001
 From: Ido Yariv <ido@wizery.com>
 Date: Mon, 2 Jan 2012 21:50:02 +0200
-Subject: [PATCH 8/9] wl12xx: Register lock-less IBI handlers *EXPERIMENTAL*
+Subject: [PATCH 08/10] wl12xx: Register lock-less IBI handlers *EXPERIMENTAL*
 
 wl->mutex is normally acquired before claiming the mmc host. In the case of IBI, the handler is called with
 the host already claimed. This means that acquiring the mutex in the handler will result in an incorrect
@@ -18,7 +18,7 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  3 files changed, 42 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index 8f241fc..fc3327b 100644
+index 2504d7b..bece10e 100644
 --- a/drivers/net/wireless/ti/wlcore/main.c
 +++ b/drivers/net/wireless/ti/wlcore/main.c
 @@ -514,20 +514,15 @@ static void wl1271_netstack_work(struct work_struct *work)
@@ -52,7 +52,7 @@ index 8f241fc..fc3327b 100644
  	wl1271_debug(DEBUG_IRQ, "IRQ work");
  
  	if (unlikely(wl->state == WL1271_STATE_OFF))
-@@ -638,10 +631,26 @@ out:
+@@ -647,10 +640,26 @@ out:
  #endif
  	spin_unlock_irqrestore(&wl->wl_lock, flags);
  
@@ -134,17 +134,17 @@ index a6405e0..3830ffd 100644
  	printk("claiming sdio irq (func=%d). ret=%d\n", func->num, ret);
  	return ret;
 diff --git a/drivers/net/wireless/ti/wlcore/wlcore.h b/drivers/net/wireless/ti/wlcore/wlcore.h
-index d6d1254..f178ea7 100644
+index 642683f..e24a064 100644
 --- a/drivers/net/wireless/ti/wlcore/wlcore.h
 +++ b/drivers/net/wireless/ti/wlcore/wlcore.h
-@@ -402,6 +402,7 @@ int __devexit wlcore_remove(struct platform_device *pdev);
- struct ieee80211_hw *wlcore_alloc_hw(size_t priv_size);
- int wlcore_free_hw(struct wl1271 *wl);
+@@ -404,6 +404,7 @@ int wlcore_set_key(struct wl1271 *wl, enum set_key_cmd cmd,
+ 		   struct ieee80211_sta *sta,
+ 		   struct ieee80211_key_conf *key_conf);
  irqreturn_t wl12xx_hardirq(int irq, void *cookie);
 +irqreturn_t wl1271_irq_locked(struct wl1271 *wl);
  irqreturn_t wl1271_irq(int irq, void *cookie);
  
  /* Firmware image load chunk size */
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

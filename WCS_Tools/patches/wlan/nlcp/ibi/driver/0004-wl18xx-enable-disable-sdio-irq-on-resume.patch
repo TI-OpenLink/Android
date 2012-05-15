@@ -1,7 +1,7 @@
-From 846c0d2b2781ca11e60c538044b5c46ca5488925 Mon Sep 17 00:00:00 2001
+From 06d88648a687c178981a8e340e0db3d8269c680a Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Thu, 3 Nov 2011 14:55:18 +0200
-Subject: [PATCH 4/9] wl18xx: enable/disable sdio irq on resume
+Subject: [PATCH 04/10] wl18xx: enable/disable sdio irq on resume
 
 call the new sdio_disable_irq when getting an irq
 while the host is suspended and enable-only
@@ -53,5 +53,5 @@ index 9cd5ee3..a6405e0 100644
  	glue->handler = handler;
  	glue->thread_fn = thread_fn;
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

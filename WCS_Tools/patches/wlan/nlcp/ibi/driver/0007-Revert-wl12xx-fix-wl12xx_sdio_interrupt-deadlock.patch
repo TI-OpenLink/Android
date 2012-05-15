@@ -1,7 +1,7 @@
-From 8bfd4aa181ef52af58c20c656b474d307e376916 Mon Sep 17 00:00:00 2001
+From 2b6940d918383135f43cbb6f422bbca93b69f823 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Sun, 11 Mar 2012 15:15:54 +0200
-Subject: [PATCH 7/9] Revert "wl12xx: fix wl12xx_sdio_interrupt() deadlock"
+Subject: [PATCH 07/10] Revert "wl12xx: fix wl12xx_sdio_interrupt() deadlock"
 
 This reverts commit ed0bf0c858e3e8ac9234856f7ad98e3417ee8e2a.
 
@@ -13,10 +13,10 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  3 files changed, 7 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index ba74c27..8f241fc 100644
+index b8c813f..2504d7b 100644
 --- a/drivers/net/wireless/ti/wlcore/main.c
 +++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -643,16 +643,6 @@ out:
+@@ -652,16 +652,6 @@ out:
  	return IRQ_HANDLED;
  }
  
@@ -33,7 +33,7 @@ index ba74c27..8f241fc 100644
  static int wl12xx_fetch_firmware(struct wl1271 *wl, bool plt)
  {
  	const struct firmware *fw;
-@@ -5043,7 +5033,6 @@ struct ieee80211_hw *wlcore_alloc_hw(size_t priv_size)
+@@ -5053,7 +5043,6 @@ struct ieee80211_hw *wlcore_alloc_hw(size_t priv_size)
  	INIT_DELAYED_WORK(&wl->elp_work, wl1271_elp_work);
  	INIT_WORK(&wl->netstack_work, wl1271_netstack_work);
  	INIT_WORK(&wl->tx_work, wl1271_tx_work);
@@ -82,10 +82,10 @@ index 53d2ccf..a6405e0 100644
  
  
 diff --git a/drivers/net/wireless/ti/wlcore/wlcore.h b/drivers/net/wireless/ti/wlcore/wlcore.h
-index e4de80d..d6d1254 100644
+index 5863607..642683f 100644
 --- a/drivers/net/wireless/ti/wlcore/wlcore.h
 +++ b/drivers/net/wireless/ti/wlcore/wlcore.h
-@@ -218,7 +218,6 @@ struct wl1271 {
+@@ -223,7 +223,6 @@ struct wl1271 {
  	struct sk_buff_head deferred_tx_queue;
  
  	struct work_struct tx_work;
@@ -94,5 +94,5 @@ index e4de80d..d6d1254 100644
  
  	/* Pending TX frames */
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

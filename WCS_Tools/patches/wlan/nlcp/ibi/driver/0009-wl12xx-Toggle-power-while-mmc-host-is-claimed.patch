@@ -1,7 +1,7 @@
-From 3fcdf14c46a63354074c8169fa9e399fec660981 Mon Sep 17 00:00:00 2001
+From 43a0d1f03bdc44cd61bcfeda8dda501f85f7482f Mon Sep 17 00:00:00 2001
 From: Ido Yariv <ido@wizery.com>
 Date: Thu, 22 Dec 2011 12:12:15 +0200
-Subject: [PATCH 9/9] wl12xx: Toggle power while mmc host is claimed
+Subject: [PATCH 09/10] wl12xx: Toggle power while mmc host is claimed
 
 Currently mmc power is toggled without first claiming the host. This can
 be problematic, as the mmc disable/enable callbacks might be called
@@ -64,5 +64,5 @@ index 3830ffd..bdb6dc8 100644
  }
  
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

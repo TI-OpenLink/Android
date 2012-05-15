@@ -78,7 +78,7 @@ wlan-private-pre-make-validation:
 
 $(PROGRESS_WLAN_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 	@$(ECHO) "patching kernel for wlan..."
-	cd $(KERNEL_DIR) ; git am $(WLAN_KERNEL_PATCHES)/0001-mmc-recognise-SDIO-cards-with-SDIO_CCCR_REV-3.00.patch
+#	cd $(KERNEL_DIR) ; git am $(WLAN_KERNEL_PATCHES)/0001-mmc-recognise-SDIO-cards-with-SDIO_CCCR_REV-3.00.patch
 	# add dynamic debug support
 	cd $(KERNEL_DIR) ; $(PATCH) -p1 <  $(WLAN_KERNEL_PATCHES)/blaze.config.patch
 	@$(ECHO) "...done"
@@ -94,8 +94,8 @@ $(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	cd $(MYDROID)/device/ti/blaze_tablet ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze_tablet/*.patch	
 	
 	# remove omap's firmware project from ics
-	$(MKDIR) -p $(TRASH_DIR)/mydroid/device/ti/proprietary-open
-	if [ -d $(MYDROID)/device/ti/proprietary-open/wl12xx ] ; then $(MOVE) $(MYDROID)/device/ti/proprietary-open/wl12xx $(TRASH_DIR)/mydroid/device/ti/proprietary-open/ ; fi
+	$(MKDIR) -p $(TRASH_DIR)/mydroid/device/ti/proprietary-open/wl12xx
+	if [ -d $(MYDROID)/device/ti/proprietary-open/wl12xx/wlan ] ; then $(MOVE) $(MYDROID)/device/ti/proprietary-open/wl12xx/wlan $(TRASH_DIR)/mydroid/device/ti/proprietary-open/wl12xx ; fi
 	# remove omap's ti-utils project from ics
 	$(MKDIR) -p $(TRASH_DIR)/mydroid/hardware/ti/wlan/mac80211
 	if [ -d $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils ] ; then $(MOVE) $(MYDROID)/hardware/ti/wlan/mac80211/ti-utils $(TRASH_DIR)/mydroid/hardware/ti/wlan/mac80211/ ; fi

@@ -1,7 +1,7 @@
-From 51cdd175233ed0b87f607741f401e811d499a4cb Mon Sep 17 00:00:00 2001
+From 8f5dc6ee800249e1aa75d9d9887574c82c5027c3 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Mon, 23 Jan 2012 13:54:51 +0200
-Subject: [PATCH 13/18] sync include/linux/wl12xx.h
+Subject: [PATCH 12/19] sync include/linux/wl12xx.h
 
 Needed in order to update the platform data struct
 
@@ -13,7 +13,7 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  3 files changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-index 34dfeea..7be2199 100644
+index 5e5ca07..5de3657 100644
 --- a/drivers/mmc/core/sdio.c
 +++ b/drivers/mmc/core/sdio.c
 @@ -115,6 +115,9 @@ static int sdio_read_cccr(struct mmc_card *card)
@@ -23,7 +23,7 @@ index 34dfeea..7be2199 100644
 +	printk(KERN_ERR "%s: CCCR structure version: %d\n",
 +		mmc_hostname(card->host), cccr_vsn);
 +
- 	if (cccr_vsn > SDIO_CCCR_REV_3_00) {
+ 	if (cccr_vsn > SDIO_CCCR_REV_2_00) {
  		printk(KERN_ERR "%s: unrecognised CCCR structure version %d\n",
  			mmc_hostname(card->host), cccr_vsn);
 diff --git a/drivers/net/wireless/wl12xx/wl12xx_platform_data.c b/drivers/net/wireless/wl12xx/wl12xx_platform_data.c
@@ -71,5 +71,5 @@ index 4b69739..0d63731 100644
  
  #endif
 -- 
-1.7.6.401.g6a319
+1.7.0.4
 

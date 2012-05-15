@@ -1,7 +1,7 @@
-From f859e299689048d43f1c44f4fe524eb60b15ddf6 Mon Sep 17 00:00:00 2001
+From 1a65e01ccd07ed78c868cde555ad85d29fc4780b Mon Sep 17 00:00:00 2001
 From: Ido Yariv <ido@wizery.com>
 Date: Mon, 23 Apr 2012 19:10:51 +0300
-Subject: [PATCH] mmc: omap_hsmmc: Avoid spurious interrupts in dat1 handler
+Subject: [PATCH 19/19] mmc: omap_hsmmc: Avoid spurious interrupts in dat1 handler
 
 *** HACK ***
 
@@ -23,7 +23,7 @@ Signed-off-by: Ido Yariv <ido@wizery.com>
  1 files changed, 4 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index aa0c0dc..c424f1c 100644
+index 1273b68..c16161d 100644
 --- a/drivers/mmc/host/omap_hsmmc.c
 +++ b/drivers/mmc/host/omap_hsmmc.c
 @@ -1302,6 +1302,10 @@ static irqreturn_t omap_hsmmc_dat1_irq(int irq, void *dev_id)

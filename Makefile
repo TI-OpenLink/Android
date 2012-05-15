@@ -196,8 +196,6 @@ distclean:
 	@if [ -d $(MANIFEST) ] ; then $(ECHO) removing $(MANIFEST) directory ; $(DEL) -rf $(MANIFEST) ; fi
 	@if [ -d .repo ] ; then $(ECHO) removing .repo directory ; $(DEL) -rf .repo ; fi
 	@if [ -d $(WORKSPACE_DIR) ] ; then $(ECHO) removing $(WORKSPACE_DIR) directory ; $(DEL) -rf $(WORKSPACE_DIR) ; fi
-	@$(ECHO) synchronizing...
-	@sync &
 	@$(call print, "DISTCLEAN DONE")
 	@$(call print, "The distclean process took $$(( $(call GET_TIME)-$(MAKE_START_TIME) )) seconds")
 

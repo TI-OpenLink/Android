@@ -130,11 +130,6 @@ $(PROGRESS_BRINGUP_MYDROID): $(PROGRESS_FETCH_MYDROID)
 	@$(ECHO) "$(PROGRESS_BRINGUP_MYDROID)"
 	@cd $(MYDROID) ; source build/envsetup.sh ; lunch $(AFS_BUILD_OPTION) ; $(MAKE) -j$(NTHREADS) clean 2>&1
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_MYDROID))
-ifneq ($(AFS_TARGET_BUILD), tablet)
-	@$(ECHO) "updating ducati-m3.bin in the internal binaries folder for install process"
-	$(MKDIR) -p $(BINARIES_PATH)/system/vendor/firmware/
-	$(COPY) $(PATCHES_PATH)/kernel/ducati-m3.bin $(BINARIES_PATH)/system/vendor/firmware/ducati-m3.bin
-endif
 	@$(call print, "mydroid bringup done")
 
 mydroid-bringup: 	$(PROGRESS_BRINGUP_MYDROID)

@@ -128,7 +128,7 @@ kernel-bringup: 	$(PROGRESS_BRINGUP_KERNEL)
 
 $(PROGRESS_BRINGUP_MYDROID): $(PROGRESS_FETCH_MYDROID)
 	@$(ECHO) "$(PROGRESS_BRINGUP_MYDROID)"
-	@cd $(MYDROID) ; source build/envsetup.sh ; $(MAKE) -j$(NTHREADS) clean 2>&1
+	@cd $(MYDROID) ; source build/envsetup.sh ; lunch $(AFS_BUILD_OPTION) ; $(MAKE) -j$(NTHREADS) clean 2>&1
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_MYDROID))
 ifneq ($(AFS_TARGET_BUILD), tablet)
 	@$(ECHO) "updating ducati-m3.bin in the internal binaries folder for install process"
@@ -154,7 +154,7 @@ kernel-make: 		$(PROGRESS_BRINGUP_KERNEL) \
 	@$(call print, "kernel make done")
 
 mydroid-make: 		$(PROGRESS_BRINGUP_MYDROID)
-	cd $(MYDROID) ; source build/envsetup.sh ; $(MAKE) $(AFS_BUILD_OPTION) -j$(NTHREADS) 2>&1
+	cd $(MYDROID) ; source build/envsetup.sh ; lunch $(AFS_BUILD_OPTION) ; $(MAKE) -j$(NTHREADS) 2>&1
 	@$(call print, "mydroid make done")
 
 $(UBOOT_DIR)/u-boot.bin:

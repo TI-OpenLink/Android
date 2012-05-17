@@ -34,9 +34,9 @@ VERSION:=r8.a1.06
 AFS_TARGET_BUILD=
 #tablet
 ifeq ($(AFS_TARGET_BUILD), tablet)
-AFS_BUILD_OPTION:=PRODUCT-blaze_tablet-userdebug
+AFS_BUILD_OPTION:=blaze_tablet-userdebug
 else
-AFS_BUILD_OPTION:=PRODUCT-full_blaze-userdebug
+AFS_BUILD_OPTION:=full_blaze-userdebug
 endif
 
 YOUR_PATH:=$(PWD)

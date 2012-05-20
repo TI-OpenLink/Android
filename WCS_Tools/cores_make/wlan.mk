@@ -63,7 +63,7 @@ PROGRESS_WLAN_IBI_BRINGUP:=$(PROGRESS_DIR)/wlan.ibi.bringup
 WLAN_GIT_COMPAT_TREE:=$(WLAN_COMPAT_DIR)
 WLAN_GIT_TREE:=$(WLCORE_DIR)
 
-WLAN_DEFAULT_DRIVER_LOAD_SCRIPT:=load_wlcore_hdk_rld2_rdl7_siso40.sh
+WLAN_DEFAULT_DRIVER_LOAD_SCRIPT:=load_wlcore_hdk_rdl2_rdl7_siso40.sh
 
 ################################################################################
 # rules

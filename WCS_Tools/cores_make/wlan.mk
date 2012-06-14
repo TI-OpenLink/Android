@@ -180,7 +180,7 @@ endif
 	export GIT_COMPAT_TREE=$(WLAN_GIT_COMPAT_TREE) ; \
 	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
 	sh ./scripts/admin-refresh.sh ; \
-	./scripts/driver-select wl12xx
+	./scripts/driver-select ti
 	$(TOUCH) $(WLAN_COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	@$(ECHO) "...done"
 
@@ -190,7 +190,7 @@ wlan-make-private:
 	export GIT_COMPAT_TREE=$(WLAN_GIT_COMPAT_TREE) ; \
 	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
 	sh ./scripts/admin-refresh.sh ; \
-	./scripts/driver-select wl12xx
+	./scripts/driver-select ti
 	$(TOUCH) $(WLAN_COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	$(MAKE) -C $(WLAN_COMPAT_WIRELESS_DIR) KLIB=$(KERNEL_DIR) KLIB_BUILD=$(KERNEL_DIR) -j$(NTHREADS)
 	$(FIND) $(WLAN_COMPAT_WIRELESS_DIR) -name "*.ko" -exec $(COPY) {} $(WL12xx_KO_INSTALLER) \;

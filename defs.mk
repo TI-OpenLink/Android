@@ -29,7 +29,7 @@
 ifndef DEFS_MK_INCLUDED
 DEFS_MK_INCLUDED:=included
 
-VERSION:=r8.a2.07
+VERSION:=r8.a3.01
 
 AFS_TARGET_BUILD=
 #tablet

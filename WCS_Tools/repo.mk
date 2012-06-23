@@ -69,12 +69,12 @@ OMAPMANIFEST_HASH:=
 # wlan repository definitions
 # -----------------------------------------------------------------------------
 WLAN_MANIFEST_REPO:=git://github.com/TI-OpenLink/ti-ol-manifest.git
-WLAN_MANIFEST_BRANCH?=r8
+WLAN_MANIFEST_BRANCH?=r8.a3
 WLAN_MANIFEST_DIR:=$(WORKSPACE_DIR)/ti-ol-manifest
 WLAN_MANIFEST_HASH?=
 WLAN_MANIFEST_EXT?=xx
-WLAN_DRIVER_MANIFEST_NAME:=ti-ol-driver-manifest.R5.$(WLAN_MANIFEST_EXT).xml
-WLAN_ANDROID_MANIFEST_NAME:=ti-ol-android-manifest.R5.$(WLAN_MANIFEST_EXT).xml
+WLAN_DRIVER_MANIFEST_NAME:=ti-ol-driver-manifest.R8.$(WLAN_MANIFEST_EXT).xml
+WLAN_ANDROID_MANIFEST_NAME:=ti-ol-android-manifest.R8.$(WLAN_MANIFEST_EXT).xml
 
 # -----------------------------------------------------------------------------
 # bt repository definitions

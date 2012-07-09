@@ -12,8 +12,6 @@ cd external/wpa_supplicant_8
 if [ -d wapi_and_wfd-patches ] ; then rm -rf wapi_and_wfd-patches ; fi
 git clone git@gitorious.tif.ti.com:ti-openlink/wapi_and_wfd-patches.git -b r5.1
 
-git checkout mc_internal
-git branch -D wapi_wfd
 git checkout mc_internal -b wapi_wfd
 git am wapi_and_wfd-patches/00*
 git tag -f -a "${TAG_NAME}-wapi_wfd" -m "${TAG_NAME}-wapi_wfd"

@@ -20,26 +20,26 @@ git tag -f -a "${TAG_NAME}" -m "${TAG_NAME}"
 git push origin ${TAG_NAME}
 cd ../
 
-find ../../out/target/product/blaze/ -name wpa_\* -exec rm {} \;
+#find ../../out/target/product/blaze/ -name wpa_\* -exec rm {} \;
 find . -name '*.c' -exec touch {} \;
 mm -j12
 mv ../../out/target/product/blaze/system/bin/wpa_supplicant ./wpa_supplicant-wapi_wfd
 mv ../../out/target/product/blaze/system/bin/wpa_cli ./wpa_cli-wapi_wfd
 
 
-find ../../out/target/product/blaze/ -name wpa_\* -exec rm {} \;
+#find ../../out/target/product/blaze/ -name wpa_\* -exec rm {} \;
 find . -name '*.c' -exec touch {} \;
 git checkout mc_internal
+git branch -D wapi_wfd
 mm -j12
 
 mv ./wpa_supplicant-wapi_wfd ../../out/target/product/blaze/system/bin/wpa_supplicant-wapi_wfd
 mv ./wpa_cli-wapi_wfd ../../out/target/product/blaze/system/bin/wpa_cli-wapi_wfd
 
-strings ../../out/target/product/blaze/system/bin/wpa_supplicant | grep $TAG_NAME
-strings ../../out/target/product/blaze/system/bin/wpa_cli | grep $TAG_NAME
-strings ../../out/target/product/blaze/system/bin/wpa_supplicant-wapi_wfd | grep $TAG_NAME
-strings ../../out/target/product/blaze/system/bin/wpa_cli-wapi_wfd | grep $TAG_NAME
-
-
+#strings ../../out/target/product/blaze/system/bin/wpa_supplicant | grep $TAG_NAME
+#strings ../../out/target/product/blaze/system/bin/wpa_cli | grep $TAG_NAME
+#strings ../../out/target/product/blaze/system/bin/wpa_supplicant-wapi_wfd | grep $TAG_NAME
+#strings ../../out/target/product/blaze/system/bin/wpa_cli-wapi_wfd | grep $TAG_NAME
 
 popd
+

@@ -16,7 +16,7 @@ cp arch/arm/boot/uImage ${NL_OUT_DIR}/boot
 cd -
 
 cd ${NL_OUT_DIR}
-find lib/ -name *.ko -exec ${CROSS_COMPILE}-strip {} \;
+find lib/ -name *.ko -exec ${CROSS_COMPILE}strip {} \;
 tar cvf nl-artifcats.tar lib
 cd -
 

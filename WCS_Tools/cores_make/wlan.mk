@@ -93,7 +93,7 @@ $(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	cd $(MYDROID)/device/ti/blaze ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze/*.patch
 	cd $(MYDROID)/device/ti/blaze_tablet ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze_tablet/*.patch
 	# patch netd
-	cd $(LIBNL_DIR) ; git am $(WLAN_ANDROID_PATCHES)/system/netd/*.patch
+	cd $(MYDROID)/system/netd/ ; git am $(WLAN_ANDROID_PATCHES)/system/netd/*.patch
 	# patch libhardware_legacy
 	cd $(MYDROID)/hardware/libhardware_legacy ; git am $(WLAN_ANDROID_PATCHES)/hardware/libhardware_legacy/*.patch
 	# patch hardware/ti/wlan

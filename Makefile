@@ -47,7 +47,7 @@ update-internals: /data/git/repositories/wiist/Android/R4.xx/internals
 	@$(ECHO) getting internals from local repository
 	@if [ -d ./.internals ] ; then $(DEL) -rf ./.internals ; fi
 	git clone /data/git/repositories/wiist/Android/R4.xx/internals ./.internals
-	cd ./.internals ; git checkout origin/ics
+	cd ./.internals ; git checkout origin/jelly-bean
 	@$(ECHO) "updating $(WIIST_PATH) with internals..."
 	@$(COPY) -rf ./.internals/* $(WIIST_PATH)/
 	@$(ECHO) "deleting local internals repository..."

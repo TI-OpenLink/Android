@@ -69,8 +69,13 @@ error-opbu_missing:
 else
 $(PROGRESS_MYDROID_REPO_INIT): $(PROGRESS_BRINGUP_MANIFEST)
 	@$(MKDIR) -p $(MYDROID)
+ifeq ($(OMAPMANIFEST_XMLFILE),)
+	cd $(MYDROID) ; \
+	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) $(REPO_INIT_DEF_PARAMS)
+else
 	cd $(MYDROID) ; \
 	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) $(REPO_INIT_DEF_PARAMS)
+endif
 	@$(call echo-to-file, "DONE", $(PROGRESS_MYDROID_REPO_INIT))
 	@$(call print, "android repo inited")
 
@@ -117,7 +122,10 @@ x-loader-bringup: 	$(PROGRESS_BRINGUP_XLOADER)
 
 $(PROGRESS_BRINGUP_KERNEL): $(PROGRESS_FETCH_KERNEL)
 	cd $(KERNEL_DIR) ; git checkout -b vanilla $(KERNEL_TAG_HASH)
-	cd $(KERNEL_DIR) ; git am $(PATCHES_PATH)/kernel/*.patch
+	$(MKDIR) -p $(PATCHES_PATH)/kernel/
+	if [ "`ls $(PATCHES_PATH)/kernel/`" != "" ] ; then \
+		cd $(KERNEL_DIR) ; git am $(PATCHES_PATH)/kernel/*.patch ; \
+	fi
 	$(MAKE) -C $(KERNEL_DIR) -j$(NTHREADS) ARCH=arm distclean
 	$(MAKE) -C $(KERNEL_DIR) ARCH=arm $(KERNEL_PLATFORM_CONFIG)
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_KERNEL))

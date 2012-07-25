@@ -1,7 +1,7 @@
-From 60fdbf9554a96a3c0dd4a55751b7ea757495baa8 Mon Sep 17 00:00:00 2001
+From 67ea4b4b2e1ade66a5040359bef5518e98aa44de Mon Sep 17 00:00:00 2001
 From: Arik Nemtsov <arik@wizery.com>
 Date: Thu, 19 Jul 2012 16:08:01 +0300
-Subject: [PATCH] SoftapControllerTI: enable advanced SoftAP solution
+Subject: [PATCH 1/2] SoftapControllerTI: enable advanced SoftAP solution
 
 Includes the following features:
 - Enabling wlan1 when switching on tethering, don't remove wlan1
@@ -3812,5 +3812,5 @@ index 0000000..776b134
 +
 +#endif /* __LINUX_NL80211_H */
 -- 
-1.7.9
+1.7.9.5
 

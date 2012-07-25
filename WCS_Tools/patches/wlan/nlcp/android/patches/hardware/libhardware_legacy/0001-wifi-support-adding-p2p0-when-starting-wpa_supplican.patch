@@ -1,4 +1,4 @@
-From 385389f09bd7d9bb23692f9c056f9b7835aa9cea Mon Sep 17 00:00:00 2001
+From 475434a903d427bf1682c43991238f0de0110933 Mon Sep 17 00:00:00 2001
 From: Arik Nemtsov <arik@wizery.com>
 Date: Sun, 22 Jul 2012 11:52:07 +0300
 Subject: [PATCH] wifi: support adding p2p0 when starting wpa_supplicant
@@ -12,7 +12,7 @@ Signed-off-by: Arik Nemtsov <arik@wizery.com>
  Android.mk  |    7 +
  nl80211.h   | 3133 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  wifi/wifi.c |  233 +++++
- 3 files changed, 3373 insertions(+), 0 deletions(-)
+ 3 files changed, 3373 insertions(+)
  create mode 100644 nl80211.h
 
 diff --git a/Android.mk b/Android.mk
@@ -3441,5 +3441,5 @@ index 5a42e2d..ed4b90e 100644
      wifi_wpa_ctrl_cleanup();
  
 -- 
-1.7.9
+1.7.9.5
 

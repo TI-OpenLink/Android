@@ -1,16 +1,16 @@
-From 835da807c9c2a9f3fe030f3f372890a2ac6b194d Mon Sep 17 00:00:00 2001
+From fbeb58ef1c70580c7bc872ded375f13dde7e6971 Mon Sep 17 00:00:00 2001
 From: Arik Nemtsov <arik@wizery.com>
 Date: Sun, 22 Jul 2012 12:28:14 +0300
-Subject: [PATCH 2/3] support wifi direct in blaze tablet
+Subject: [PATCH 2/4] support wifi direct in blaze tablet
 
 Change-Id: I2105d3db289b50e700830bf2cfea39c0a3d364e2
 Signed-off-by: Arik Nemtsov <arik@wizery.com>
 ---
  device.mk |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/device.mk b/device.mk
-index 3e9e6e0..17968c1 100644
+index 718f683..e372758 100644
 --- a/device.mk
 +++ b/device.mk
 @@ -69,6 +69,7 @@ PRODUCT_COPY_FILES += \
@@ -26,9 +26,9 @@ index 3e9e6e0..17968c1 100644
  #	frameworks/base/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
  #	frameworks/base/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
 -#	frameworks/base/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
- #	device/ti/blaze_tablet/cyttsp4-i2c.idc:system/usr/idc/cyttsp4-i2c.idc
  
  # to mount the external storage (sdcard)
+ PRODUCT_COPY_FILES += \
 -- 
-1.7.9.5
+1.7.9
 

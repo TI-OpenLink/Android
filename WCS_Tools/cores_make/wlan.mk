@@ -98,12 +98,14 @@ $(PROGRESS_WLAN_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 $(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	@$(ECHO) "patching android for wlan..."	
 	# patch libnl
-	cd $(LIBNL_DIR) ; git am $(WLAN_ANDROID_PATCHES)/system/core/*.patch	
+	cd $(MYDROID)/system/core ; git am $(WLAN_ANDROID_PATCHES)/system/core/*.patch
 	# patch BoardConfig.mk
 	cd $(MYDROID)/device/ti/blaze ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze/*.patch
 	cd $(MYDROID)/device/ti/blaze_tablet ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze_tablet/*.patch	
-	# patch wpa_supplicant_lib
-	cd $(MYDROID)/hardware/ti/wlan/mac80211/wpa_supplicant_lib ; git am $(WLAN_ANDROID_PATCHES)/hardware/ti/wlan/mac80211/wpa_supplicant_lib/*.patch
+	# patch netd
+	cd $(LIBNL_DIR) ; git am $(WLAN_ANDROID_PATCHES)/system/netd/*.patch
+	# patch libhardware_legacy
+	cd $(MYDROID)/hardware/libhardware_legacy ; git am $(WLAN_ANDROID_PATCHES)/hardware/libhardware_legacy/*.patch
 	
 	# remove omap's firmware project from ics
 	$(MKDIR) -p $(TRASH_DIR)/mydroid/device/ti/proprietary-open/wl12xx

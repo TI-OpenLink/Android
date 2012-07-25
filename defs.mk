@@ -33,7 +33,7 @@ VERSION:=r5.00.20
 
 AFS_TARGET_BUILD=
 #tablet
-ifeq ($(AFS_TARGET_BUILD), tablet)
+ifneq ($(AFS_TARGET_BUILD), blaze)
 AFS_BUILD_OPTION:=blaze_tablet-userdebug
 else
 AFS_BUILD_OPTION:=full_blaze-userdebug
@@ -99,7 +99,7 @@ endif
 # platform configuration
 ################################################################################
 
-ifeq ($(AFS_TARGET_BUILD), tablet)
+ifneq ($(AFS_TARGET_BUILD), blaze)
 UBOOT_PLATFORM_CONFIG:=omap44XXtablet_config
 XLOADER_PLATFORM_CONFIG:=omap44XXtablet_config
 else
@@ -112,7 +112,7 @@ KERNEL_PLATFORM_CONFIG:=blaze_defconfig
 # output paths
 ################################################################################
 
-ifeq ($(AFS_TARGET_BUILD), tablet)
+ifneq ($(AFS_TARGET_BUILD), blaze)
 OUTPUT_IMG_DIR=$(MYDROID)/out/target/product/blaze_tablet
 else
 OUTPUT_IMG_DIR=$(MYDROID)/out/target/product/blaze

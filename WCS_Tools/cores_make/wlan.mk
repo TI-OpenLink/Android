@@ -106,7 +106,11 @@ $(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	cd $(LIBNL_DIR) ; git am $(WLAN_ANDROID_PATCHES)/system/netd/*.patch
 	# patch libhardware_legacy
 	cd $(MYDROID)/hardware/libhardware_legacy ; git am $(WLAN_ANDROID_PATCHES)/hardware/libhardware_legacy/*.patch
-	
+	# patch hardware/ti/wlan
+	cd $(MYDROID)/hardware/ti/wlan ; git am $(WLAN_ANDROID_PATCHES)/hardware/ti/wlan/*.patch
+	# patch framework/base
+	cd $(MYDROID)/frameworks/base ; git am $(WLAN_ANDROID_PATCHES)/frameworks/base/*.patch
+
 	# remove omap's firmware project from ics
 	$(MKDIR) -p $(TRASH_DIR)/mydroid/device/ti/proprietary-open/wl12xx
 	if [ -d $(MYDROID)/device/ti/proprietary-open/wl12xx/wlan ] ; then $(MOVE) $(MYDROID)/device/ti/proprietary-open/wl12xx/wlan $(TRASH_DIR)/mydroid/device/ti/proprietary-open/wl12xx ; fi

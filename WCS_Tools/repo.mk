@@ -48,28 +48,27 @@ XLOADER_TAG_HASH:=835089cdb52288fcf1ca2f14018ae756842be724
 # u-boot repository definitions
 # -----------------------------------------------------------------------------
 UBOOT_REPO:=git://git.omapzoom.org/repo/u-boot.git
-UBOOT_TAG_HASH:=b2f9ce5c0c2747f1af86d26f9cadbc36af9b7da6
+UBOOT_TAG_HASH:=bb9f0949700503aeaa9ef40948cd23795ec3e7ea
 
 # -----------------------------------------------------------------------------
 # kernel repository definitions
 # -----------------------------------------------------------------------------
 KERNEL_REPO:=git://git.omapzoom.org/kernel/omap.git
-KERNEL_TAG_HASH:=d5e6ee8b7b648094892e501b4ee6e2424d59f7d1
+KERNEL_TAG_HASH:=p-android-omap-3.0-dev
 
 # -----------------------------------------------------------------------------
 # mydroid repository definitions
 # -----------------------------------------------------------------------------
-
-OMAPMANIFEST_REPO:=git://git.omapzoom.org/platform/omapmanifest.git
-OMAPMANIFEST_BRANCH:=27.x
-OMAPMANIFEST_XMLFILE:=RLS4AI.1.4_IcecreamSandwich.xml
+OMAPMANIFEST_REPO:=git://git.omapzoom.org/platform/omapmanifest
+OMAPMANIFEST_BRANCH:=jb-release
+OMAPMANIFEST_XMLFILE:=
 OMAPMANIFEST_HASH:=
 
 # -----------------------------------------------------------------------------
 # wlan repository definitions
 # -----------------------------------------------------------------------------
 WLAN_MANIFEST_REPO:=git://github.com/TI-OpenLink/ti-ol-manifest.git
-WLAN_MANIFEST_BRANCH?=r8.a3
+WLAN_MANIFEST_BRANCH?=r8.a3-jb
 WLAN_MANIFEST_DIR:=$(WORKSPACE_DIR)/ti-ol-manifest
 WLAN_MANIFEST_HASH?=
 WLAN_MANIFEST_EXT?=xx

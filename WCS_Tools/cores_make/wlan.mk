@@ -147,7 +147,7 @@ ifneq ($(CONFIG_WLAN_IBI), y)
 endif
 	@$(ECHO) "driver and kernel bringup for ibi..." 	
 	cd $(WLCORE_DIR) ; git checkout -b _ibi ; git am $(WLAN_IBI_DRIVER_PATCHES)/*.patch
-	cd $(KERNEL_DIR) ; git am $(WLAN_IBI_KERNEL_PATCHES)/*.patch	
+	cd $(KERNEL_DIR) ; git checkout -b _ibi ; git am $(WLAN_IBI_KERNEL_PATCHES)/*.patch
 	@$(ECHO) "...done"
 	@$(call echo-to-file, "DONE", $(PROGRESS_WLAN_IBI_BRINGUP))
 	@$(call print, "driver and kernel patched for ibi")

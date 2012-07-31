@@ -35,14 +35,13 @@ $(PROGRESS_FETCH_MANIFEST):
 	@$(ECHO) "getting manifest..."
 	@$(MAKE) $(PROGRESS_DIR)
 	@$(ECHO) "$(PROGRESS_FETCH_MANIFEST)"
-	@git clone $(OMAPMANIFEST_REPO) $(MANIFEST)
+	@git clone $(OMAPMANIFEST_REPO) $(MANIFEST) -b $(OMAPMANIFEST_BRANCH)
 	@$(call echo-to-file, "DONE", $(PROGRESS_FETCH_MANIFEST))
 	@$(call print, "manifest for $(OMAPMANIFEST_BRANCH) retrieved")
 	@$(call echo-to-file, "PACKAGE SOURCE: git -> $(GIT_PROTOCOL_USE)", $(PROGRESS_FETCH_METHOD))
 
 $(PROGRESS_BRINGUP_MANIFEST): $(PROGRESS_FETCH_MANIFEST)
 	@$(ECHO) "manifest bringup..."
-	@cd $(MANIFEST) ; git checkout $(OMAPMANIFEST_BRANCH)
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_MANIFEST))
 	@$(call print, "manifest for $(OMAPMANIFEST_BRANCH) ready to use")
 
@@ -99,7 +98,7 @@ $(PROGRESS_FETCH_XLOADER):
 	@$(call print, "x-loader retrieved")
 
 $(PROGRESS_BRINGUP_UBOOT): $(PROGRESS_FETCH_UBOOT)
-	cd $(UBOOT_DIR) ; git checkout $(UBOOT_TAG_HASH)
+	cd $(UBOOT_DIR) ; git checkout -b vanilla $(UBOOT_TAG_HASH)
 	$(MAKE) -C $(UBOOT_DIR) distclean
 	$(MAKE) -C $(UBOOT_DIR) ARCH=arm $(UBOOT_PLATFORM_CONFIG)
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_UBOOT))
@@ -108,7 +107,7 @@ $(PROGRESS_BRINGUP_UBOOT): $(PROGRESS_FETCH_UBOOT)
 u-boot-bringup: 	$(PROGRESS_BRINGUP_UBOOT)
 
 $(PROGRESS_BRINGUP_XLOADER): $(PROGRESS_FETCH_XLOADER)
-	cd $(XLOADER_DIR) ; git checkout $(XLOADER_TAG_HASH)
+	cd $(XLOADER_DIR) ; git checkout -b vanilla $(XLOADER_TAG_HASH)
 	$(MAKE) -C $(XLOADER_DIR) distclean	
 	$(MAKE) -C $(XLOADER_DIR) ARCH=arm $(XLOADER_PLATFORM_CONFIG)
 	@$(call echo-to-file, "DONE", $(PROGRESS_BRINGUP_XLOADER))
@@ -117,7 +116,7 @@ $(PROGRESS_BRINGUP_XLOADER): $(PROGRESS_FETCH_XLOADER)
 x-loader-bringup: 	$(PROGRESS_BRINGUP_XLOADER)
 
 $(PROGRESS_BRINGUP_KERNEL): $(PROGRESS_FETCH_KERNEL)
-	cd $(KERNEL_DIR) ; git checkout $(KERNEL_TAG_HASH)
+	cd $(KERNEL_DIR) ; git checkout -b vanilla $(KERNEL_TAG_HASH)
 	cd $(KERNEL_DIR) ; git am $(PATCHES_PATH)/kernel/*.patch
 	$(MAKE) -C $(KERNEL_DIR) -j$(NTHREADS) ARCH=arm distclean
 	$(MAKE) -C $(KERNEL_DIR) ARCH=arm $(KERNEL_PLATFORM_CONFIG)

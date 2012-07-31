@@ -1,7 +1,7 @@
-From 660a59f4b8a70f156567303b72f884ebd1d71c22 Mon Sep 17 00:00:00 2001
+From 1a186490a18e7a4debe1f647f6a85e865e3c4c36 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Wed, 2 Nov 2011 18:21:33 +0200
-Subject: [PATCH 10/19] board-4430: set mmc/dat1 wakeup enable
+Subject: [PATCH 10/17] board-4430: set mmc/dat1 wakeup enable
 
 Signed-off-by: Eliad Peller <eliad@wizery.com>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  1 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/mach-omap2/board-4430sdp.c b/arch/arm/mach-omap2/board-4430sdp.c
-index 70d8840..5fe2164 100644
+index 505278c..49e494f 100644
 --- a/arch/arm/mach-omap2/board-4430sdp.c
 +++ b/arch/arm/mach-omap2/board-4430sdp.c
-@@ -416,11 +416,14 @@ static void remux_mmc5_dat1(bool clocks_enabled)
+@@ -499,11 +499,14 @@ static void remux_mmc5_dat1(bool clocks_enabled)
  	}
  
  	val = __raw_readl(mux_base + 0x14C) & 0x0000FFFF;
@@ -30,5 +30,5 @@ index 70d8840..5fe2164 100644
  	__raw_writel(val, mux_base + 0x14C);
  
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

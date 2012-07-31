@@ -1,7 +1,7 @@
-From f9b46c7f98c177a1f3f01974f06d26e253cb0af3 Mon Sep 17 00:00:00 2001
+From f1cebc74c664a2be0c0f58fa4588affe690e4b0e Mon Sep 17 00:00:00 2001
 From: Sourav Poddar <sourav.poddar@ti.com>
 Date: Thu, 2 Jun 2011 13:09:09 +0530
-Subject: [PATCH 03/19] Support to keep cards always on
+Subject: [PATCH 03/17] Support to keep cards always on
 
 To keep cards always ON and to make mmc_release_host
 call only once.
@@ -13,7 +13,7 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  1 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 32507f5..41baec0 100644
+index 2a26df7..283532e 100644
 --- a/drivers/mmc/host/omap_hsmmc.c
 +++ b/drivers/mmc/host/omap_hsmmc.c
 @@ -1916,8 +1916,7 @@ static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
@@ -51,5 +51,5 @@ index 32507f5..41baec0 100644
  }
  
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

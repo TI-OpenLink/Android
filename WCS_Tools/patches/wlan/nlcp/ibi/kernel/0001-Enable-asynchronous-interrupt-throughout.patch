@@ -1,7 +1,7 @@
-From 73963512ee5bf0d56e24a0feb3d2ba25862bdf47 Mon Sep 17 00:00:00 2001
+From 5f1cf7184f0ea7fc016dccc1a5f33068d58f9198 Mon Sep 17 00:00:00 2001
 From: Sourav Poddar <sourav.poddar@ti.com>
 Date: Thu, 2 Jun 2011 13:09:09 +0530
-Subject: [PATCH 01/19] Enable asynchronous interrupt throughout
+Subject: [PATCH 01/17] Enable asynchronous interrupt throughout
 
 To keep Interrupt enabled outside transaction.
 
@@ -12,10 +12,10 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  1 files changed, 0 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index ba7f628..e073dce 100644
+index cb6a99c..f38ba94 100644
 --- a/drivers/mmc/host/omap_hsmmc.c
 +++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -722,7 +722,6 @@ static int omap_hsmmc_context_restore(struct omap_hsmmc_host *host)
+@@ -723,7 +723,6 @@ static int omap_hsmmc_context_restore(struct omap_hsmmc_host *host)
  		&& time_before(jiffies, timeout))
  		;
  
@@ -23,7 +23,7 @@ index ba7f628..e073dce 100644
  
  	/* Do not initialize card-specific things if the power is off */
  	if (host->power_mode == MMC_POWER_OFF)
-@@ -949,7 +948,6 @@ static void omap_hsmmc_request_done(struct omap_hsmmc_host *host, struct mmc_req
+@@ -950,7 +949,6 @@ static void omap_hsmmc_request_done(struct omap_hsmmc_host *host, struct mmc_req
  	dma_ch = host->dma_ch;
  	spin_unlock(&host->irq_lock);
  
@@ -31,7 +31,7 @@ index ba7f628..e073dce 100644
  	/* Do not complete the request if DMA is still in progress */
  	if (mrq->data && host->dma_type && dma_ch != -1)
  		return;
-@@ -2477,7 +2475,6 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
+@@ -2486,7 +2484,6 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
  		mmc_slot(host).mmc_data.card_present =
  			mmc_slot(host).mmc_data.status(mmc_dev(host->mmc));
  
@@ -39,7 +39,7 @@ index ba7f628..e073dce 100644
  
  	mmc_host_lazy_disable(host->mmc);
  
-@@ -2609,7 +2606,6 @@ static int omap_hsmmc_suspend(struct device *dev)
+@@ -2618,7 +2615,6 @@ static int omap_hsmmc_suspend(struct device *dev)
  		ret = mmc_suspend_host(host->mmc);
  		if (ret == 0) {
  			mmc_host_enable(host->mmc);
@@ -48,5 +48,5 @@ index ba7f628..e073dce 100644
  				OMAP_HSMMC_READ(host->base, HCTL) & ~SDBP);
  			mmc_host_disable(host->mmc);
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

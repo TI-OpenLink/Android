@@ -1,7 +1,7 @@
-From c082932eba344708cfe702a3d11bb8d5591aa7f9 Mon Sep 17 00:00:00 2001
+From 043921fa47073e4d6e48cdb84808edc0e60e638f Mon Sep 17 00:00:00 2001
 From: Ido Yariv <ido@wizery.com>
 Date: Mon, 2 Jan 2012 21:50:02 +0200
-Subject: [PATCH 08/10] wl12xx: Register lock-less IBI handlers *EXPERIMENTAL*
+Subject: [PATCH 6/9] wl12xx: Register lock-less IBI handlers *EXPERIMENTAL*
 
 wl->mutex is normally acquired before claiming the mmc host. In the case of IBI, the handler is called with
 the host already claimed. This means that acquiring the mutex in the handler will result in an incorrect
@@ -9,82 +9,40 @@ locking order, which could lead to a deadlock.
 
 Fix this by registering the handler as a lock-less one, and claim the host after acquiring the mutex.
 
-Signed-off-by: Ido Reis <idor@ti.com>
+Signed-off-by: Ido Yariv <ido@wizery.com>
 Signed-off-by: Eliad Peller <eliad@wizery.com>
 ---
- drivers/net/wireless/ti/wlcore/main.c   |   27 ++++++++++++++++++---------
+ drivers/net/wireless/ti/wlcore/main.c   |    3 ++-
  drivers/net/wireless/ti/wlcore/sdio.c   |   26 +++++++++++++++++++++++---
  drivers/net/wireless/ti/wlcore/wlcore.h |    1 +
- 3 files changed, 42 insertions(+), 12 deletions(-)
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index 2504d7b..bece10e 100644
+index 48cb5af..02ee80c 100644
 --- a/drivers/net/wireless/ti/wlcore/main.c
 +++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -514,20 +514,15 @@ static void wl1271_netstack_work(struct work_struct *work)
+@@ -494,7 +494,7 @@ static void wl1271_netstack_work(struct work_struct *work)
  
  #define WL1271_IRQ_MAX_LOOPS 256
  
--irqreturn_t wl1271_irq(int irq, void *cookie)
-+irqreturn_t wl1271_irq_locked(struct wl1271 *wl)
+-static int wlcore_irq_locked(struct wl1271 *wl)
++int wlcore_irq_locked(struct wl1271 *wl)
  {
- 	int ret;
+ 	int ret = 0;
  	u32 intr;
- 	int loopcount = WL1271_IRQ_MAX_LOOPS;
--	struct wl1271 *wl = (struct wl1271 *)cookie;
- 	bool done = false;
- 	unsigned int defer_count;
- 	unsigned long flags;
- 
--	/* TX might be handled here, avoid redundant work */
--	set_bit(WL1271_FLAG_TX_PENDING, &wl->flags);
--	cancel_work_sync(&wl->tx_work);
--
- 	/*
- 	 * In case edge triggered interrupt must be used, we cannot iterate
- 	 * more than once without introducing race conditions with the hardirq.
-@@ -535,8 +530,6 @@ irqreturn_t wl1271_irq(int irq, void *cookie)
- 	if (wl->platform_quirks & WL12XX_PLATFORM_QUIRK_EDGE_IRQ)
- 		loopcount = 1;
- 
--	mutex_lock(&wl->mutex);
--
- 	wl1271_debug(DEBUG_IRQ, "IRQ work");
- 
- 	if (unlikely(wl->state == WL1271_STATE_OFF))
-@@ -647,10 +640,26 @@ out:
- #endif
- 	spin_unlock_irqrestore(&wl->wl_lock, flags);
- 
-+	return IRQ_HANDLED;
-+}
-+EXPORT_SYMBOL_GPL(wl1271_irq_locked);
-+
-+irqreturn_t wl1271_irq(int irq, void *cookie)
-+{
-+	struct wl1271 *wl = cookie;
-+	irqreturn_t ret;
-+
-+	/* TX might be handled here, avoid redundant work */
-+	set_bit(WL1271_FLAG_TX_PENDING, &wl->flags);
-+	cancel_work_sync(&wl->tx_work);
-+
-+	mutex_lock(&wl->mutex);
-+	ret = wl1271_irq_locked(wl);
- 	mutex_unlock(&wl->mutex);
- 
--	return IRQ_HANDLED;
-+	return ret;
+@@ -622,6 +622,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
+ out:
+ 	return ret;
  }
-+EXPORT_SYMBOL_GPL(wl1271_irq);
++EXPORT_SYMBOL(wlcore_irq_locked);
  
- static int wl12xx_fetch_firmware(struct wl1271 *wl, bool plt)
+ irqreturn_t wlcore_irq(int irq, void *cookie)
  {
 diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index a6405e0..3830ffd 100644
+index ef3deb4..35960cd 100644
 --- a/drivers/net/wireless/ti/wlcore/sdio.c
 +++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -211,6 +211,10 @@ static void wl12xx_sdio_interrupt(struct sdio_func *func)
+@@ -219,6 +219,10 @@ static void wl12xx_sdio_interrupt(struct sdio_func *func)
  
  	dev_dbg(&func->dev, "SDIO IRQ");
  
@@ -95,7 +53,7 @@ index a6405e0..3830ffd 100644
  	if (WARN_ON(!glue->handler || !glue->thread_fn))
  		return;
  
-@@ -219,10 +223,26 @@ static void wl12xx_sdio_interrupt(struct sdio_func *func)
+@@ -227,10 +231,26 @@ static void wl12xx_sdio_interrupt(struct sdio_func *func)
  
  	ret = glue->handler(0, glue->irq_cookie);
  	if (ret == IRQ_WAKE_THREAD) {
@@ -110,7 +68,7 @@ index a6405e0..3830ffd 100644
 +			mutex_unlock(&wl->mutex);
 +			return;
 +		}
-+		wl1271_irq_locked(wl);
++		wlcore_irq_locked(wl);
  		sdio_release_host(func);
 -		glue->thread_fn(0, glue->irq_cookie);
 -		sdio_claim_host(func);
@@ -124,7 +82,7 @@ index a6405e0..3830ffd 100644
  }
  
  int wl12xx_sdio_request_irq(struct device *child,
-@@ -247,7 +267,7 @@ int wl12xx_sdio_request_irq(struct device *child,
+@@ -255,7 +275,7 @@ int wl12xx_sdio_request_irq(struct device *child,
  	glue->handler = handler;
  	glue->thread_fn = thread_fn;
  	glue->irq_cookie = cookie;
@@ -134,17 +92,17 @@ index a6405e0..3830ffd 100644
  	printk("claiming sdio irq (func=%d). ret=%d\n", func->num, ret);
  	return ret;
 diff --git a/drivers/net/wireless/ti/wlcore/wlcore.h b/drivers/net/wireless/ti/wlcore/wlcore.h
-index 642683f..e24a064 100644
+index d1ea8dd..e121706 100644
 --- a/drivers/net/wireless/ti/wlcore/wlcore.h
 +++ b/drivers/net/wireless/ti/wlcore/wlcore.h
-@@ -404,6 +404,7 @@ int wlcore_set_key(struct wl1271 *wl, enum set_key_cmd cmd,
- 		   struct ieee80211_sta *sta,
+@@ -427,6 +427,7 @@ int wlcore_set_key(struct wl1271 *wl, enum set_key_cmd cmd,
  		   struct ieee80211_key_conf *key_conf);
  irqreturn_t wl12xx_hardirq(int irq, void *cookie);
-+irqreturn_t wl1271_irq_locked(struct wl1271 *wl);
- irqreturn_t wl1271_irq(int irq, void *cookie);
+ irqreturn_t wlcore_irq(int irq, void *cookie);
++int wlcore_irq_locked(struct wl1271 *wl);
  
- /* Firmware image load chunk size */
+ static inline void
+ wlcore_set_ht_cap(struct wl1271 *wl, enum ieee80211_band band,
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

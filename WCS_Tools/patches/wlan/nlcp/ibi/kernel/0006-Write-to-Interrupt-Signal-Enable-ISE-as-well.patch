@@ -1,7 +1,7 @@
-From 7eed715594a38b51907d64508d7799bfa153e72f Mon Sep 17 00:00:00 2001
+From 6f79b47a6467874e86ad880bde9f988ac69da18e Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Wed, 7 Sep 2011 02:34:51 +0300
-Subject: [PATCH 06/19] Write to Interrupt Signal Enable (ISE) as well
+Subject: [PATCH 06/17] Write to Interrupt Signal Enable (ISE) as well
 
 We want the Card Interrupt to trigger an irq (in addition
 to setting the correct CIRQ bit in the status register)
@@ -12,7 +12,7 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  1 files changed, 5 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 17a6a59..0676d88 100644
+index 9f7cc53..428aecc 100644
 --- a/drivers/mmc/host/omap_hsmmc.c
 +++ b/drivers/mmc/host/omap_hsmmc.c
 @@ -1912,7 +1912,7 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
@@ -44,5 +44,5 @@ index 17a6a59..0676d88 100644
  	OMAP_HSMMC_READ(host->base, IE); /* flush posted write */
  	pm_runtime_put_sync(host->dev);
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

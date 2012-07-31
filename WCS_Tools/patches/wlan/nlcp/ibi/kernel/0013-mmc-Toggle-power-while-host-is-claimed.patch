@@ -1,7 +1,7 @@
-From d64285628140608c43527d45f9578dc12cd6beb5 Mon Sep 17 00:00:00 2001
+From 2eade652bddd9762e6346bbc03b90504f714747f Mon Sep 17 00:00:00 2001
 From: Ido Yariv <ido@wizery.com>
 Date: Thu, 22 Dec 2011 11:27:06 +0200
-Subject: [PATCH 13/19] mmc: Toggle power while host is claimed
+Subject: [PATCH 13/17] mmc: Toggle power while host is claimed
 
 Runtime PM ops might be called when the host isn't claimed. This can be
 problematic, as the mmc disable/enable callbacks might be called
@@ -52,5 +52,5 @@ index 44191b1..a2bdeb5 100644
  
  static int mmc_runtime_idle(struct device *dev)
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

@@ -1,7 +1,7 @@
-From 991ab8e7db6545ea89d0a43a38bc8a9cb7435c79 Mon Sep 17 00:00:00 2001
+From 0553c4109059b1c83ded0c8494c4ec34c97ad461 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Sun, 4 Sep 2011 18:07:35 +0300
-Subject: [PATCH 05/19] support SDIO Interrupt Extensions
+Subject: [PATCH 05/17] support SDIO Interrupt Extensions
 
 Check for Support Asynchronous Interrupt (SAI), and
 enable set Enable Asynchrounous Interrupt (EAI) if supported.
@@ -42,7 +42,7 @@ index 03ead02..e05a9c2 100644
  	ret = sdio_card_irq_get(func->card);
  	if (ret)
 diff --git a/include/linux/mmc/sdio.h b/include/linux/mmc/sdio.h
-index 2b8b857..587d412 100644
+index c428333..009f79f 100644
 --- a/include/linux/mmc/sdio.h
 +++ b/include/linux/mmc/sdio.h
 @@ -91,6 +91,7 @@
@@ -54,5 +54,5 @@ index 2b8b857..587d412 100644
  #define SDIO_CCCR_ABORT		0x06	/* function abort/card reset */
  
 -- 
-1.7.0.4
+1.7.6.401.g6a319
 

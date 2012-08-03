@@ -1,7 +1,7 @@
-From 55b9fdffd1db48fd8dd46a3dc893321618708871 Mon Sep 17 00:00:00 2001
+From 85e334b4054471d725aa7e83c688aaac6a0944c4 Mon Sep 17 00:00:00 2001
 From: Eyal Shapira <eyal@wizery.com>
 Date: Thu, 2 Aug 2012 16:09:51 +0300
-Subject: [PATCH] SoftapControllerTI: override ctrl_interface with correct
+Subject: [PATCH 3/3] SoftapControllerTI: override ctrl_interface with correct
  interface
 
 Set ctrl_interface in hostapd.conf to wlan1 instead of whatever
@@ -11,11 +11,8 @@ setup the control interface.
 Change-Id: I97fbfcb1bdab7898b734f8dde18bb55518419a3c
 Signed-off-by: Eyal Shapira <eyal@wizery.com>
 ---
-This one fixes softAP.
-Should be applied on mydroid/system/netd
-
  SoftapControllerTI.cpp |    5 +++++
- 1 file changed, 5 insertions(+)
+ 1 files changed, 5 insertions(+), 0 deletions(-)
 
 diff --git a/SoftapControllerTI.cpp b/SoftapControllerTI.cpp
 index ed37f74..2603021 100644
@@ -41,5 +38,5 @@ index ed37f74..2603021 100644
      sprintf(buf, "ssid=%s\n",argv[4]);
      fputs(buf, fp2);
 -- 
-1.7.9.5
+1.7.9
 

@@ -1,0 +1,33 @@
+From c2bba35391890891bcbd5da177840ed99c1e8211 Mon Sep 17 00:00:00 2001
+From: Ido Reis <idor@ti.com>
+Date: Thu, 2 Aug 2012 18:00:30 +0300
+Subject: [PATCH 4/5] blaze: remove wifi private lib from build
+
+otherwise some dependencies fail
+
+Change-Id: I70981433e93a0cd41ee4780c7e22744ca4455c12
+Signed-off-by: Arik Nemtsov <arik@wizery.com>
+Signed-off-by: Ido Reis <idor@ti.com>
+---
+ BoardConfig.mk |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/BoardConfig.mk b/BoardConfig.mk
+index 2a14840..116e646 100644
+--- a/BoardConfig.mk
++++ b/BoardConfig.mk
+@@ -74,9 +74,9 @@ USES_TI_MAC80211 := true
+ ifdef USES_TI_MAC80211
+ BOARD_WPA_SUPPLICANT_DRIVER      := NL80211
+ WPA_SUPPLICANT_VERSION           := VER_0_8_X
+-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wl12xx
++BOARD_WPA_SUPPLICANT_PRIVATE_LIB :=
+ BOARD_HOSTAPD_DRIVER             := NL80211
+-BOARD_HOSTAPD_PRIVATE_LIB        := lib_driver_cmd_wl12xx
++BOARD_HOSTAPD_PRIVATE_LIB        :=
+ BOARD_WLAN_DEVICE                := wl12xx_mac80211
+ BOARD_SOFTAP_DEVICE              := wl12xx_mac80211
+ WIFI_DRIVER_MODULE_PATH          := "/system/lib/modules/wl12xx_sdio.ko"
+-- 
+1.7.9
+

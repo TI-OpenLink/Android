@@ -1,7 +1,7 @@
-From b417654a95342c2bbf95f374164f112d3f9ea3cc Mon Sep 17 00:00:00 2001
+From 8f50adeaf2cf65e0b311c264b354199a56aa0dec Mon Sep 17 00:00:00 2001
 From: Arik Nemtsov <arik@wizery.com>
 Date: Fri, 20 Jul 2012 10:48:53 +0300
-Subject: [PATCH 1/2] make wlan1 tetherable
+Subject: [PATCH 1/7] blaze: make wlan1 tetherable
 
 Change-Id: I01ee28f861cb4faff57b411bfc1fd2f91655fd31
 Signed-off-by: Arik Nemtsov <arik@wizery.com>
@@ -10,7 +10,7 @@ Signed-off-by: Arik Nemtsov <arik@wizery.com>
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/overlay/frameworks/base/core/res/res/values/config.xml b/overlay/frameworks/base/core/res/res/values/config.xml
-index f17cf73..25f36a9 100644
+index 0e457f6..43f5d16 100644
 --- a/overlay/frameworks/base/core/res/res/values/config.xml
 +++ b/overlay/frameworks/base/core/res/res/values/config.xml
 @@ -36,7 +36,7 @@

@@ -1,4 +1,4 @@
-From add9425567d5294a97e4f2076edee0aed75e4a9f Mon Sep 17 00:00:00 2001
+From b03174eb7b0eddcb74af108c873084200bbd7b38 Mon Sep 17 00:00:00 2001
 From: Arik Nemtsov <arik@wizery.com>
 Date: Sun, 22 Jul 2012 13:54:48 +0300
 Subject: [PATCH] remove wpa_supplicant_lib

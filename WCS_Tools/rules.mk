@@ -77,6 +77,7 @@ else
 	cd $(MYDROID) ; \
 	repo init -u $(OMAPMANIFEST_REPO) -b $(OMAPMANIFEST_BRANCH) -m $(OMAPMANIFEST_XMLFILE) $(REPO_INIT_DEF_PARAMS)
 endif
+	if [ -f $(WIIST_PATH)/misc/manifests/manifest.xml ] ; then cp $(WIIST_PATH)/misc/manifests/manifest.xml $(MYDROID)/.repo/manifest.xml ; fi
 	@$(call echo-to-file, "DONE", $(PROGRESS_MYDROID_REPO_INIT))
 	@$(call print, "android repo inited")
 

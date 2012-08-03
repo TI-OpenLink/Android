@@ -78,7 +78,6 @@ wlan-private-pre-make-validation:
 
 $(PROGRESS_WLAN_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 	@$(ECHO) "patching kernel for wlan..."
-#	cd $(KERNEL_DIR) ; git am $(WLAN_KERNEL_PATCHES)/0001-mmc-recognise-SDIO-cards-with-SDIO_CCCR_REV-3.00.patch
 	# add dynamic debug support
 	cd $(KERNEL_DIR) ; $(PATCH) -p1 <  $(WLAN_KERNEL_PATCHES)/blaze.config.patch
 	@$(ECHO) "...done"
@@ -86,18 +85,18 @@ $(PROGRESS_WLAN_KERNEL_PATCHES): $(PROGRESS_BRINGUP_KERNEL)
 	@$(call print, "wlan kernel patches done")	
 
 $(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
-	@$(ECHO) "patching android for wlan..."	
-	# patch libnl
+	@$(ECHO) "patching android for wlan..." 
+	# patch /system/code
 	cd $(MYDROID)/system/core ; git am $(WLAN_ANDROID_PATCHES)/system/core/*.patch
-	# patch BoardConfig.mk
+	# patch /system/netd
+	cd $(MYDROID)/system/netd/ ; git am $(WLAN_ANDROID_PATCHES)/system/netd/*.patch
+	# patch board's definitions
 	cd $(MYDROID)/device/ti/blaze ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze/*.patch
 	cd $(MYDROID)/device/ti/blaze_tablet ; git am $(WLAN_ANDROID_PATCHES)/device/ti/blaze_tablet/*.patch
-	# patch netd
-	cd $(MYDROID)/system/netd/ ; git am $(WLAN_ANDROID_PATCHES)/system/netd/*.patch
-	# patch libhardware_legacy
-	cd $(MYDROID)/hardware/libhardware_legacy ; git am $(WLAN_ANDROID_PATCHES)/hardware/libhardware_legacy/*.patch
 	# patch hardware/ti/wlan
 	cd $(MYDROID)/hardware/ti/wlan ; git am $(WLAN_ANDROID_PATCHES)/hardware/ti/wlan/*.patch
+	# patch /frameworks/base/
+	cd $(MYDROID)/frameworks/base/ ; git am $(WLAN_ANDROID_PATCHES)/frameworks/base/*.patch
 
 	# remove omap's firmware project from ics
 	$(MKDIR) -p $(TRASH_DIR)/mydroid/device/ti/proprietary-open/wl12xx

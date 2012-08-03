@@ -54,7 +54,8 @@ UBOOT_TAG_HASH:=bb9f0949700503aeaa9ef40948cd23795ec3e7ea
 # kernel repository definitions
 # -----------------------------------------------------------------------------
 KERNEL_REPO:=git://git.omapzoom.org/kernel/omap.git
-KERNEL_TAG_HASH:=p-android-omap-3.0-dev
+KERNEL_BRANCH:=origin/p-android-omap-3.0-dev
+KERNEL_TAG_HASH:=bdaabe6e2444edd8fe57b79f8e73094858cd1c84
 
 # -----------------------------------------------------------------------------
 # mydroid repository definitions

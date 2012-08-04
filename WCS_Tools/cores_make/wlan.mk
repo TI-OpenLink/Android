@@ -105,6 +105,8 @@ $(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	cd $(MYDROID)/system/netd/ ; git am $(WLAN_ANDROID_PATCHES)/system/netd/*.patch
 	# patch hardware/ti/wlan
 	cd $(MYDROID)/hardware/ti/wlan ; git am $(WLAN_ANDROID_PATCHES)/hardware/ti/wlan/*.patch
+	# patch hardware/libhardware_legacy
+	cd $(MYDROID)/hardware/libhardware_legacy ; git am $(WLAN_ANDROID_PATCHES)/hardware/libhardware_legacy/*.patch
 	# patch /frameworks/base/
 	cd $(MYDROID)/frameworks/base/ ; git am $(WLAN_ANDROID_PATCHES)/frameworks/base/*.patch
 

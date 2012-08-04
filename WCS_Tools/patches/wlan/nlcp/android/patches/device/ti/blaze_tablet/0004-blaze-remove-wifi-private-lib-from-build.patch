@@ -1,7 +1,7 @@
-From c2bba35391890891bcbd5da177840ed99c1e8211 Mon Sep 17 00:00:00 2001
+From fc45d39e7a92a8e522417858b1892527500ea4a6 Mon Sep 17 00:00:00 2001
 From: Ido Reis <idor@ti.com>
 Date: Thu, 2 Aug 2012 18:00:30 +0300
-Subject: [PATCH 4/5] blaze: remove wifi private lib from build
+Subject: [PATCH 4/7] blaze: remove wifi private lib from build
 
 otherwise some dependencies fail
 

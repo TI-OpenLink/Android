@@ -1,7 +1,7 @@
-From 760bb78a6b1afd936f49db8a0c3f5a9519f5be3a Mon Sep 17 00:00:00 2001
+From 634f8aec0bd00d732e4bf1bca7cdec6469e2a396 Mon Sep 17 00:00:00 2001
 From: Arik Nemtsov <arik@wizery.com>
 Date: Tue, 24 Jul 2012 16:30:34 +0300
-Subject: [PATCH 3/5] blaze: hostapd: make reserved socket name wlan1 for
+Subject: [PATCH 3/7] blaze: hostapd: make reserved socket name wlan1 for
  hostapd
 
 Change-Id: I1e3cec0dad6307b7ac13dc54234acb73bfa23eaa

@@ -1,7 +1,7 @@
-From 91a7b137e68cf8008233bb1bac56f7d8744c0014 Mon Sep 17 00:00:00 2001
+From 077cbf2bab1bb0da58b8c9228e0f6fb80c5f7523 Mon Sep 17 00:00:00 2001
 From: Arik Nemtsov <arik@wizery.com>
 Date: Fri, 20 Jul 2012 10:48:53 +0300
-Subject: [PATCH 1/5] blaze: make wlan1 tetherable
+Subject: [PATCH 1/7] blaze: make wlan1 tetherable
 
 Change-Id: I01ee28f861cb4faff57b411bfc1fd2f91655fd31
 Signed-off-by: Arik Nemtsov <arik@wizery.com>

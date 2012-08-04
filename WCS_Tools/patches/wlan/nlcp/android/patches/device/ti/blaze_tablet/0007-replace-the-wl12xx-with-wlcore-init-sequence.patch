@@ -1,19 +1,19 @@
-From ff87f17c84072f82e296c38f3d2be137fa96a9ce Mon Sep 17 00:00:00 2001
+From 29112b2d8b0fce2e628533eede9e4719df70055a Mon Sep 17 00:00:00 2001
 From: Ido Reis <idor@ti.com>
-Date: Wed, 22 Feb 2012 11:32:35 +0200
-Subject: [PATCH 2/2] replace the wl12xx with wlcore init sequence
+Date: Sat, 4 Aug 2012 21:33:02 +0300
+Subject: [PATCH 7/7] replace the wl12xx with wlcore init sequence
 
-Change-Id: I0fcbed5b7cd0c327fbd0649382f290ad738f0117
+Change-Id: I2e520f5dcff93868bb74bca2bcb44f4e87feceb7
 Signed-off-by: Ido Reis <idor@ti.com>
 ---
  init.omap4blazeboard.rc |    5 +----
  1 files changed, 1 insertions(+), 4 deletions(-)
 
 diff --git a/init.omap4blazeboard.rc b/init.omap4blazeboard.rc
-index ab4057e..96036c0 100755
+index ce75acb..48f1433 100755
 --- a/init.omap4blazeboard.rc
 +++ b/init.omap4blazeboard.rc
-@@ -36,10 +36,7 @@ on boot
+@@ -78,10 +78,7 @@ on boot
  # wi-fi
  	mkdir /data/misc/wifi/sockets 0770 wifi wifi
  	mkdir /data/misc/dhcp 0770 dhcp dhcp
@@ -24,7 +24,7 @@ index ab4057e..96036c0 100755
 +	exec /system/bin/sh /data/misc/wifi/load_wlcore.sh
  
  # GPS
-         insmod /system/lib/modules/gps_drv.ko
+ #        insmod /system/lib/modules/gps_drv.ko
 -- 
-1.7.0.4
+1.7.9
 

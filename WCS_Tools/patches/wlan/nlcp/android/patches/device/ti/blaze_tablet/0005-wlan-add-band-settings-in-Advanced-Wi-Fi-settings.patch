@@ -1,7 +1,7 @@
-From aecec25838cb75b18c72fd137ebd948a306e6c1f Mon Sep 17 00:00:00 2001
+From a89600e4b0c0fbbcc731105ae8ad06efb3261906 Mon Sep 17 00:00:00 2001
 From: Ido Reis <idor@ti.com>
 Date: Sun, 18 Mar 2012 11:49:04 +0200
-Subject: [PATCH 5/5] wlan: add band settings in Advanced Wi-Fi settings
+Subject: [PATCH 5/7] wlan: add band settings in Advanced Wi-Fi settings
 
 Change-Id: I577a821a04b1f8a799613a388d07744297dce0a3
 ---

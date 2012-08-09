@@ -1,7 +1,7 @@
-From 8de1c80528d71d2bc0357f5ce4e3233dcb9b7632 Mon Sep 17 00:00:00 2001
+From a97ff8d607a393f3fdd23e927a495d08cbf38282 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Thu, 3 Nov 2011 14:48:01 +0200
-Subject: [PATCH 11/17] sdio: add sdio_enable_irq/sdio_disable_irq functions
+Subject: [PATCH 11/19] sdio: add sdio_enable_irq/sdio_disable_irq functions
 
 In some cases, we'd like to disable the irq, without stopping
 the handler thread, as this is our own context (i.e. doing
@@ -110,5 +110,5 @@ index 557acae..1715c47 100755
  extern unsigned int sdio_align_size(struct sdio_func *func, unsigned int sz);
  
 -- 
-1.7.6.401.g6a319
+1.7.7.6
 

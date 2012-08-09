@@ -1,7 +1,7 @@
-From 0553c4109059b1c83ded0c8494c4ec34c97ad461 Mon Sep 17 00:00:00 2001
+From 19ccc724b9615e9a2301f4ac4ad6152575fe9cf8 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Sun, 4 Sep 2011 18:07:35 +0300
-Subject: [PATCH 05/17] support SDIO Interrupt Extensions
+Subject: [PATCH 05/19] support SDIO Interrupt Extensions
 
 Check for Support Asynchronous Interrupt (SAI), and
 enable set Enable Asynchrounous Interrupt (EAI) if supported.
@@ -54,5 +54,5 @@ index c428333..009f79f 100644
  #define SDIO_CCCR_ABORT		0x06	/* function abort/card reset */
  
 -- 
-1.7.6.401.g6a319
+1.7.7.6
 

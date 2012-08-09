@@ -1,7 +1,7 @@
-From f2dbf1d73c3382d5f0cc7a5c97e24da403520cb0 Mon Sep 17 00:00:00 2001
+From 036c97101be0191b48e521a53702795de507bac1 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Mon, 23 Jan 2012 13:54:51 +0200
-Subject: [PATCH 12/17] sync include/linux/wl12xx.h
+Subject: [PATCH 12/19] sync include/linux/wl12xx.h
 
 Needed in order to update the platform data struct
 
@@ -13,7 +13,7 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
  3 files changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-index 3f5afab..86dad68 100644
+index c3be87a..f51fcc4 100644
 --- a/drivers/mmc/core/sdio.c
 +++ b/drivers/mmc/core/sdio.c
 @@ -115,6 +115,9 @@ static int sdio_read_cccr(struct mmc_card *card)
@@ -71,5 +71,5 @@ index 4b69739..0d63731 100644
  
  #endif
 -- 
-1.7.6.401.g6a319
+1.7.7.6
 

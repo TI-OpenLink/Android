@@ -1,7 +1,7 @@
-From 7313f64d4e30f90079867ddc7bb85ae591571abd Mon Sep 17 00:00:00 2001
+From bfe939fdd75e79f38950dac6c4c9d5857792d2f0 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Sun, 11 Mar 2012 14:58:34 +0200
-Subject: [PATCH 16/17] PM: fix might_sleep_if in __pm_runtime_idle
+Subject: [PATCH 16/19] PM: fix might_sleep_if in __pm_runtime_idle
 
 commit b1d0d5f ("PM: runtime: add might_sleep to PM runtime functions")
 added might_sleep_if() checks for __pm_runtime_* functions. But while
@@ -31,5 +31,5 @@ index 184cf54..c1cdc29 100644
  	if (rpmflags & RPM_GET_PUT) {
  		if (!atomic_dec_and_test(&dev->power.usage_count))
 -- 
-1.7.6.401.g6a319
+1.7.7.6
 

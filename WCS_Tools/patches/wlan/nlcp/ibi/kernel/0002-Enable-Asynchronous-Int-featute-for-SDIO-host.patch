@@ -1,7 +1,7 @@
-From 89aae860d356ba470857a5cf96764012b70e7191 Mon Sep 17 00:00:00 2001
-From: Sourav Poddar <sourav.poddar@ti.com>
-Date: Mon, 6 Jun 2011 15:30:44 +0530
-Subject: [PATCH 02/17] Enable Asynchronous Int featute for SDIO host
+From 9f867a40ebabff5cd21687e209718e74cf8b6d11 Mon Sep 17 00:00:00 2001
+From: Ido Reis <idor@ti.com>
+Date: Mon, 30 Apr 2012 13:50:38 +0300
+Subject: [PATCH 02/19] Enable Asynchronous Int featute for SDIO host
 
 Enble the use of SDIO card interrupts.
 
@@ -17,15 +17,16 @@ inabnd interrupt differently.
 Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
 [Eliad: Fix omap_hsmmc_enable_sdio_irq prototype]
 Signed-off-by: Eliad Peller <eliad@wizery.com>
+Signed-off-by: Ido Reis <idor@ti.com>
 ---
  drivers/mmc/host/omap_hsmmc.c |   92 ++++++++++++++++++++++++++++++++++++-----
  1 files changed, 81 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index f38ba94..2a26df7 100644
+index 96b6ec8..a7c709e 100644
 --- a/drivers/mmc/host/omap_hsmmc.c
 +++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -73,6 +73,7 @@
+@@ -79,6 +79,7 @@
  #define SDVS_MASK		0x00000E00
  #define SDVSCLR			0xFFFFF1FF
  #define SDVSDET			0x00000400
@@ -33,7 +34,7 @@ index f38ba94..2a26df7 100644
  #define AUTOIDLE		0x1
  #define SDBP			(1 << 8)
  #define DTO			0xe
-@@ -82,11 +83,13 @@
+@@ -88,11 +89,13 @@
  #define CLKD_MASK		0x0000FFC0
  #define CLKD_SHIFT		6
  #define DTO_MASK		0x000F0000
@@ -47,7 +48,7 @@ index f38ba94..2a26df7 100644
  #define INIT_STREAM		(1 << 1)
  #define ACEN_ACMD12		(1 << 2)
  #define ACEN_ACMD23		(2 << 2)
-@@ -96,11 +99,13 @@
+@@ -102,11 +105,13 @@
  #define MSBS			(1 << 5)
  #define BCE			(1 << 1)
  #define FOUR_BIT		(1 << 1)
@@ -61,7 +62,7 @@ index f38ba94..2a26df7 100644
  #define ERR			(1 << 15)
  #define CMD_TIMEOUT		(1 << 16)
  #define DATA_TIMEOUT		(1 << 20)
-@@ -124,6 +129,7 @@
+@@ -130,6 +135,7 @@
  #define DMA_MNS_ADMA_MODE	(1 << 20)
  #define ADMA_ERR		(1 << 25)
  #define ADMA_XFER_INT		(1 << 3)
@@ -69,15 +70,15 @@ index f38ba94..2a26df7 100644
  
  #define DMA_TABLE_NUM_ENTRIES	1024
  #define ADMA_TABLE_SZ 	\
-@@ -231,6 +237,7 @@ struct omap_hsmmc_host {
- 	int			use_reg;
+@@ -250,6 +256,7 @@ struct omap_hsmmc_host {
  	int			req_in_progress;
  	unsigned int		flags;
+ 	unsigned int		errata;
 +	int			inband_status;
  
  	struct	omap_mmc_platform_data	*pdata;
  };
-@@ -687,8 +694,13 @@ static int omap_hsmmc_context_restore(struct omap_hsmmc_host *host)
+@@ -706,8 +713,13 @@ static int omap_hsmmc_context_restore(struct omap_hsmmc_host *host)
  		&& time_before(jiffies, timeout))
  		;
  
@@ -92,7 +93,7 @@ index f38ba94..2a26df7 100644
  
  	if (host->id == OMAP_MMC1_DEVID) {
  		if (host->power_mode != MMC_POWER_OFF &&
-@@ -704,8 +716,13 @@ static int omap_hsmmc_context_restore(struct omap_hsmmc_host *host)
+@@ -723,8 +735,13 @@ static int omap_hsmmc_context_restore(struct omap_hsmmc_host *host)
  	if (host->dma_type == ADMA_XFER)
  		hctl |= DMAS;
  
@@ -107,7 +108,7 @@ index f38ba94..2a26df7 100644
  
  	OMAP_HSMMC_WRITE(host->base, CAPA,
  			OMAP_HSMMC_READ(host->base, CAPA) | capa);
-@@ -727,8 +744,10 @@ static int omap_hsmmc_context_restore(struct omap_hsmmc_host *host)
+@@ -746,8 +763,10 @@ static int omap_hsmmc_context_restore(struct omap_hsmmc_host *host)
  	/* Do not initialize card-specific things if the power is off */
  	if (host->power_mode == MMC_POWER_OFF)
  		goto out;
@@ -120,7 +121,7 @@ index f38ba94..2a26df7 100644
  	/* configure in DDR mode */
  	if (ios->timing == MMC_TIMING_UHS_DDR50) {
  		con |= DDR;
-@@ -1217,6 +1236,12 @@ static void omap_hsmmc_do_irq(struct omap_hsmmc_host *host, int status)
+@@ -1252,6 +1271,12 @@ static void omap_hsmmc_do_irq(struct omap_hsmmc_host *host, int status)
  			OMAP_HSMMC_READ(host->base, PSTATE));
  
  	}
@@ -131,9 +132,9 @@ index f38ba94..2a26df7 100644
 +			dev_dbg(mmc_dev(host->mmc), "inband interrupt received during data transfer\n");
 +	}
  
- 	OMAP_HSMMC_WRITE(host->base, STAT, status);
- 
-@@ -1224,6 +1249,7 @@ static void omap_hsmmc_do_irq(struct omap_hsmmc_host *host, int status)
+ 	/* Errata i761 */
+ 	if ((host->errata & OMAP_HSMMC_ERRATA_I761) && host->cmd
+@@ -1270,6 +1295,7 @@ static void omap_hsmmc_do_irq(struct omap_hsmmc_host *host, int status)
  		omap_hsmmc_cmd_done(host, host->cmd);
  	if ((end_trans || (status & TC)) && host->mrq)
  		omap_hsmmc_xfer_done(host, data);
@@ -141,7 +142,7 @@ index f38ba94..2a26df7 100644
  }
  
  /*
-@@ -1883,6 +1909,44 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
+@@ -1929,6 +1955,44 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
  		mmc_slot(host).init_card(card);
  }
  
@@ -186,7 +187,7 @@ index f38ba94..2a26df7 100644
  static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
  {
  	u32 hctl, capa, value;
-@@ -1900,7 +1964,10 @@ static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
+@@ -1946,7 +2010,10 @@ static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
  		hctl |= DMAS;
  
  	value = OMAP_HSMMC_READ(host->base, HCTL) & ~SDVS_MASK;
@@ -198,7 +199,7 @@ index f38ba94..2a26df7 100644
  
  	if (host->dma_type == ADMA_XFER) {
  		value = OMAP_HSMMC_READ(host->base, CON);
-@@ -1912,7 +1979,10 @@ static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
+@@ -1958,7 +2025,10 @@ static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
  
  	/* Set the controller to AUTO IDLE mode */
  	value = OMAP_HSMMC_READ(host->base, SYSCONFIG);
@@ -210,7 +211,7 @@ index f38ba94..2a26df7 100644
  
  	/* Set SD bus power bit */
  	set_sd_bus_power(host);
-@@ -2010,9 +2080,7 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
+@@ -2056,9 +2126,7 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
  	      (mmc_slot(host).get_cover_state &&
  	       mmc_slot(host).get_cover_state(host->dev, host->slot_id)))) {
  		mmc_release_host(host->mmc);
@@ -220,7 +221,7 @@ index f38ba94..2a26df7 100644
  	mmc_slot(host).set_power(host->dev, host->slot_id, 0, 0);
  	host->vdd = 0;
  	host->power_mode = MMC_POWER_OFF;
-@@ -2022,8 +2090,6 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
+@@ -2068,8 +2136,6 @@ static int omap_hsmmc_sleep_to_off(struct omap_hsmmc_host *host)
  
  	host->dpm_state = OFF;
  
@@ -229,7 +230,7 @@ index f38ba94..2a26df7 100644
  	return 0;
  }
  
-@@ -2154,6 +2220,7 @@ static const struct mmc_host_ops omap_hsmmc_ops = {
+@@ -2253,6 +2319,7 @@ static const struct mmc_host_ops omap_hsmmc_ops = {
  	.get_cd = omap_hsmmc_get_cd,
  	.get_ro = omap_hsmmc_get_ro,
  	.init_card = omap_hsmmc_init_card,
@@ -237,7 +238,7 @@ index f38ba94..2a26df7 100644
  	/* NYET -- enable_sdio_irq */
  };
  
-@@ -2165,6 +2232,7 @@ static const struct mmc_host_ops omap_hsmmc_ps_ops = {
+@@ -2264,6 +2331,7 @@ static const struct mmc_host_ops omap_hsmmc_ps_ops = {
  	.get_cd = omap_hsmmc_get_cd,
  	.get_ro = omap_hsmmc_get_ro,
  	.init_card = omap_hsmmc_init_card,
@@ -245,15 +246,15 @@ index f38ba94..2a26df7 100644
  	/* NYET -- enable_sdio_irq */
  };
  
-@@ -2296,6 +2364,7 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
+@@ -2420,6 +2488,7 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
  	}
  	host->power_mode = MMC_POWER_OFF;
  	host->flags	= AUTO_CMD12;
 +	host->inband_status = false;
  
- 	host->master_clock = OMAP_MMC_MASTER_CLOCK;
- 	if (mmc_slot(host).features & HSMMC_HAS_48MHZ_MASTER_CLK)
-@@ -2409,7 +2478,8 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
+ 	host->errata = 0;
+ 	if (cpu_is_omap44xx())
+@@ -2546,7 +2615,8 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
  	mmc->max_seg_size = mmc->max_req_size;
  
  	mmc->caps |= MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED |
@@ -264,5 +265,5 @@ index f38ba94..2a26df7 100644
  	mmc->caps |= mmc_slot(host).caps;
  	if (mmc->caps & MMC_CAP_8_BIT_DATA)
 -- 
-1.7.6.401.g6a319
+1.7.7.6
 

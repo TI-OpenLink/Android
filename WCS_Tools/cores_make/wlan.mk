@@ -109,6 +109,8 @@ $(PROGRESS_WLAN_MYDROID_PATCHES): $(PROGRESS_BRINGUP_MYDROID)
 	cd $(MYDROID)/hardware/libhardware_legacy ; git am $(WLAN_ANDROID_PATCHES)/hardware/libhardware_legacy/*.patch
 	# patch /frameworks/base/
 	cd $(MYDROID)/frameworks/base/ ; git am $(WLAN_ANDROID_PATCHES)/frameworks/base/*.patch
+	# patch hostap
+	cd $(MYDROID)/external/wpa_supplicant_8 ; git am $(WLAN_ANDROID_PATCHES)/external/wpa_supplicant_8/*.patch
 
 	# remove omap's firmware project from ics
 	$(MKDIR) -p $(TRASH_DIR)/mydroid/device/ti/proprietary-open/wl12xx

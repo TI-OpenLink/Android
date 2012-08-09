@@ -1,0 +1,36 @@
+From 89c556dcc2fdb3a6c1bf8ffd835c2a40eec18b9f Mon Sep 17 00:00:00 2001
+From: Eyal Shapira <eyal@wizery.com>
+Date: Thu, 9 Aug 2012 02:28:39 +0300
+Subject: [PATCH] init.omap4blazeboard.rc: disable default wl12xx debug_level
+
+A recent change in wl12xx/wlcore drivers causes debug logs
+to be emitted even if DYNAMIC_DEBUG isn't enabled in the kernel.
+Debug logs and especially going to console can introduce significant
+delays which harms time sensitive operations like p2p neg,
+responding to management frames in AP mode and more.
+
+Debug logs will be turned on when needed via
+echo DEBUG_LEVEL_MASK > /sys/module/wl12xx/parameters/debug_level
+
+Change-Id: Ie4227a6f8464d49c11bcffc5a8cd526f4ed39d98
+Signed-off-by: Eyal Shapira <eyal@wizery.com>
+---
+ init.omap4blazeboard.rc |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/init.omap4blazeboard.rc b/init.omap4blazeboard.rc
+index 5484da8..8e282de 100755
+--- a/init.omap4blazeboard.rc
++++ b/init.omap4blazeboard.rc
+@@ -81,7 +81,7 @@ on boot
+ 	insmod /system/lib/modules/compat.ko
+ 	insmod /system/lib/modules/cfg80211.ko
+ 	insmod /system/lib/modules/mac80211.ko
+-	insmod /system/lib/modules/wl12xx.ko debug_level=0x63c00
++	insmod /system/lib/modules/wl12xx.ko
+ 
+ # GPS
+ #        insmod /system/lib/modules/gps_drv.ko
+-- 
+1.7.9.5
+

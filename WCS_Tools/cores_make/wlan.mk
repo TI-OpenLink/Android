@@ -188,7 +188,7 @@ endif
 	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
 	sh ./scripts/admin-refresh.sh ; \
 	./scripts/driver-select ti
-	$(TOUCH) $(WLAN_COMPAT_WIRELESS_DIR)/drivers/net/Makefile
+	touch $(WLAN_COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	@$(ECHO) "...done"
 
 wlan-make-private:
@@ -198,7 +198,7 @@ wlan-make-private:
 	cd $(WLAN_COMPAT_WIRELESS_DIR) ; \
 	sh ./scripts/admin-refresh.sh ; \
 	./scripts/driver-select ti
-	$(TOUCH) $(WLAN_COMPAT_WIRELESS_DIR)/drivers/net/Makefile
+	touch $(WLAN_COMPAT_WIRELESS_DIR)/drivers/net/Makefile
 	$(MAKE) -C $(WLAN_COMPAT_WIRELESS_DIR) KLIB=$(KERNEL_DIR) KLIB_BUILD=$(KERNEL_DIR) -j$(NTHREADS)
 	$(FIND) $(WLAN_COMPAT_WIRELESS_DIR) -name "*.ko" -exec $(COPY) {} $(WL12xx_KO_INSTALLER) \;
 	@$(ECHO) "...done"

@@ -46,7 +46,6 @@ TAR:=/bin/tar
 FIND:=/usr/bin/find
 SED:=/bin/sed
 MKFS_EXT4:=/sbin/mkfs.ext4
-TOUCH:=/usr/bin/touch
 GIT:=/usr/bin/git
 CAT:=/bin/cat
 
